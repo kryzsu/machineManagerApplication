@@ -1,0 +1,14 @@
+
+
+entity Machine {
+	name String required
+	description String required
+}
+
+entity Job {
+	name String required
+}
+
+relationship OneToMany {
+  Machine to Job
+}
