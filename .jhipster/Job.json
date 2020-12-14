@@ -1,0 +1,32 @@
+{
+  "name": "Job",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "machine",
+      "otherEntityRelationshipName": "job",
+      "relationshipName": "machine",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201214140542",
+  "entityTableName": "job",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
