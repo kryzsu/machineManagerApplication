@@ -18,6 +18,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
+
     private GitProperties gitProperties;
     private BuildProperties buildProperties;
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
@@ -50,6 +51,10 @@ public class CacheConfiguration {
             createCache(cm, hu.mycompany.machinemanager.domain.Machine.class.getName());
             createCache(cm, hu.mycompany.machinemanager.domain.Machine.class.getName() + ".jobs");
             createCache(cm, hu.mycompany.machinemanager.domain.Job.class.getName());
+            createCache(cm, hu.mycompany.machinemanager.domain.Job.class.getName() + ".workeds");
+            createCache(cm, hu.mycompany.machinemanager.domain.Holiday.class.getName());
+            createCache(cm, hu.mycompany.machinemanager.domain.Worked.class.getName());
+            createCache(cm, hu.mycompany.machinemanager.domain.Worked.class.getName() + ".jobs");
             // jhipster-needle-ehcache-add-entry
         };
     }

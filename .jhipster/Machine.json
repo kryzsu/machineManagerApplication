@@ -4,16 +4,24 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "description",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createDateTime",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "updateDateTime",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "deleted",
+      "fieldType": "Boolean"
     }
   ],
   "relationships": [

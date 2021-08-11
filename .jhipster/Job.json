@@ -2,20 +2,67 @@
   "name": "Job",
   "fields": [
     {
-      "fieldName": "name",
+      "fieldName": "customerName",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "days",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "productName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "count",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "productType",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createDateTime",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "updateDateTime",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "deleted",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "inProgress",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "daysDone",
+      "fieldType": "Integer"
     }
   ],
   "relationships": [
     {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "worked",
+      "otherEntityRelationshipName": "job",
+      "relationshipName": "worked",
+      "ownerSide": true
+    },
+    {
       "relationshipType": "many-to-one",
       "otherEntityName": "machine",
       "otherEntityRelationshipName": "job",
-      "relationshipName": "machine",
-      "otherEntityField": "id"
+      "relationshipName": "machine"
     }
   ],
   "changelogDate": "20201214140542",

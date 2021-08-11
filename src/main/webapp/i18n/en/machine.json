@@ -3,6 +3,7 @@
     "machine": {
       "home": {
         "title": "Machines",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Machine",
         "createOrEditLabel": "Create or edit a Machine",
         "notFound": "No Machines found"
@@ -16,8 +17,12 @@
       "detail": {
         "title": "Machine"
       },
+      "id": "ID",
       "name": "Name",
       "description": "Description",
+      "createDateTime": "Create Date Time",
+      "updateDateTime": "Update Date Time",
+      "deleted": "Deleted",
       "job": "Job"
     }
   }

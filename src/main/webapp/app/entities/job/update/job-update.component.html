@@ -1,0 +1,210 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-job-heading" data-cy="JobCreateUpdateHeading" jhiTranslate="machineManagerApplicationApp.job.home.createOrEditLabel">
+        Create or edit a Job
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.customerName" for="field_customerName"
+            >Customer Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="customerName"
+            id="field_customerName"
+            data-cy="customerName"
+            formControlName="customerName"
+          />
+          <div
+            *ngIf="editForm.get('customerName')!.invalid && (editForm.get('customerName')!.dirty || editForm.get('customerName')!.touched)"
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('customerName')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.days" for="field_days">Days</label>
+          <input type="number" class="form-control" name="days" id="field_days" data-cy="days" formControlName="days" />
+          <div *ngIf="editForm.get('days')!.invalid && (editForm.get('days')!.dirty || editForm.get('days')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('days')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('days')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.productName" for="field_productName"
+            >Product Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="productName"
+            id="field_productName"
+            data-cy="productName"
+            formControlName="productName"
+          />
+          <div *ngIf="editForm.get('productName')!.invalid && (editForm.get('productName')!.dirty || editForm.get('productName')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('productName')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.count" for="field_count">Count</label>
+          <input type="number" class="form-control" name="count" id="field_count" data-cy="count" formControlName="count" />
+          <div *ngIf="editForm.get('count')!.invalid && (editForm.get('count')!.dirty || editForm.get('count')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('count')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('count')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.productType" for="field_productType"
+            >Product Type</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="productType"
+            id="field_productType"
+            data-cy="productType"
+            formControlName="productType"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.comment" for="field_comment">Comment</label>
+          <input type="text" class="form-control" name="comment" id="field_comment" data-cy="comment" formControlName="comment" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.createDateTime" for="field_createDateTime"
+            >Create Date Time</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_createDateTime"
+              data-cy="createDateTime"
+              type="datetime-local"
+              class="form-control"
+              name="createDateTime"
+              formControlName="createDateTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.updateDateTime" for="field_updateDateTime"
+            >Update Date Time</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_updateDateTime"
+              data-cy="updateDateTime"
+              type="datetime-local"
+              class="form-control"
+              name="updateDateTime"
+              formControlName="updateDateTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.deleted" for="field_deleted">Deleted</label>
+          <input type="checkbox" class="form-check" name="deleted" id="field_deleted" data-cy="deleted" formControlName="deleted" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.inProgress" for="field_inProgress"
+            >In Progress</label
+          >
+          <input
+            type="checkbox"
+            class="form-check"
+            name="inProgress"
+            id="field_inProgress"
+            data-cy="inProgress"
+            formControlName="inProgress"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.daysDone" for="field_daysDone">Days Done</label>
+          <input type="number" class="form-control" name="daysDone" id="field_daysDone" data-cy="daysDone" formControlName="daysDone" />
+        </div>
+
+        <div class="form-group">
+          <label jhiTranslate="machineManagerApplicationApp.job.worked" for="field_workeds">Worked</label>
+          <select class="form-control" id="field_workeds" data-cy="worked" multiple name="workeds" formControlName="workeds">
+            <option
+              [ngValue]="getSelectedWorked(workedOption, editForm.get('workeds')!.value)"
+              *ngFor="let workedOption of workedsSharedCollection; trackBy: trackWorkedById"
+            >
+              {{ workedOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
+          <select class="form-control" id="field_machine" data-cy="machine" name="machine" formControlName="machine">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
+              *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
+            >
+              {{ machineOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

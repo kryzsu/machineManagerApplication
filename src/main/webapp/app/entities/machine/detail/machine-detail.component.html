@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="machine">
+      <h2 data-cy="machineDetailsHeading"><span jhiTranslate="machineManagerApplicationApp.machine.detail.title">Machine</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ machine.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.name">Name</span></dt>
+        <dd>
+          <span>{{ machine.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.description">Description</span></dt>
+        <dd>
+          <span>{{ machine.description }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.createDateTime">Create Date Time</span></dt>
+        <dd>
+          <span>{{ machine.createDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.updateDateTime">Update Date Time</span></dt>
+        <dd>
+          <span>{{ machine.updateDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.deleted">Deleted</span></dt>
+        <dd>
+          <span>{{ machine.deleted }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/machine', machine.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

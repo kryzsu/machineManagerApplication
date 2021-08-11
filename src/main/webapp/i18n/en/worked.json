@@ -1,0 +1,26 @@
+{
+  "machineManagerApplicationApp": {
+    "worked": {
+      "home": {
+        "title": "Workeds",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Worked",
+        "createOrEditLabel": "Create or edit a Worked",
+        "notFound": "No Workeds found"
+      },
+      "created": "A new Worked is created with identifier {{ param }}",
+      "updated": "A Worked is updated with identifier {{ param }}",
+      "deleted": "A Worked is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Worked {{ id }}?"
+      },
+      "detail": {
+        "title": "Worked"
+      },
+      "id": "ID",
+      "day": "Day",
+      "comment": "Comment",
+      "job": "Job"
+    }
+  }
+}

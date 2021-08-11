@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec, protractor, promise } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { MachineComponentsPage, MachineDeleteDialog, MachineUpdatePage } from './machine.page-object';
@@ -11,12 +11,14 @@ describe('Machine e2e test', () => {
   let machineComponentsPage: MachineComponentsPage;
   let machineUpdatePage: MachineUpdatePage;
   let machineDeleteDialog: MachineDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -40,10 +42,13 @@ describe('Machine e2e test', () => {
 
     await machineComponentsPage.clickOnCreateButton();
 
-    await promise.all([machineUpdatePage.setNameInput('name'), machineUpdatePage.setDescriptionInput('description')]);
-
-    expect(await machineUpdatePage.getNameInput()).to.eq('name', 'Expected Name value to be equals to name');
-    expect(await machineUpdatePage.getDescriptionInput()).to.eq('description', 'Expected Description value to be equals to description');
+    await promise.all([
+      machineUpdatePage.setNameInput('name'),
+      machineUpdatePage.setDescriptionInput('description'),
+      machineUpdatePage.setCreateDateTimeInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+      machineUpdatePage.setUpdateDateTimeInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+      machineUpdatePage.getDeletedInput().click(),
+    ]);
 
     await machineUpdatePage.save();
     expect(await machineUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -58,6 +63,7 @@ describe('Machine e2e test', () => {
     machineDeleteDialog = new MachineDeleteDialog();
     expect(await machineDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.machine.delete.question');
     await machineDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(machineComponentsPage.title), 5000);
 
     expect(await machineComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

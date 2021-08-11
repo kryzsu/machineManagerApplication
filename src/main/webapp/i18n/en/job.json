@@ -3,6 +3,7 @@
     "job": {
       "home": {
         "title": "Jobs",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Job",
         "createOrEditLabel": "Create or edit a Job",
         "notFound": "No Jobs found"
@@ -16,7 +17,19 @@
       "detail": {
         "title": "Job"
       },
-      "name": "Name",
+      "id": "ID",
+      "customerName": "Customer Name",
+      "days": "Days",
+      "productName": "Product Name",
+      "count": "Count",
+      "productType": "Product Type",
+      "comment": "Comment",
+      "createDateTime": "Create Date Time",
+      "updateDateTime": "Update Date Time",
+      "deleted": "Deleted",
+      "inProgress": "In Progress",
+      "daysDone": "Days Done",
+      "worked": "Worked",
       "machine": "Machine"
     }
   }
