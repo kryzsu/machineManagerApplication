@@ -17,7 +17,8 @@
         "title": "Out Of Order"
       },
       "date": "Date",
-      "description": "Description"
+      "description": "Description",
+      "machine": "Machine"
     }
   }
 }

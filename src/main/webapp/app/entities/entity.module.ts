@@ -16,6 +16,10 @@ import { RouterModule } from '@angular/router';
         path: 'out-of-order',
         loadChildren: () => import('./out-of-order/out-of-order.module').then(m => m.MachineManagerApplicationOutOfOrderModule),
       },
+      {
+        path: 'product',
+        loadChildren: () => import('./product/product.module').then(m => m.MachineManagerApplicationProductModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

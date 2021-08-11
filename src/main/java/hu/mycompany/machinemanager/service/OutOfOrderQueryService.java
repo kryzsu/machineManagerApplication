@@ -91,6 +91,12 @@ public class OutOfOrderQueryService extends QueryService<OutOfOrder> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), OutOfOrder_.description));
             }
+            if (criteria.getMachineId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getMachineId(), root -> root.join(OutOfOrder_.machines, JoinType.LEFT).get(Machine_.id))
+                    );
+            }
         }
         return specification;
     }

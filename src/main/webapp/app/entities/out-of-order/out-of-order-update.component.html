@@ -42,6 +42,13 @@
                         </small>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="machineManagerApplicationApp.outOfOrder.machine" for="field_machines">Machine</label>
+                    <select class="form-control" id="field_machines" multiple name="machines" formControlName="machines">
+                        <option [ngValue]="getSelected(editForm.get('machines')!.value, machineOption)" *ngFor="let machineOption of machines; trackBy: trackById">{{ machineOption.name }}</option>
+                    </select>
+                </div>
             </div>
 
             <div>

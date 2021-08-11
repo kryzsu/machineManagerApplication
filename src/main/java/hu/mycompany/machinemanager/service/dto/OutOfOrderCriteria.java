@@ -30,12 +30,15 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
+    private LongFilter machineId;
+
     public OutOfOrderCriteria() {}
 
     public OutOfOrderCriteria(OutOfOrderCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.date = other.date == null ? null : other.date.copy();
         this.description = other.description == null ? null : other.description.copy();
+        this.machineId = other.machineId == null ? null : other.machineId.copy();
     }
 
     @Override
@@ -67,6 +70,14 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
+    public LongFilter getMachineId() {
+        return machineId;
+    }
+
+    public void setMachineId(LongFilter machineId) {
+        this.machineId = machineId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -76,12 +87,17 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
             return false;
         }
         final OutOfOrderCriteria that = (OutOfOrderCriteria) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(description, that.description);
+        return (
+            Objects.equals(id, that.id) &&
+            Objects.equals(date, that.date) &&
+            Objects.equals(description, that.description) &&
+            Objects.equals(machineId, that.machineId)
+        );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, description);
+        return Objects.hash(id, date, description, machineId);
     }
 
     // prettier-ignore
@@ -91,6 +107,7 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
                 (id != null ? "id=" + id + ", " : "") +
                 (date != null ? "date=" + date + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
+                (machineId != null ? "machineId=" + machineId + ", " : "") +
             "}";
     }
 }

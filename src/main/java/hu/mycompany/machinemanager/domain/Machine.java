@@ -1,14 +1,13 @@
 package hu.mycompany.machinemanager.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Machine.
@@ -17,7 +16,6 @@ import java.util.Set;
 @Table(name = "machine")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Machine implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -31,6 +29,11 @@ public class Machine implements Serializable {
     @NotNull
     @Column(name = "description", nullable = false)
     private String description;
+
+    @ManyToMany(mappedBy = "machines")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<OutOfOrder> outOfOrders = new HashSet<>();
 
     @OneToMany(mappedBy = "machine")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -71,6 +74,31 @@ public class Machine implements Serializable {
         this.description = description;
     }
 
+    public Set<OutOfOrder> getOutOfOrders() {
+        return outOfOrders;
+    }
+
+    public Machine outOfOrders(Set<OutOfOrder> outOfOrders) {
+        this.outOfOrders = outOfOrders;
+        return this;
+    }
+
+    public Machine addOutOfOrder(OutOfOrder outOfOrder) {
+        this.outOfOrders.add(outOfOrder);
+        outOfOrder.getMachines().add(this);
+        return this;
+    }
+
+    public Machine removeOutOfOrder(OutOfOrder outOfOrder) {
+        this.outOfOrders.remove(outOfOrder);
+        outOfOrder.getMachines().remove(this);
+        return this;
+    }
+
+    public void setOutOfOrders(Set<OutOfOrder> outOfOrders) {
+        this.outOfOrders = outOfOrders;
+    }
+
     public Set<Job> getJobs() {
         return jobs;
     }
@@ -95,6 +123,7 @@ public class Machine implements Serializable {
     public void setJobs(Set<Job> jobs) {
         this.jobs = jobs;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

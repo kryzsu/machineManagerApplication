@@ -40,6 +40,7 @@ export const jobRoute: Routes = [
     component: JobComponent,
     data: {
       authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'machineManagerApplicationApp.job.home.title',
     },
     canActivate: [UserRouteAccessService],

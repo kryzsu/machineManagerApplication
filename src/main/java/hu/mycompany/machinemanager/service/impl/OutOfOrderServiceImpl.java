@@ -45,11 +45,15 @@ public class OutOfOrderServiceImpl implements OutOfOrderService {
         return outOfOrderRepository.findAll(pageable).map(outOfOrderMapper::toDto);
     }
 
+    public Page<OutOfOrderDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return outOfOrderRepository.findAllWithEagerRelationships(pageable).map(outOfOrderMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<OutOfOrderDTO> findOne(Long id) {
         log.debug("Request to get OutOfOrder : {}", id);
-        return outOfOrderRepository.findById(id).map(outOfOrderMapper::toDto);
+        return outOfOrderRepository.findOneWithEagerRelationships(id).map(outOfOrderMapper::toDto);
     }
 
     @Override

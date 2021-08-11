@@ -8,6 +8,18 @@
     -->
     <changeSet id="20201214140542-2" author="jhipster">
         
+        <addForeignKeyConstraint baseColumnNames="job_id"
+                                 baseTableName="job_product"
+                                 constraintName="fk_job_product_job_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="job"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="job_product"
+                                 constraintName="fk_job_product_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+        
         <addForeignKeyConstraint baseColumnNames="machine_id"
                                  baseTableName="job"
                                  constraintName="fk_job_machine_id"

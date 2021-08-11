@@ -40,7 +40,11 @@ describe('OutOfOrder e2e test', () => {
 
     await outOfOrderComponentsPage.clickOnCreateButton();
 
-    await promise.all([outOfOrderUpdatePage.setDateInput('2000-12-31'), outOfOrderUpdatePage.setDescriptionInput('description')]);
+    await promise.all([
+      outOfOrderUpdatePage.setDateInput('2000-12-31'),
+      outOfOrderUpdatePage.setDescriptionInput('description'),
+      // outOfOrderUpdatePage.machineSelectLastOption(),
+    ]);
 
     expect(await outOfOrderUpdatePage.getDateInput()).to.eq('2000-12-31', 'Expected date value to be equals to 2000-12-31');
     expect(await outOfOrderUpdatePage.getDescriptionInput()).to.eq('description', 'Expected Description value to be equals to description');

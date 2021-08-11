@@ -25,11 +25,19 @@
   ],
   "relationships": [
     {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "machine",
-      "otherEntityRelationshipName": "job",
+      "relationshipName": "product",
+      "otherEntityName": "product",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "name",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "job"
+    },
+    {
       "relationshipName": "machine",
-      "otherEntityField": "id"
+      "otherEntityName": "machine",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "name",
+      "otherEntityRelationshipName": "job"
     }
   ],
   "changelogDate": "20201214140542",

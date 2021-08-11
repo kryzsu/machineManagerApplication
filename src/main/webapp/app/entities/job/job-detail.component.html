@@ -8,14 +8,36 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
-                <dt><span jhiTranslate="machineManagerApplicationApp.job.name">Name</span></dt>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.estimation">Estimation</span></dt>
                 <dd>
-                    <span>{{ job.name }}</span>
+                    <span>{{ job.estimation }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.productCount">Product Count</span></dt>
+                <dd>
+                    <span>{{ job.productCount }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.startDate">Start Date</span></dt>
+                <dd>
+                    <span>{{ job.startDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.endDate">End Date</span></dt>
+                <dd>
+                    <span>{{ job.endDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.fact">Fact</span></dt>
+                <dd>
+                    <span>{{ job.fact }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.product">Product</span></dt>
+                <dd>
+                    <span *ngFor="let product of job.products; let last = last">
+                        <a [routerLink]="['/product', product?.id, 'view']">{{ product.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
                 </dd>
                 <dt><span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span></dt>
                 <dd>
-                    <div *ngIf="job.machine">
-                        <a [routerLink]="['/machine', job.machine?.id, 'view']">{{ job.machine?.id }}</a>
+                    <div *ngIf="job.machineId">
+                        <a [routerLink]="['/machine', job.machineId, 'view']">{{ job.machineName }}</a>
                     </div>
                 </dd>
             </dl>

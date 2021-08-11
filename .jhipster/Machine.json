@@ -14,10 +14,17 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-many",
+      "relationshipName": "outOfOrder",
+      "otherEntityName": "outOfOrder",
+      "relationshipType": "many-to-many",
+      "ownerSide": false,
+      "otherEntityRelationshipName": "machine"
+    },
+    {
+      "relationshipName": "job",
       "otherEntityName": "job",
-      "otherEntityRelationshipName": "machine",
-      "relationshipName": "job"
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "machine"
     }
   ],
   "changelogDate": "20201214140442",
@@ -30,5 +37,7 @@
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
 }

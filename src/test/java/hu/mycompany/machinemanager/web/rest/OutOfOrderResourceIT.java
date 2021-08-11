@@ -2,10 +2,12 @@ package hu.mycompany.machinemanager.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import hu.mycompany.machinemanager.MachineManagerApplicationApp;
+import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.domain.OutOfOrder;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
 import hu.mycompany.machinemanager.service.OutOfOrderQueryService;
@@ -15,13 +17,19 @@ import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.OutOfOrderMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link OutOfOrderResource} REST controller.
  */
 @SpringBootTest(classes = MachineManagerApplicationApp.class)
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class OutOfOrderResourceIT {
@@ -44,8 +53,14 @@ public class OutOfOrderResourceIT {
     @Autowired
     private OutOfOrderRepository outOfOrderRepository;
 
+    @Mock
+    private OutOfOrderRepository outOfOrderRepositoryMock;
+
     @Autowired
     private OutOfOrderMapper outOfOrderMapper;
+
+    @Mock
+    private OutOfOrderService outOfOrderServiceMock;
 
     @Autowired
     private OutOfOrderService outOfOrderService;
@@ -183,6 +198,24 @@ public class OutOfOrderResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(outOfOrder.getId().intValue())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public void getAllOutOfOrdersWithEagerRelationshipsIsEnabled() throws Exception {
+        when(outOfOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restOutOfOrderMockMvc.perform(get("/api/out-of-orders?eagerload=true")).andExpect(status().isOk());
+
+        verify(outOfOrderServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public void getAllOutOfOrdersWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(outOfOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restOutOfOrderMockMvc.perform(get("/api/out-of-orders?eagerload=true")).andExpect(status().isOk());
+
+        verify(outOfOrderServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -399,6 +432,25 @@ public class OutOfOrderResourceIT {
 
         // Get all the outOfOrderList where description does not contain UPDATED_DESCRIPTION
         defaultOutOfOrderShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOutOfOrdersByMachineIsEqualToSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+        Machine machine = MachineResourceIT.createEntity(em);
+        em.persist(machine);
+        em.flush();
+        outOfOrder.addMachine(machine);
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+        Long machineId = machine.getId();
+
+        // Get all the outOfOrderList where machine equals to machineId
+        defaultOutOfOrderShouldBeFound("machineId.equals=" + machineId);
+
+        // Get all the outOfOrderList where machine equals to machineId + 1
+        defaultOutOfOrderShouldNotBeFound("machineId.equals=" + (machineId + 1));
     }
 
     /**

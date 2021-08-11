@@ -16,7 +16,12 @@
       "detail": {
         "title": "Job"
       },
-      "name": "Name",
+      "estimation": "Estimation",
+      "productCount": "Product Count",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "fact": "Fact",
+      "product": "Product",
       "machine": "Machine"
     }
   }

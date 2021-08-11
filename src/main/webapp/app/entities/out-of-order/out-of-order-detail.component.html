@@ -16,6 +16,12 @@
                 <dd>
                     <span>{{ outOfOrder.description }}</span>
                 </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.machine">Machine</span></dt>
+                <dd>
+                    <span *ngFor="let machine of outOfOrder.machines; let last = last">
+                        <a [routerLink]="['/machine', machine?.id, 'view']">{{ machine.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
             </dl>
 
             <button type="submit"

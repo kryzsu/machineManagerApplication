@@ -7,8 +7,9 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link OutOfOrder} and its DTO {@link OutOfOrderDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = { MachineMapper.class })
 public interface OutOfOrderMapper extends EntityMapper<OutOfOrderDTO, OutOfOrder> {
+    @Mapping(target = "removeMachine", ignore = true)
     default OutOfOrder fromId(Long id) {
         if (id == null) {
             return null;

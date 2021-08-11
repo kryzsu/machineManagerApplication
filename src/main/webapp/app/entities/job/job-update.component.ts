@@ -7,8 +7,12 @@ import { Observable } from 'rxjs';
 
 import { IJob, Job } from 'app/shared/model/job.model';
 import { JobService } from './job.service';
+import { IProduct } from 'app/shared/model/product.model';
+import { ProductService } from 'app/entities/product/product.service';
 import { IMachine } from 'app/shared/model/machine.model';
 import { MachineService } from 'app/entities/machine/machine.service';
+
+type SelectableEntity = IProduct | IMachine;
 
 @Component({
   selector: 'jhi-job-update',
@@ -16,16 +20,25 @@ import { MachineService } from 'app/entities/machine/machine.service';
 })
 export class JobUpdateComponent implements OnInit {
   isSaving = false;
+  products: IProduct[] = [];
   machines: IMachine[] = [];
+  startDateDp: any;
+  endDateDp: any;
 
   editForm = this.fb.group({
     id: [],
-    name: [null, [Validators.required]],
-    machine: [],
+    estimation: [],
+    productCount: [null, [Validators.required]],
+    startDate: [],
+    endDate: [],
+    fact: [],
+    products: [],
+    machineId: [],
   });
 
   constructor(
     protected jobService: JobService,
+    protected productService: ProductService,
     protected machineService: MachineService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -35,6 +48,8 @@ export class JobUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ job }) => {
       this.updateForm(job);
 
+      this.productService.query().subscribe((res: HttpResponse<IProduct[]>) => (this.products = res.body || []));
+
       this.machineService.query().subscribe((res: HttpResponse<IMachine[]>) => (this.machines = res.body || []));
     });
   }
@@ -42,8 +57,13 @@ export class JobUpdateComponent implements OnInit {
   updateForm(job: IJob): void {
     this.editForm.patchValue({
       id: job.id,
-      name: job.name,
-      machine: job.machine,
+      estimation: job.estimation,
+      productCount: job.productCount,
+      startDate: job.startDate,
+      endDate: job.endDate,
+      fact: job.fact,
+      products: job.products,
+      machineId: job.machineId,
     });
   }
 
@@ -65,8 +85,13 @@ export class JobUpdateComponent implements OnInit {
     return {
       ...new Job(),
       id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      machine: this.editForm.get(['machine'])!.value,
+      estimation: this.editForm.get(['estimation'])!.value,
+      productCount: this.editForm.get(['productCount'])!.value,
+      startDate: this.editForm.get(['startDate'])!.value,
+      endDate: this.editForm.get(['endDate'])!.value,
+      fact: this.editForm.get(['fact'])!.value,
+      products: this.editForm.get(['products'])!.value,
+      machineId: this.editForm.get(['machineId'])!.value,
     };
   }
 
@@ -86,7 +111,18 @@ export class JobUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IMachine): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
+  }
+
+  getSelected(selectedVals: IProduct[], option: IProduct): IProduct {
+    if (selectedVals) {
+      for (let i = 0; i < selectedVals.length; i++) {
+        if (option.id === selectedVals[i].id) {
+          return selectedVals[i];
+        }
+      }
+    }
+    return option;
   }
 }

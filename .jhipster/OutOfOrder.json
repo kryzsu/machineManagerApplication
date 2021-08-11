@@ -1,7 +1,16 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "machine",
+      "otherEntityName": "machine",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "name",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "outOfOrder"
+    }
+  ],
   "fields": [
     {
       "fieldName": "date",

@@ -29,20 +29,73 @@ export class JobUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
-  nameInput = element(by.id('field_name'));
+  estimationInput = element(by.id('field_estimation'));
+  productCountInput = element(by.id('field_productCount'));
+  startDateInput = element(by.id('field_startDate'));
+  endDateInput = element(by.id('field_endDate'));
+  factInput = element(by.id('field_fact'));
 
+  productSelect = element(by.id('field_product'));
   machineSelect = element(by.id('field_machine'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
   }
 
-  async setNameInput(name: string): Promise<void> {
-    await this.nameInput.sendKeys(name);
+  async setEstimationInput(estimation: string): Promise<void> {
+    await this.estimationInput.sendKeys(estimation);
   }
 
-  async getNameInput(): Promise<string> {
-    return await this.nameInput.getAttribute('value');
+  async getEstimationInput(): Promise<string> {
+    return await this.estimationInput.getAttribute('value');
+  }
+
+  async setProductCountInput(productCount: string): Promise<void> {
+    await this.productCountInput.sendKeys(productCount);
+  }
+
+  async getProductCountInput(): Promise<string> {
+    return await this.productCountInput.getAttribute('value');
+  }
+
+  async setStartDateInput(startDate: string): Promise<void> {
+    await this.startDateInput.sendKeys(startDate);
+  }
+
+  async getStartDateInput(): Promise<string> {
+    return await this.startDateInput.getAttribute('value');
+  }
+
+  async setEndDateInput(endDate: string): Promise<void> {
+    await this.endDateInput.sendKeys(endDate);
+  }
+
+  async getEndDateInput(): Promise<string> {
+    return await this.endDateInput.getAttribute('value');
+  }
+
+  async setFactInput(fact: string): Promise<void> {
+    await this.factInput.sendKeys(fact);
+  }
+
+  async getFactInput(): Promise<string> {
+    return await this.factInput.getAttribute('value');
+  }
+
+  async productSelectLastOption(): Promise<void> {
+    await this.productSelect.all(by.tagName('option')).last().click();
+  }
+
+  async productSelectOption(option: string): Promise<void> {
+    await this.productSelect.sendKeys(option);
+  }
+
+  getProductSelect(): ElementFinder {
+    return this.productSelect;
+  }
+
+  async getProductSelectedOption(): Promise<string> {
+    return await this.productSelect.element(by.css('option:checked')).getText();
   }
 
   async machineSelectLastOption(): Promise<void> {

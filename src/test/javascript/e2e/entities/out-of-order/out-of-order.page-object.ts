@@ -32,6 +32,8 @@ export class OutOfOrderUpdatePage {
   dateInput = element(by.id('field_date'));
   descriptionInput = element(by.id('field_description'));
 
+  machineSelect = element(by.id('field_machine'));
+
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
   }
@@ -50,6 +52,22 @@ export class OutOfOrderUpdatePage {
 
   async getDescriptionInput(): Promise<string> {
     return await this.descriptionInput.getAttribute('value');
+  }
+
+  async machineSelectLastOption(): Promise<void> {
+    await this.machineSelect.all(by.tagName('option')).last().click();
+  }
+
+  async machineSelectOption(option: string): Promise<void> {
+    await this.machineSelect.sendKeys(option);
+  }
+
+  getMachineSelect(): ElementFinder {
+    return this.machineSelect;
+  }
+
+  async getMachineSelectedOption(): Promise<string> {
+    return await this.machineSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

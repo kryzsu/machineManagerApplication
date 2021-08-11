@@ -26,6 +26,13 @@ public interface OutOfOrderService {
     Page<OutOfOrderDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the outOfOrders with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    Page<OutOfOrderDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" outOfOrder.
      *
      * @param id the id of the entity.

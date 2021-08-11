@@ -40,6 +40,7 @@ export const machineRoute: Routes = [
     component: MachineComponent,
     data: {
       authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'machineManagerApplicationApp.machine.home.title',
     },
     canActivate: [UserRouteAccessService],

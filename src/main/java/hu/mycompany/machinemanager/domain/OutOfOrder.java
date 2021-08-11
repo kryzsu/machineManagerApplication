@@ -2,6 +2,8 @@ package hu.mycompany.machinemanager.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -28,6 +30,15 @@ public class OutOfOrder implements Serializable {
     @Size(min = 5)
     @Column(name = "description", nullable = false)
     private String description;
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinTable(
+        name = "out_of_order_machine",
+        joinColumns = @JoinColumn(name = "out_of_order_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "machine_id", referencedColumnName = "id")
+    )
+    private Set<Machine> machines = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -62,6 +73,31 @@ public class OutOfOrder implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Machine> getMachines() {
+        return machines;
+    }
+
+    public OutOfOrder machines(Set<Machine> machines) {
+        this.machines = machines;
+        return this;
+    }
+
+    public OutOfOrder addMachine(Machine machine) {
+        this.machines.add(machine);
+        machine.getOutOfOrders().add(this);
+        return this;
+    }
+
+    public OutOfOrder removeMachine(Machine machine) {
+        this.machines.remove(machine);
+        machine.getOutOfOrders().remove(this);
+        return this;
+    }
+
+    public void setMachines(Set<Machine> machines) {
+        this.machines = machines;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

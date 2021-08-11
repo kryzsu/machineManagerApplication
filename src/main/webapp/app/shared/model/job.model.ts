@@ -1,11 +1,28 @@
-import { IMachine } from 'app/shared/model/machine.model';
+import { Moment } from 'moment';
+import { IProduct } from 'app/shared/model/product.model';
 
 export interface IJob {
   id?: number;
-  name?: string;
-  machine?: IMachine;
+  estimation?: number;
+  productCount?: number;
+  startDate?: Moment;
+  endDate?: Moment;
+  fact?: number;
+  products?: IProduct[];
+  machineName?: string;
+  machineId?: number;
 }
 
 export class Job implements IJob {
-  constructor(public id?: number, public name?: string, public machine?: IMachine) {}
+  constructor(
+    public id?: number,
+    public estimation?: number,
+    public productCount?: number,
+    public startDate?: Moment,
+    public endDate?: Moment,
+    public fact?: number,
+    public products?: IProduct[],
+    public machineName?: string,
+    public machineId?: number
+  ) {}
 }

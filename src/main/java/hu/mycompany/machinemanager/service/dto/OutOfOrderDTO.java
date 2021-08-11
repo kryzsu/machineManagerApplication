@@ -2,6 +2,8 @@ package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import javax.validation.constraints.*;
 
 /**
@@ -16,6 +18,8 @@ public class OutOfOrderDTO implements Serializable {
     @NotNull
     @Size(min = 5)
     private String description;
+
+    private Set<MachineDTO> machines = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -39,6 +43,14 @@ public class OutOfOrderDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<MachineDTO> getMachines() {
+        return machines;
+    }
+
+    public void setMachines(Set<MachineDTO> machines) {
+        this.machines = machines;
     }
 
     @Override
@@ -65,6 +77,7 @@ public class OutOfOrderDTO implements Serializable {
             "id=" + getId() +
             ", date='" + getDate() + "'" +
             ", description='" + getDescription() + "'" +
+            ", machines='" + getMachines() + "'" +
             "}";
     }
 }

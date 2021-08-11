@@ -28,6 +28,17 @@
 
     <changeSet id="20210811182927-1-relations" author="jhipster">
 
+        <createTable tableName="out_of_order_machine">
+            <column name="machine_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="out_of_order_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="out_of_order_id, machine_id" tableName="out_of_order_machine"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
