@@ -9,6 +9,7 @@
         "main": "Entities",
         "machine": "Machine",
         "job": "Job",
+        "outOfOrder": "Out Of Order",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
