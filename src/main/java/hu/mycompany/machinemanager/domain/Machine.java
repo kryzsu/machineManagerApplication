@@ -1,14 +1,14 @@
 package hu.mycompany.machinemanager.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Machine.
@@ -32,8 +32,18 @@ public class Machine implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "create_date_time")
+    private ZonedDateTime createDateTime;
+
+    @Column(name = "update_date_time")
+    private ZonedDateTime updateDateTime;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @OneToMany(mappedBy = "machine")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "workeds", "machine" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -45,8 +55,13 @@ public class Machine implements Serializable {
         this.id = id;
     }
 
+    public Machine id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Machine name(String name) {
@@ -59,7 +74,7 @@ public class Machine implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Machine description(String description) {
@@ -71,12 +86,51 @@ public class Machine implements Serializable {
         this.description = description;
     }
 
+    public ZonedDateTime getCreateDateTime() {
+        return this.createDateTime;
+    }
+
+    public Machine createDateTime(ZonedDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+        return this;
+    }
+
+    public void setCreateDateTime(ZonedDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public ZonedDateTime getUpdateDateTime() {
+        return this.updateDateTime;
+    }
+
+    public Machine updateDateTime(ZonedDateTime updateDateTime) {
+        this.updateDateTime = updateDateTime;
+        return this;
+    }
+
+    public void setUpdateDateTime(ZonedDateTime updateDateTime) {
+        this.updateDateTime = updateDateTime;
+    }
+
+    public Boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public Machine deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Set<Job> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public Machine jobs(Set<Job> jobs) {
-        this.jobs = jobs;
+        this.setJobs(jobs);
         return this;
     }
 
@@ -93,8 +147,15 @@ public class Machine implements Serializable {
     }
 
     public void setJobs(Set<Job> jobs) {
+        if (this.jobs != null) {
+            this.jobs.forEach(i -> i.setMachine(null));
+        }
+        if (jobs != null) {
+            jobs.forEach(i -> i.setMachine(this));
+        }
         this.jobs = jobs;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -110,7 +171,8 @@ public class Machine implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -120,6 +182,9 @@ public class Machine implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", createDateTime='" + getCreateDateTime() + "'" +
+            ", updateDateTime='" + getUpdateDateTime() + "'" +
+            ", deleted='" + getDeleted() + "'" +
             "}";
     }
 }

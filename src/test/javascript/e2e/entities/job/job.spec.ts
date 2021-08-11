@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as ec, promise } from 'protractor';
+import { browser, ExpectedConditions as ec, protractor, promise } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { JobComponentsPage, JobDeleteDialog, JobUpdatePage } from './job.page-object';
@@ -11,12 +11,14 @@ describe('Job e2e test', () => {
   let jobComponentsPage: JobComponentsPage;
   let jobUpdatePage: JobUpdatePage;
   let jobDeleteDialog: JobDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -40,9 +42,21 @@ describe('Job e2e test', () => {
 
     await jobComponentsPage.clickOnCreateButton();
 
-    await promise.all([jobUpdatePage.setNameInput('name'), jobUpdatePage.machineSelectLastOption()]);
-
-    expect(await jobUpdatePage.getNameInput()).to.eq('name', 'Expected Name value to be equals to name');
+    await promise.all([
+      jobUpdatePage.setCustomerNameInput('customerName'),
+      jobUpdatePage.setDaysInput('5'),
+      jobUpdatePage.setProductNameInput('productName'),
+      jobUpdatePage.setCountInput('5'),
+      jobUpdatePage.setProductTypeInput('productType'),
+      jobUpdatePage.setCommentInput('comment'),
+      jobUpdatePage.setCreateDateTimeInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+      jobUpdatePage.setUpdateDateTimeInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+      jobUpdatePage.getDeletedInput().click(),
+      jobUpdatePage.getInProgressInput().click(),
+      jobUpdatePage.setDaysDoneInput('5'),
+      // jobUpdatePage.workedSelectLastOption(),
+      jobUpdatePage.machineSelectLastOption(),
+    ]);
 
     await jobUpdatePage.save();
     expect(await jobUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -57,6 +71,7 @@ describe('Job e2e test', () => {
     jobDeleteDialog = new JobDeleteDialog();
     expect(await jobDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.job.delete.question');
     await jobDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(jobComponentsPage.title), 5000);
 
     expect(await jobComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

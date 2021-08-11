@@ -11,12 +11,14 @@ describe('Holiday e2e test', () => {
   let holidayComponentsPage: HolidayComponentsPage;
   let holidayUpdatePage: HolidayUpdatePage;
   let holidayDeleteDialog: HolidayDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -40,10 +42,11 @@ describe('Holiday e2e test', () => {
 
     await holidayComponentsPage.clickOnCreateButton();
 
-    await promise.all([holidayUpdatePage.setDayInput('2000-12-31'), holidayUpdatePage.setCommentInput('comment')]);
-
-    expect(await holidayUpdatePage.getDayInput()).to.eq('2000-12-31', 'Expected day value to be equals to 2000-12-31');
-    expect(await holidayUpdatePage.getCommentInput()).to.eq('comment', 'Expected Comment value to be equals to comment');
+    await promise.all([
+      holidayUpdatePage.setDayInput('2000-12-31'),
+      holidayUpdatePage.setCommentInput('comment'),
+      holidayUpdatePage.getDeletedInput().click(),
+    ]);
 
     await holidayUpdatePage.save();
     expect(await holidayUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
@@ -58,6 +61,7 @@ describe('Holiday e2e test', () => {
     holidayDeleteDialog = new HolidayDeleteDialog();
     expect(await holidayDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.holiday.delete.question');
     await holidayDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(holidayComponentsPage.title), 5000);
 
     expect(await holidayComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

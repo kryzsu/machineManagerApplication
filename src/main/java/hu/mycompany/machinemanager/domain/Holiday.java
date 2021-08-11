@@ -13,6 +13,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "holiday")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Holiday implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -25,6 +26,9 @@ public class Holiday implements Serializable {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -34,8 +38,13 @@ public class Holiday implements Serializable {
         this.id = id;
     }
 
+    public Holiday id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LocalDate getDay() {
-        return day;
+        return this.day;
     }
 
     public Holiday day(LocalDate day) {
@@ -48,7 +57,7 @@ public class Holiday implements Serializable {
     }
 
     public String getComment() {
-        return comment;
+        return this.comment;
     }
 
     public Holiday comment(String comment) {
@@ -58,6 +67,19 @@ public class Holiday implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Boolean getDeleted() {
+        return this.deleted;
+    }
+
+    public Holiday deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -75,7 +97,8 @@ public class Holiday implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -85,6 +108,7 @@ public class Holiday implements Serializable {
             "id=" + getId() +
             ", day='" + getDay() + "'" +
             ", comment='" + getComment() + "'" +
+            ", deleted='" + getDeleted() + "'" +
             "}";
     }
 }

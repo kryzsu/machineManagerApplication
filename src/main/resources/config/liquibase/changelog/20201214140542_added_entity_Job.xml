@@ -3,32 +3,73 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
-        <property name="autoIncrement" value="true"/>
 
     <!--
         Added the entity Job.
     -->
     <changeSet id="20201214140542-1" author="jhipster">
         <createTable tableName="job">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="customer_name" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+            <column name="days" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="product_name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="count" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="product_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="comment" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="create_date_time" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="update_date_time" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="deleted" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="in_progress" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="days_done" type="integer">
+                <constraints nullable="true" />
             </column>
             <column name="machine_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="job" columnName="create_date_time" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="job" columnName="update_date_time" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <changeSet id="20201214140542-1-relations" author="jhipster">
 
+        <createTable tableName="rel_job__worked">
+            <column name="worked_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="job_id, worked_id" tableName="rel_job__worked"/>
     </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--
@@ -45,9 +86,18 @@
                   separator=";"
                   tableName="job">
             <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
+            <column name="customer_name" type="string"/>
+            <column name="days" type="numeric"/>
+            <column name="product_name" type="string"/>
+            <column name="count" type="numeric"/>
+            <column name="product_type" type="string"/>
+            <column name="comment" type="string"/>
+            <column name="create_date_time" type="${datetimeType}"/>
+            <column name="update_date_time" type="${datetimeType}"/>
+            <column name="deleted" type="boolean"/>
+            <column name="in_progress" type="boolean"/>
+            <column name="days_done" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>
-
 </databaseChangeLog>

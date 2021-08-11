@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { MachineManagerApplicationSharedModule } from 'app/shared/shared.module';
-import { HolidayComponent } from './holiday.component';
-import { HolidayDetailComponent } from './holiday-detail.component';
-import { HolidayUpdateComponent } from './holiday-update.component';
-import { HolidayDeleteDialogComponent } from './holiday-delete-dialog.component';
-import { holidayRoute } from './holiday.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { HolidayComponent } from './list/holiday.component';
+import { HolidayDetailComponent } from './detail/holiday-detail.component';
+import { HolidayUpdateComponent } from './update/holiday-update.component';
+import { HolidayDeleteDialogComponent } from './delete/holiday-delete-dialog.component';
+import { HolidayRoutingModule } from './route/holiday-routing.module';
 
 @NgModule({
-  imports: [MachineManagerApplicationSharedModule, RouterModule.forChild(holidayRoute)],
+  imports: [SharedModule, HolidayRoutingModule],
   declarations: [HolidayComponent, HolidayDetailComponent, HolidayUpdateComponent, HolidayDeleteDialogComponent],
   entryComponents: [HolidayDeleteDialogComponent],
 })
-export class MachineManagerApplicationHolidayModule {}
+export class HolidayModule {}

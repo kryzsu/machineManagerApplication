@@ -29,11 +29,23 @@ export class MachineUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   nameInput = element(by.id('field_name'));
   descriptionInput = element(by.id('field_description'));
+  createDateTimeInput = element(by.id('field_createDateTime'));
+  updateDateTimeInput = element(by.id('field_updateDateTime'));
+  deletedInput = element(by.id('field_deleted'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setNameInput(name: string): Promise<void> {
@@ -50,6 +62,26 @@ export class MachineUpdatePage {
 
   async getDescriptionInput(): Promise<string> {
     return await this.descriptionInput.getAttribute('value');
+  }
+
+  async setCreateDateTimeInput(createDateTime: string): Promise<void> {
+    await this.createDateTimeInput.sendKeys(createDateTime);
+  }
+
+  async getCreateDateTimeInput(): Promise<string> {
+    return await this.createDateTimeInput.getAttribute('value');
+  }
+
+  async setUpdateDateTimeInput(updateDateTime: string): Promise<void> {
+    await this.updateDateTimeInput.sendKeys(updateDateTime);
+  }
+
+  async getUpdateDateTimeInput(): Promise<string> {
+    return await this.updateDateTimeInput.getAttribute('value');
+  }
+
+  getDeletedInput(): ElementFinder {
+    return this.deletedInput;
   }
 
   async save(): Promise<void> {

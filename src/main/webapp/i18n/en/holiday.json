@@ -3,6 +3,7 @@
     "holiday": {
       "home": {
         "title": "Holidays",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Holiday",
         "createOrEditLabel": "Create or edit a Holiday",
         "notFound": "No Holidays found"
@@ -16,8 +17,10 @@
       "detail": {
         "title": "Holiday"
       },
+      "id": "ID",
       "day": "Day",
-      "comment": "Comment"
+      "comment": "Comment",
+      "deleted": "Deleted"
     }
   }
 }

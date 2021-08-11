@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hu.mycompany.machinemanager.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class HolidayTest {
+class HolidayTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Holiday.class);
         Holiday holiday1 = new Holiday();
         holiday1.setId(1L);

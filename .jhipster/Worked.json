@@ -1,0 +1,32 @@
+{
+  "name": "Worked",
+  "fields": [
+    {
+      "fieldName": "day",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "job",
+      "otherEntityRelationshipName": "worked",
+      "relationshipName": "job",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "worked",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210811124005"
+}

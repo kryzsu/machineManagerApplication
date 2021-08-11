@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="job">
+      <h2 data-cy="jobDetailsHeading"><span jhiTranslate="machineManagerApplicationApp.job.detail.title">Job</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ job.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.customerName">Customer Name</span></dt>
+        <dd>
+          <span>{{ job.customerName }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.days">Days</span></dt>
+        <dd>
+          <span>{{ job.days }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.productName">Product Name</span></dt>
+        <dd>
+          <span>{{ job.productName }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.count">Count</span></dt>
+        <dd>
+          <span>{{ job.count }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.productType">Product Type</span></dt>
+        <dd>
+          <span>{{ job.productType }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.comment">Comment</span></dt>
+        <dd>
+          <span>{{ job.comment }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.createDateTime">Create Date Time</span></dt>
+        <dd>
+          <span>{{ job.createDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.updateDateTime">Update Date Time</span></dt>
+        <dd>
+          <span>{{ job.updateDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.deleted">Deleted</span></dt>
+        <dd>
+          <span>{{ job.deleted }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.inProgress">In Progress</span></dt>
+        <dd>
+          <span>{{ job.inProgress }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.daysDone">Days Done</span></dt>
+        <dd>
+          <span>{{ job.daysDone }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.worked">Worked</span></dt>
+        <dd>
+          <span *ngFor="let worked of job.workeds; let last = last">
+            <a [routerLink]="['/worked', worked?.id, 'view']">{{ worked.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span></dt>
+        <dd>
+          <div *ngIf="job.machine">
+            <a [routerLink]="['/machine', job.machine?.id, 'view']">{{ job.machine?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/job', job.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

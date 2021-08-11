@@ -1,13 +1,14 @@
 package hu.mycompany.machinemanager.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import hu.mycompany.machinemanager.web.rest.TestUtil;
 
-public class MachineTest {
+import hu.mycompany.machinemanager.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class MachineTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Machine.class);
         Machine machine1 = new Machine();
         machine1.setId(1L);

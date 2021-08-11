@@ -3,21 +3,21 @@ package hu.mycompany.machinemanager.web.rest;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link hu.mycompany.machinemanager.domain.Machine}.
@@ -54,30 +54,103 @@ public class MachineResource {
             throw new BadRequestAlertException("A new machine cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Machine result = machineRepository.save(machine);
-        return ResponseEntity.created(new URI("/api/machines/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/machines/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /machines} : Updates an existing machine.
+     * {@code PUT  /machines/:id} : Updates an existing machine.
      *
+     * @param id the id of the machine to save.
      * @param machine the machine to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated machine,
      * or with status {@code 400 (Bad Request)} if the machine is not valid,
      * or with status {@code 500 (Internal Server Error)} if the machine couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/machines")
-    public ResponseEntity<Machine> updateMachine(@Valid @RequestBody Machine machine) throws URISyntaxException {
-        log.debug("REST request to update Machine : {}", machine);
+    @PutMapping("/machines/{id}")
+    public ResponseEntity<Machine> updateMachine(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Machine machine
+    ) throws URISyntaxException {
+        log.debug("REST request to update Machine : {}, {}", id, machine);
         if (machine.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, machine.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!machineRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Machine result = machineRepository.save(machine);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, machine.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /machines/:id} : Partial updates given fields of an existing machine, field will ignore if it is null
+     *
+     * @param id the id of the machine to save.
+     * @param machine the machine to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated machine,
+     * or with status {@code 400 (Bad Request)} if the machine is not valid,
+     * or with status {@code 404 (Not Found)} if the machine is not found,
+     * or with status {@code 500 (Internal Server Error)} if the machine couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/machines/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Machine> partialUpdateMachine(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Machine machine
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Machine partially : {}, {}", id, machine);
+        if (machine.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, machine.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!machineRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<Machine> result = machineRepository
+            .findById(machine.getId())
+            .map(
+                existingMachine -> {
+                    if (machine.getName() != null) {
+                        existingMachine.setName(machine.getName());
+                    }
+                    if (machine.getDescription() != null) {
+                        existingMachine.setDescription(machine.getDescription());
+                    }
+                    if (machine.getCreateDateTime() != null) {
+                        existingMachine.setCreateDateTime(machine.getCreateDateTime());
+                    }
+                    if (machine.getUpdateDateTime() != null) {
+                        existingMachine.setUpdateDateTime(machine.getUpdateDateTime());
+                    }
+                    if (machine.getDeleted() != null) {
+                        existingMachine.setDeleted(machine.getDeleted());
+                    }
+
+                    return existingMachine;
+                }
+            )
+            .map(machineRepository::save);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, machine.getId().toString())
+        );
     }
 
     /**
@@ -114,6 +187,9 @@ public class MachineResource {
     public ResponseEntity<Void> deleteMachine(@PathVariable Long id) {
         log.debug("REST request to delete Machine : {}", id);
         machineRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

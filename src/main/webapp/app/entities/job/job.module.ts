@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { MachineManagerApplicationSharedModule } from 'app/shared/shared.module';
-import { JobComponent } from './job.component';
-import { JobDetailComponent } from './job-detail.component';
-import { JobUpdateComponent } from './job-update.component';
-import { JobDeleteDialogComponent } from './job-delete-dialog.component';
-import { jobRoute } from './job.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { JobComponent } from './list/job.component';
+import { JobDetailComponent } from './detail/job-detail.component';
+import { JobUpdateComponent } from './update/job-update.component';
+import { JobDeleteDialogComponent } from './delete/job-delete-dialog.component';
+import { JobRoutingModule } from './route/job-routing.module';
 
 @NgModule({
-  imports: [MachineManagerApplicationSharedModule, RouterModule.forChild(jobRoute)],
+  imports: [SharedModule, JobRoutingModule],
   declarations: [JobComponent, JobDetailComponent, JobUpdateComponent, JobDeleteDialogComponent],
   entryComponents: [JobDeleteDialogComponent],
 })
-export class MachineManagerApplicationJobModule {}
+export class JobModule {}

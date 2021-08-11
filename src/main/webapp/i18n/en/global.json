@@ -10,6 +10,7 @@
         "machine": "Machine",
         "job": "Job",
         "holiday": "Holiday",
+        "worked": "Worked",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

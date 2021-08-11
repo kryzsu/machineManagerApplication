@@ -10,15 +10,22 @@
     {
       "fieldName": "comment",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "deleted",
+      "fieldType": "Boolean"
     }
   ],
   "changelogDate": "20210811123119",
-  "dto": "mapstruct",
+  "dto": "no",
   "searchEngine": false,
-  "service": "serviceImpl",
+  "service": "no",
   "entityTableName": "holiday",
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "pagination"
+  "pagination": "no",
+  "name": "Holiday",
+  "embedded": false,
+  "applications": "*"
 }

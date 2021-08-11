@@ -17,6 +17,7 @@
     <include file="config/liquibase/changelog/20201214140442_added_entity_Machine.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201214140542_added_entity_Job.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210811123119_added_entity_Holiday.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210811124005_added_entity_Worked.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201214140542_added_entity_constraints_Job.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

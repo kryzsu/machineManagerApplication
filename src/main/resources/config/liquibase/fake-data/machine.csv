@@ -1,4 +1,11 @@
-id;name;description
-1;masina 1;Teszt masina készülék
-2;masina 2;Teszt masina készülék 2
-3;masina 3;Teszt masina készülék 3
+id;name;description;create_date_time;update_date_time;deleted
+1;sensor Loan Avon;Handmade synthesizing primary;2020-12-14T01:38:17;2020-12-13T17:50:20;false
+2;Gorgeous;non-volatile success;2020-12-14T06:13:50;2020-12-13T18:58:45;true
+3;deposit reboot;Checking Front-line Cotton;2020-12-14T10:16:14;2020-12-14T11:41:03;true
+4;Micronesia array;Analyst Bike Cambridgeshire;2020-12-14T02:43:44;2020-12-13T14:06:22;false
+5;incentivize;invoice;2020-12-14T10:23:39;2020-12-13T22:05:39;true
+6;contingency Outdoors Vermont;Rubber Dynamic Iceland;2020-12-14T09:10:24;2020-12-14T08:28:43;true
+7;benchmark;Buckinghamshire Credit;2020-12-14T12:37:23;2020-12-14T08:46:21;true
+8;Technician quantifying Rapid;Plastic;2020-12-14T05:41:21;2020-12-14T09:07:13;true
+9;Bike Engineer Mississippi;interactive JBOD;2020-12-13T20:58:37;2020-12-14T03:54:04;false
+10;Handmade quantifying;modular Intelligent District;2020-12-14T10:58:23;2020-12-14T01:54:40;true

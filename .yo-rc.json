@@ -37,7 +37,8 @@
     "otherModules": [],
     "blueprints": [],
     "prettierJava": true,
-    "lastLiquibaseTimestamp": 1628685079000
+    "lastLiquibaseTimestamp": 1628685605000,
+    "entities": ["Machine", "Job", "Holiday", "Worked"]
   },
   "git-provider": "GitHub",
   "git-company": "kryzsu",

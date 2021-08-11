@@ -29,11 +29,21 @@ export class HolidayUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   dayInput = element(by.id('field_day'));
   commentInput = element(by.id('field_comment'));
+  deletedInput = element(by.id('field_deleted'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setDayInput(day: string): Promise<void> {
@@ -50,6 +60,10 @@ export class HolidayUpdatePage {
 
   async getCommentInput(): Promise<string> {
     return await this.commentInput.getAttribute('value');
+  }
+
+  getDeletedInput(): ElementFinder {
+    return this.deletedInput;
   }
 
   async save(): Promise<void> {
