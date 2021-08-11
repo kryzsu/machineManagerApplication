@@ -3,12 +3,45 @@
 entity Machine {
 	name String required
 	description String required
+    createDateTime ZonedDateTime
+    updateDateTime ZonedDateTime
+    deleted Boolean
 }
 
 entity Job {
-	name String required
+	customerName String required
+    days Integer required
+	productName String required
+    count Integer required
+    productType String
+    comment String
+    createDateTime ZonedDateTime
+    updateDateTime ZonedDateTime
+    deleted Boolean
+    inProgress Boolean
+    daysDone Integer
+}
+
+entity Holiday {
+	day LocalDate
+    comment String
+    deleted Boolean
+}
+
+entity Worked {
+	day LocalDate
+    comment String
+}
+
+relationship ManyToMany {
+	Job to Worked
+}
+
+
+relationship OneToMany {
+	Machine to Job
 }
 
 relationship OneToMany {
-  Machine to Job
+	Machine to Job
 }
