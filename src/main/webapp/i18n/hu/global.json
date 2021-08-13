@@ -36,7 +36,8 @@
         "database": "Adatbázis",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
-      "language": "Nyelvek"
+      "language": "Nyelvek",
+      "calendar": "calendar"
     },
     "form": {
       "username.label": "Azonosító",
