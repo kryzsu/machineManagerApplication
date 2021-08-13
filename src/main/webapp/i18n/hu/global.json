@@ -37,7 +37,7 @@
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
       "language": "Nyelvek",
-      "calendar": "calendar"
+      "perspective": "Perspektiva"
     },
     "form": {
       "username.label": "Azonosító",
