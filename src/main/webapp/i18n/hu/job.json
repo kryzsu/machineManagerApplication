@@ -1,0 +1,29 @@
+{
+  "machineManagerApplicationApp": {
+    "job": {
+      "home": {
+        "title": "Feladatok",
+        "createLabel": "Egy új Feladat létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Feladatot",
+        "notFound": "Nincs ilyen Feladat"
+      },
+      "created": "Egy új Feladat lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Feladat módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Feladat törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Feladatot {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Feladat"
+      },
+      "estimation": "Becslés (nap)",
+      "productCount": "Termékek száma",
+      "startDate": "Kezdés dátuma",
+      "endDate": "Befejezés dátuma",
+      "fact": "Tény (nap)",
+      "orderNumber": "Megrendelés szám",
+      "product": "Termék",
+      "machine": "Munkagép"
+    }
+  }
+}

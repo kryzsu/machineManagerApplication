@@ -19,7 +19,8 @@
       "name": "Name",
       "description": "Description",
       "outOfOrder": "Out Of Order",
-      "job": "Job"
+      "job": "Job",
+      "view": "View"
     }
   }
 }

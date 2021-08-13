@@ -13,6 +13,8 @@ public interface MachineMapper extends EntityMapper<MachineDTO, Machine> {
     @Mapping(target = "removeOutOfOrder", ignore = true)
     @Mapping(target = "jobs", ignore = true)
     @Mapping(target = "removeJob", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "removeView", ignore = true)
     Machine toEntity(MachineDTO machineDTO);
 
     default Machine fromId(Long id) {

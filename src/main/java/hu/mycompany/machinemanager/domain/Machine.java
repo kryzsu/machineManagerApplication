@@ -39,6 +39,11 @@ public class Machine implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Job> jobs = new HashSet<>();
 
+    @ManyToMany(mappedBy = "machines")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<View> views = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -122,6 +127,31 @@ public class Machine implements Serializable {
 
     public void setJobs(Set<Job> jobs) {
         this.jobs = jobs;
+    }
+
+    public Set<View> getViews() {
+        return views;
+    }
+
+    public Machine views(Set<View> views) {
+        this.views = views;
+        return this;
+    }
+
+    public Machine addView(View view) {
+        this.views.add(view);
+        view.getMachines().add(this);
+        return this;
+    }
+
+    public Machine removeView(View view) {
+        this.views.remove(view);
+        view.getMachines().remove(this);
+        return this;
+    }
+
+    public void setViews(Set<View> views) {
+        this.views = views;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -1,0 +1,24 @@
+{
+  "machineManagerApplicationApp": {
+    "product": {
+      "home": {
+        "title": "Termékek",
+        "createLabel": "Egy új Termék létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Terméket",
+        "notFound": "Nincs ilyen Termék"
+      },
+      "created": "Egy új Termék lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Termék módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Termék törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Terméket {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Termék"
+      },
+      "name": "Név",
+      "comment": "Megjegyzés",
+      "job": "Feladat"
+    }
+  }
+}

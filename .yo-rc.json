@@ -24,7 +24,7 @@
     "testFrameworks": ["protractor"],
     "enableTranslation": true,
     "nativeLanguage": "en",
-    "languages": ["en"],
+    "languages": ["en", "hu"],
     "clientFramework": "angularX",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "6.10.5",
@@ -37,7 +37,7 @@
     "otherModules": [],
     "blueprints": [],
     "prettierJava": true,
-    "lastLiquibaseTimestamp": 1628706567000
+    "lastLiquibaseTimestamp": 1628842763000
   },
   "git-provider": "GitHub",
   "git-company": "kryzsu",

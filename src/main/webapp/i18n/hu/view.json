@@ -1,0 +1,23 @@
+{
+  "machineManagerApplicationApp": {
+    "view": {
+      "home": {
+        "title": "Nézetek",
+        "createLabel": "Egy új Nézet létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Nézetet",
+        "notFound": "Nincs ilyen Nézet"
+      },
+      "created": "Egy új Nézet lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Nézet módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Nézet törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Nézetet {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Nézet"
+      },
+      "name": "Név",
+      "machine": "Munkagép"
+    }
+  }
+}

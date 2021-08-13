@@ -1,5 +1,6 @@
 import { IOutOfOrder } from 'app/shared/model/out-of-order.model';
 import { IJob } from 'app/shared/model/job.model';
+import { IView } from 'app/shared/model/view.model';
 
 export interface IMachine {
   id?: number;
@@ -7,6 +8,7 @@ export interface IMachine {
   description?: string;
   outOfOrders?: IOutOfOrder[];
   jobs?: IJob[];
+  views?: IView[];
 }
 
 export class Machine implements IMachine {
@@ -15,6 +17,7 @@ export class Machine implements IMachine {
     public name?: string,
     public description?: string,
     public outOfOrders?: IOutOfOrder[],
-    public jobs?: IJob[]
+    public jobs?: IJob[],
+    public views?: IView[]
   ) {}
 }

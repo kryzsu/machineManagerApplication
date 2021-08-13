@@ -1,0 +1,24 @@
+{
+  "machineManagerApplicationApp": {
+    "outOfOrder": {
+      "home": {
+        "title": "Üzemen kívűl",
+        "createLabel": "Egy új Üzemszünet létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Üzemszünetet",
+        "notFound": "Nincs ilyen Üzemszünet"
+      },
+      "created": "Egy új Üzemszünet lett létrehozva {{ param }} azonosítóval",
+      "updated": "Az Üzemszünet módosítva lett {{ param }} azonosítóval",
+      "deleted": "Az Üzemszünet törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Üzemszünetet {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Üzemszünet"
+      },
+      "date": "Dátum",
+      "description": "Leírás",
+      "machine": "Munkagép"
+    }
+  }
+}

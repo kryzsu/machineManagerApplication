@@ -25,6 +25,13 @@
       "otherEntityName": "job",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "machine"
+    },
+    {
+      "relationshipName": "view",
+      "otherEntityName": "view",
+      "relationshipType": "many-to-many",
+      "ownerSide": false,
+      "otherEntityRelationshipName": "machine"
     }
   ],
   "changelogDate": "20201214140442",

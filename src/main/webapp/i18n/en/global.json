@@ -11,6 +11,7 @@
         "job": "Job",
         "outOfOrder": "Out Of Order",
         "product": "Product",
+        "view": "View",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
