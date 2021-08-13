@@ -27,6 +27,7 @@ import {
   faCloud,
   faSignOutAlt,
   faSignInAlt,
+  faCalendar,
   faCalendarAlt,
   faSearch,
   faTrashAlt,
@@ -72,4 +73,5 @@ export const fontAwesomeIcons = [
   faTrashAlt,
   // jhipster-needle-add-icon-import
   faAsterisk,
+  faCalendar,
 ];

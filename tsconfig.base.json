@@ -23,6 +23,7 @@
     "forceConsistentCasingInFileNames": true
   },
   "angularCompilerOptions": {
+    "enableIvy": false,
     "strictInjectionParameters": true,
     "fullTemplateTypeCheck": true,
     "strictTemplates": true,
