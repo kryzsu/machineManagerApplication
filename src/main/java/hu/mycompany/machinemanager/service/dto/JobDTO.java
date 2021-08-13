@@ -23,6 +23,8 @@ public class JobDTO implements Serializable {
 
     private Integer fact;
 
+    private String orderNumber;
+
     private Set<ProductDTO> products = new HashSet<>();
 
     private Long machineId;
@@ -77,6 +79,14 @@ public class JobDTO implements Serializable {
         this.fact = fact;
     }
 
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
     public Set<ProductDTO> getProducts() {
         return products;
     }
@@ -128,6 +138,7 @@ public class JobDTO implements Serializable {
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", fact=" + getFact() +
+            ", orderNumber='" + getOrderNumber() + "'" +
             ", products='" + getProducts() + "'" +
             ", machineId=" + getMachineId() +
             ", machineName='" + getMachineName() + "'" +

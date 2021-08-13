@@ -39,6 +39,9 @@ public class Job implements Serializable {
     @Column(name = "fact")
     private Integer fact;
 
+    @Column(name = "order_number")
+    private String orderNumber;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(
@@ -126,6 +129,19 @@ public class Job implements Serializable {
         this.fact = fact;
     }
 
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public Job orderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+        return this;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
     public Set<Product> getProducts() {
         return products;
     }
@@ -192,6 +208,7 @@ public class Job implements Serializable {
             ", startDate='" + getStartDate() + "'" +
             ", endDate='" + getEndDate() + "'" +
             ", fact=" + getFact() +
+            ", orderNumber='" + getOrderNumber() + "'" +
             "}";
     }
 }

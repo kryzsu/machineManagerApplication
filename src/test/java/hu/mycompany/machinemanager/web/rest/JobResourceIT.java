@@ -55,6 +55,9 @@ public class JobResourceIT {
     private static final Integer DEFAULT_FACT = 1;
     private static final Integer UPDATED_FACT = 2;
 
+    private static final String DEFAULT_ORDER_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_ORDER_NUMBER = "BBBBBBBBBB";
+
     @Autowired
     private JobRepository jobRepository;
 
@@ -90,7 +93,8 @@ public class JobResourceIT {
             .productCount(DEFAULT_PRODUCT_COUNT)
             .startDate(DEFAULT_START_DATE)
             .endDate(DEFAULT_END_DATE)
-            .fact(DEFAULT_FACT);
+            .fact(DEFAULT_FACT)
+            .orderNumber(DEFAULT_ORDER_NUMBER);
         return job;
     }
 
@@ -106,7 +110,8 @@ public class JobResourceIT {
             .productCount(UPDATED_PRODUCT_COUNT)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
-            .fact(UPDATED_FACT);
+            .fact(UPDATED_FACT)
+            .orderNumber(UPDATED_ORDER_NUMBER);
         return job;
     }
 
@@ -134,6 +139,7 @@ public class JobResourceIT {
         assertThat(testJob.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testJob.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(DEFAULT_FACT);
+        assertThat(testJob.getOrderNumber()).isEqualTo(DEFAULT_ORDER_NUMBER);
     }
 
     @Test
@@ -189,7 +195,8 @@ public class JobResourceIT {
             .andExpect(jsonPath("$.[*].productCount").value(hasItem(DEFAULT_PRODUCT_COUNT)))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
-            .andExpect(jsonPath("$.[*].fact").value(hasItem(DEFAULT_FACT)));
+            .andExpect(jsonPath("$.[*].fact").value(hasItem(DEFAULT_FACT)))
+            .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -226,7 +233,8 @@ public class JobResourceIT {
             .andExpect(jsonPath("$.productCount").value(DEFAULT_PRODUCT_COUNT))
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
-            .andExpect(jsonPath("$.fact").value(DEFAULT_FACT));
+            .andExpect(jsonPath("$.fact").value(DEFAULT_FACT))
+            .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER));
     }
 
     @Test
@@ -253,7 +261,8 @@ public class JobResourceIT {
             .productCount(UPDATED_PRODUCT_COUNT)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
-            .fact(UPDATED_FACT);
+            .fact(UPDATED_FACT)
+            .orderNumber(UPDATED_ORDER_NUMBER);
         JobDTO jobDTO = jobMapper.toDto(updatedJob);
 
         restJobMockMvc
@@ -269,6 +278,7 @@ public class JobResourceIT {
         assertThat(testJob.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testJob.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
+        assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
     }
 
     @Test

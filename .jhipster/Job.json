@@ -21,6 +21,10 @@
     {
       "fieldName": "fact",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "orderNumber",
+      "fieldType": "String"
     }
   ],
   "relationships": [

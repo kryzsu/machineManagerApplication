@@ -28,6 +28,7 @@
                     <th scope="col"  jhiSortBy="startDate"><span jhiTranslate="machineManagerApplicationApp.job.startDate">Start Date</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="endDate"><span jhiTranslate="machineManagerApplicationApp.job.endDate">End Date</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="fact"><span jhiTranslate="machineManagerApplicationApp.job.fact">Fact</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="orderNumber"><span jhiTranslate="machineManagerApplicationApp.job.orderNumber">Order Number</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="machineName"><span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
@@ -40,6 +41,7 @@
                     <td>{{ job.startDate | date:'mediumDate' }}</td>
                     <td>{{ job.endDate | date:'mediumDate' }}</td>
                     <td>{{ job.fact }}</td>
+                    <td>{{ job.orderNumber }}</td>
                     <td>
                         <div *ngIf="job.machineId">
                             <a [routerLink]="['/machine', job.machineId , 'view']" >{{ job.machineName }}</a>

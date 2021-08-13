@@ -8,6 +8,7 @@ export interface IJob {
   startDate?: Moment;
   endDate?: Moment;
   fact?: number;
+  orderNumber?: string;
   products?: IProduct[];
   machineName?: string;
   machineId?: number;
@@ -21,6 +22,7 @@ export class Job implements IJob {
     public startDate?: Moment,
     public endDate?: Moment,
     public fact?: number,
+    public orderNumber?: string,
     public products?: IProduct[],
     public machineName?: string,
     public machineId?: number

@@ -21,6 +21,7 @@
       "startDate": "Start Date",
       "endDate": "End Date",
       "fact": "Fact",
+      "orderNumber": "Order Number",
       "product": "Product",
       "machine": "Machine"
     }

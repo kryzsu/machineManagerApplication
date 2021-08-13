@@ -46,6 +46,7 @@ describe('Job e2e test', () => {
       jobUpdatePage.setStartDateInput('2000-12-31'),
       jobUpdatePage.setEndDateInput('2000-12-31'),
       jobUpdatePage.setFactInput('5'),
+      jobUpdatePage.setOrderNumberInput('orderNumber'),
       // jobUpdatePage.productSelectLastOption(),
       jobUpdatePage.machineSelectLastOption(),
     ]);
@@ -55,6 +56,7 @@ describe('Job e2e test', () => {
     expect(await jobUpdatePage.getStartDateInput()).to.eq('2000-12-31', 'Expected startDate value to be equals to 2000-12-31');
     expect(await jobUpdatePage.getEndDateInput()).to.eq('2000-12-31', 'Expected endDate value to be equals to 2000-12-31');
     expect(await jobUpdatePage.getFactInput()).to.eq('5', 'Expected fact value to be equals to 5');
+    expect(await jobUpdatePage.getOrderNumberInput()).to.eq('orderNumber', 'Expected OrderNumber value to be equals to orderNumber');
 
     await jobUpdatePage.save();
     expect(await jobUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;

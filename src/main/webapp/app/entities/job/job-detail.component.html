@@ -28,6 +28,10 @@
                 <dd>
                     <span>{{ job.fact }}</span>
                 </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.orderNumber">Order Number</span></dt>
+                <dd>
+                    <span>{{ job.orderNumber }}</span>
+                </dd>
                 <dt><span jhiTranslate="machineManagerApplicationApp.job.product">Product</span></dt>
                 <dd>
                     <span *ngFor="let product of job.products; let last = last">

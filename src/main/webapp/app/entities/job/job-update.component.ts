@@ -32,6 +32,7 @@ export class JobUpdateComponent implements OnInit {
     startDate: [],
     endDate: [],
     fact: [],
+    orderNumber: [],
     products: [],
     machineId: [],
   });
@@ -62,6 +63,7 @@ export class JobUpdateComponent implements OnInit {
       startDate: job.startDate,
       endDate: job.endDate,
       fact: job.fact,
+      orderNumber: job.orderNumber,
       products: job.products,
       machineId: job.machineId,
     });
@@ -90,6 +92,7 @@ export class JobUpdateComponent implements OnInit {
       startDate: this.editForm.get(['startDate'])!.value,
       endDate: this.editForm.get(['endDate'])!.value,
       fact: this.editForm.get(['fact'])!.value,
+      orderNumber: this.editForm.get(['orderNumber'])!.value,
       products: this.editForm.get(['products'])!.value,
       machineId: this.editForm.get(['machineId'])!.value,
     };

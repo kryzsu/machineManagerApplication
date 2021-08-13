@@ -34,6 +34,7 @@ export class JobUpdatePage {
   startDateInput = element(by.id('field_startDate'));
   endDateInput = element(by.id('field_endDate'));
   factInput = element(by.id('field_fact'));
+  orderNumberInput = element(by.id('field_orderNumber'));
 
   productSelect = element(by.id('field_product'));
   machineSelect = element(by.id('field_machine'));
@@ -80,6 +81,14 @@ export class JobUpdatePage {
 
   async getFactInput(): Promise<string> {
     return await this.factInput.getAttribute('value');
+  }
+
+  async setOrderNumberInput(orderNumber: string): Promise<void> {
+    await this.orderNumberInput.sendKeys(orderNumber);
+  }
+
+  async getOrderNumberInput(): Promise<string> {
+    return await this.orderNumberInput.getAttribute('value');
   }
 
   async productSelectLastOption(): Promise<void> {
