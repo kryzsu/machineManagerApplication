@@ -1,6 +1,9 @@
 {
-  "activate": {
+  "calendar": {
     "title": "Naptár",
-    "messages": {}
+    "activate": {
+      "title": "Naptár",
+      "messages": {}
+    }
   }
 }
