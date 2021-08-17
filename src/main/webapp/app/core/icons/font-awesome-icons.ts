@@ -35,7 +35,6 @@ import {
   faTasks,
   // jhipster-needle-add-icon-import
   faHome,
-  fas,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const fontAwesomeIcons = [

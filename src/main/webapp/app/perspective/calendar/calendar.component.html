@@ -1,7 +1,7 @@
 
   <mwl-calendar-month-view
     [viewDate]="viewDate"
-    [events]="events"
+    [events]="events2"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
     (dayClicked)="dayClicked($event.day)"
@@ -30,7 +30,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let event of events">
+      <tr *ngFor="let event of events2">
         <td>
           <input
             type="text"
@@ -78,3 +78,36 @@
     </tbody>
   </table>
 </div>
+
+<div class="example-container">
+  <h2>To do</h2>
+
+  <div
+    cdkDropList
+    #todoList="cdkDropList"
+    [cdkDropListData]="todo"
+    [cdkDropListConnectedTo]="[doneList]"
+    class="example-list"
+    (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+  </div>
+</div>
+
+<div class="example-container">
+  <h2>Done</h2>
+
+  <div
+    cdkDropList
+    #doneList="cdkDropList"
+    [cdkDropListData]="done"
+    [cdkDropListConnectedTo]="[todoList]"
+    class="example-list"
+    (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
+  </div>
+</div>
+<hr>
+<h2>Bar Chart</h2>
+<figure id="bar"></figure>
+<hr>
+<jhi-perps-timeline [events]="events2"></jhi-perps-timeline>

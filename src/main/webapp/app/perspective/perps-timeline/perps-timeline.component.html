@@ -1,0 +1,13 @@
+<p>perps-timeline works!</p>
+<div id="timeline"></div>
+<script>
+    milestones('#timeline')
+      .parseTime('%Y-%m-%d')
+      .aggregateBy('day')
+      .render([
+        { timestamp: '2021-08-18', text: 'Vikings begin attacks on England.' },
+        { timestamp: '2021-08-18', text: 'Vikings found Dublin in Ireland.' },
+        { timestamp: '2021-08-28', text: 'The city of Oslo is founded in Norway.' },
+        { timestamp: '2021-08-22', text: 'Battle of Hastings.' }
+      ]);
+  </script>
