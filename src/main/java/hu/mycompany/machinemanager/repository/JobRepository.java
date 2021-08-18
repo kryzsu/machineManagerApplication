@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data  repository for the Job entity.
+ * Spring Data SQL repository for the Job entity.
  */
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {

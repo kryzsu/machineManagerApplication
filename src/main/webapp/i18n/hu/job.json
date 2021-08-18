@@ -3,6 +3,7 @@
     "job": {
       "home": {
         "title": "Feladatok",
+        "refreshListLabel": "Lista frissitése",
         "createLabel": "Egy új Feladat létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Feladatot",
         "notFound": "Nincs ilyen Feladat"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Feladat"
       },
+      "id": "ID",
       "estimation": "Becslés (nap)",
       "productCount": "Termékek száma",
       "startDate": "Kezdés dátuma",

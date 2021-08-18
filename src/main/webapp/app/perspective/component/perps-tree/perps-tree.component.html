@@ -1,2 +1,9 @@
 <p>Feladatok, gep bontasban</p>
-<p-tree [value]="data" draggableNodes="true" droppableNodes="true" [validateDrop]="true" (onNodeDrop)="onDrop($event)" [filter]="true"></p-tree>
+<p-tree
+  [value]="data"
+  [draggableNodes]="true"
+  [droppableNodes]="true"
+  [validateDrop]="true"
+  (onNodeDrop)="onDrop($event)"
+  [filter]="true"
+></p-tree>

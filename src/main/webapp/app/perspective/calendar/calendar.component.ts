@@ -1,3 +1,4 @@
+/* tslint:disable: no-unsafe-return */
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventAction, CalendarView } from 'angular-calendar';
 import { Subject } from 'rxjs';
@@ -5,10 +6,10 @@ import { startOfDay, subDays, addDays, endOfDay, isSameDay, isSameMonth } from '
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 
-import { IMachine } from 'app/shared/model/machine.model';
-import { IJob } from 'app/shared/model/job.model';
-import * as moment from 'moment';
-import { machineArray2Events } from '../converter-utils';
+import { colorList, machineArray2Events } from '../converter-utils';
+import { IMachine } from 'app/entities/machine/machine.model';
+import { IJob } from 'app/entities/job/job.model';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'jhi-calendar',
@@ -18,6 +19,9 @@ import { machineArray2Events } from '../converter-utils';
 export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
   view: CalendarView = CalendarView.Month;
+  viewDate: Date = new Date();
+
+  events2: CalendarEvent[] = [];
 
   machineList: IMachine[] = [];
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
@@ -57,10 +61,6 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  viewDate: Date = new Date();
-
-  events2: CalendarEvent[] = [];
-
   constructor() {
     const startDate = subDays(startOfDay(new Date()), 1);
 
@@ -73,12 +73,10 @@ export class CalendarComponent implements OnInit {
         const estimation = Math.floor(Math.random() * 100) % 3;
         jobs.push({
           id: machineId + 10 * j + 1,
-          startDate: moment(addDays(startDate, estimationSum)),
+          startDate: dayjs(addDays(startDate, estimationSum)),
           estimation,
-          orderNumber: 'order ' + machineId + j + 1,
-          products: [{ id: machineId + 10 * j + 1, name: 'termek ' + machineId + j + 1 }],
-          machineName: 'gep' + i,
-          machineId,
+          orderNumber: `order ${machineId + j + 1}`,
+          products: [{ id: machineId + 10 * j + 1, name: `termek ${machineId + j + 1}` }],
         });
 
         estimationSum += estimation;
@@ -86,8 +84,8 @@ export class CalendarComponent implements OnInit {
 
       this.machineList.push({
         id: machineId,
-        name: 'gep' + i,
-        description: 'gep leiras ' + i,
+        name: `gep ${i}`,
+        description: `gep leiras ${i}`,
         jobs,
       });
     }
@@ -96,7 +94,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEvent(arg0: string, event: CalendarEvent<any>): void {
-    alert('handleEvent' + arg0 + ' ' + event);
+    alert(`handleEvent ${arg0} event`);
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -141,12 +139,14 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.createSvg();
     this.drawBars(this.data);
+  }
 
-    // Parse data from a CSV
-    // d3.csv("/assets/frameworks.csv").then(data => this.drawBars(data));
+  setView(view: CalendarView): void {
+    this.view = view;
+  }
 
-    // Fetch JSON from an external endpoint
-    // d3.json('https://api.jsonbin.io/b/5eee6a5397cb753b4d149343').then(data => this.drawBars(data));
+  closeOpenMonthViewDay(): void {
+    this.activeDayIsOpen = false;
   }
 
   private createSvg(): void {
@@ -156,20 +156,20 @@ export class CalendarComponent implements OnInit {
       .attr('width', this.width + this.margin * 2)
       .attr('height', this.height + this.margin * 2)
       .append('g')
-      .attr('transform', 'translate(' + this.margin + ',' + this.margin + ')');
+      .attr('transform', `translate(${this.margin}, ${this.margin})`);
   }
 
   private drawBars(data: any[]): void {
     // Add X axis
-    const x = d3
+    const x: any = d3
       .scaleBand()
       .range([0, this.width])
-      .domain(data.map(d => d.Framework))
+      .domain(data.map(d => d.Framework)) // eslint-disable-line @typescript-eslint/no-unsafe-return
       .padding(0.2);
 
     this.svg
       .append('g')
-      .attr('transform', 'translate(0,' + this.height + ')')
+      .attr('transform', `translate(0,${this.height})`)
       .call(d3.axisBottom(x))
       .selectAll('text')
       .attr('transform', 'translate(-10,0)rotate(-45)')
@@ -186,18 +186,10 @@ export class CalendarComponent implements OnInit {
       .data(data)
       .enter()
       .append('rect')
-      .attr('x', (d: any) => x(d.Framework))
+      .attr('x', (d: any) => x(d.Framework)) // eslint-disable-line @typescript-eslint/no-unsafe-return
       .attr('y', (d: any) => y(d.Stars))
       .attr('width', x.bandwidth())
       .attr('height', (d: any) => this.height - y(d.Stars))
       .attr('fill', '#d04a35');
-  }
-
-  setView(view: CalendarView): void {
-    this.view = view;
-  }
-
-  closeOpenMonthViewDay(): void {
-    this.activeDayIsOpen = false;
   }
 }

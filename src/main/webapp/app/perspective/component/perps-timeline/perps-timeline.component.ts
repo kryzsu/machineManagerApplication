@@ -1,8 +1,9 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import { Component, Input, OnInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-
+declare const require: any;
 const milestones = require('d3-milestones');
+
 interface Item {
   timestamp: string;
   text: string;

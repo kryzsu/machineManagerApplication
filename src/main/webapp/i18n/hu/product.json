@@ -3,6 +3,7 @@
     "product": {
       "home": {
         "title": "Termékek",
+        "refreshListLabel": "Lista frissítése",
         "createLabel": "Egy új Termék létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Terméket",
         "notFound": "Nincs ilyen Termék"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Termék"
       },
+      "id": "ID",
       "name": "Név",
       "comment": "Megjegyzés",
       "job": "Feladat"

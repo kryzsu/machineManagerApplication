@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data  repository for the View entity.
+ * Spring Data SQL repository for the View entity.
  */
 @Repository
 public interface ViewRepository extends JpaRepository<View, Long>, JpaSpecificationExecutor<View> {

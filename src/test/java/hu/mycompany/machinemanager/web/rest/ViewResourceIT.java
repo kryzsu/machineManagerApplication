@@ -6,17 +6,18 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import hu.mycompany.machinemanager.MachineManagerApplicationApp;
+import hu.mycompany.machinemanager.IntegrationTest;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.domain.View;
 import hu.mycompany.machinemanager.repository.ViewRepository;
-import hu.mycompany.machinemanager.service.ViewQueryService;
 import hu.mycompany.machinemanager.service.ViewService;
-import hu.mycompany.machinemanager.service.dto.ViewCriteria;
+import hu.mycompany.machinemanager.service.criteria.ViewCriteria;
 import hu.mycompany.machinemanager.service.dto.ViewDTO;
 import hu.mycompany.machinemanager.service.mapper.ViewMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -36,13 +36,20 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ViewResource} REST controller.
  */
-@SpringBootTest(classes = MachineManagerApplicationApp.class)
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class ViewResourceIT {
+class ViewResourceIT {
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/views";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ViewRepository viewRepository;
@@ -55,12 +62,6 @@ public class ViewResourceIT {
 
     @Mock
     private ViewService viewServiceMock;
-
-    @Autowired
-    private ViewService viewService;
-
-    @Autowired
-    private ViewQueryService viewQueryService;
 
     @Autowired
     private EntityManager em;
@@ -99,12 +100,12 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void createView() throws Exception {
+    void createView() throws Exception {
         int databaseSizeBeforeCreate = viewRepository.findAll().size();
         // Create the View
         ViewDTO viewDTO = viewMapper.toDto(view);
         restViewMockMvc
-            .perform(post("/api/views").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
             .andExpect(status().isCreated());
 
         // Validate the View in the database
@@ -116,16 +117,16 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void createViewWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = viewRepository.findAll().size();
-
+    void createViewWithExistingId() throws Exception {
         // Create the View with an existing ID
         view.setId(1L);
         ViewDTO viewDTO = viewMapper.toDto(view);
 
+        int databaseSizeBeforeCreate = viewRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
         restViewMockMvc
-            .perform(post("/api/views").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the View in the database
@@ -135,13 +136,13 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViews() throws Exception {
+    void getAllViews() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
         // Get all the viewList
         restViewMockMvc
-            .perform(get("/api/views?sort=id,desc"))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(view.getId().intValue())))
@@ -149,32 +150,32 @@ public class ViewResourceIT {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void getAllViewsWithEagerRelationshipsIsEnabled() throws Exception {
+    void getAllViewsWithEagerRelationshipsIsEnabled() throws Exception {
         when(viewServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restViewMockMvc.perform(get("/api/views?eagerload=true")).andExpect(status().isOk());
+        restViewMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(viewServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void getAllViewsWithEagerRelationshipsIsNotEnabled() throws Exception {
+    void getAllViewsWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(viewServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restViewMockMvc.perform(get("/api/views?eagerload=true")).andExpect(status().isOk());
+        restViewMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(viewServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    public void getView() throws Exception {
+    void getView() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
         // Get the view
         restViewMockMvc
-            .perform(get("/api/views/{id}", view.getId()))
+            .perform(get(ENTITY_API_URL_ID, view.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(view.getId().intValue()))
@@ -183,7 +184,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getViewsByIdFiltering() throws Exception {
+    void getViewsByIdFiltering() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -201,7 +202,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameIsEqualToSomething() throws Exception {
+    void getAllViewsByNameIsEqualToSomething() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -214,7 +215,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameIsNotEqualToSomething() throws Exception {
+    void getAllViewsByNameIsNotEqualToSomething() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -227,7 +228,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameIsInShouldWork() throws Exception {
+    void getAllViewsByNameIsInShouldWork() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -240,7 +241,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameIsNullOrNotNull() throws Exception {
+    void getAllViewsByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -253,7 +254,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameContainsSomething() throws Exception {
+    void getAllViewsByNameContainsSomething() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -266,7 +267,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByNameNotContainsSomething() throws Exception {
+    void getAllViewsByNameNotContainsSomething() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -279,7 +280,7 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getAllViewsByMachineIsEqualToSomething() throws Exception {
+    void getAllViewsByMachineIsEqualToSomething() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
         Machine machine = MachineResourceIT.createEntity(em);
@@ -292,7 +293,7 @@ public class ViewResourceIT {
         // Get all the viewList where machine equals to machineId
         defaultViewShouldBeFound("machineId.equals=" + machineId);
 
-        // Get all the viewList where machine equals to machineId + 1
+        // Get all the viewList where machine equals to (machineId + 1)
         defaultViewShouldNotBeFound("machineId.equals=" + (machineId + 1));
     }
 
@@ -301,7 +302,7 @@ public class ViewResourceIT {
      */
     private void defaultViewShouldBeFound(String filter) throws Exception {
         restViewMockMvc
-            .perform(get("/api/views?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(view.getId().intValue())))
@@ -309,7 +310,7 @@ public class ViewResourceIT {
 
         // Check, that the count call also returns 1
         restViewMockMvc
-            .perform(get("/api/views/count?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -320,7 +321,7 @@ public class ViewResourceIT {
      */
     private void defaultViewShouldNotBeFound(String filter) throws Exception {
         restViewMockMvc
-            .perform(get("/api/views?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
@@ -328,7 +329,7 @@ public class ViewResourceIT {
 
         // Check, that the count call also returns 0
         restViewMockMvc
-            .perform(get("/api/views/count?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -336,14 +337,14 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingView() throws Exception {
+    void getNonExistingView() throws Exception {
         // Get the view
-        restViewMockMvc.perform(get("/api/views/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restViewMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateView() throws Exception {
+    void putNewView() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -357,7 +358,11 @@ public class ViewResourceIT {
         ViewDTO viewDTO = viewMapper.toDto(updatedView);
 
         restViewMockMvc
-            .perform(put("/api/views").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, viewDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(viewDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the View in the database
@@ -369,15 +374,20 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingView() throws Exception {
+    void putNonExistingView() throws Exception {
         int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
 
         // Create the View
         ViewDTO viewDTO = viewMapper.toDto(view);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restViewMockMvc
-            .perform(put("/api/views").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, viewDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(viewDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the View in the database
@@ -387,7 +397,170 @@ public class ViewResourceIT {
 
     @Test
     @Transactional
-    public void deleteView() throws Exception {
+    void putWithIdMismatchView() throws Exception {
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
+
+        // Create the View
+        ViewDTO viewDTO = viewMapper.toDto(view);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restViewMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(viewDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamView() throws Exception {
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
+
+        // Create the View
+        ViewDTO viewDTO = viewMapper.toDto(view);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restViewMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateViewWithPatch() throws Exception {
+        // Initialize the database
+        viewRepository.saveAndFlush(view);
+
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+
+        // Update the view using partial update
+        View partialUpdatedView = new View();
+        partialUpdatedView.setId(view.getId());
+
+        restViewMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedView.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedView))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+        View testView = viewList.get(viewList.size() - 1);
+        assertThat(testView.getName()).isEqualTo(DEFAULT_NAME);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateViewWithPatch() throws Exception {
+        // Initialize the database
+        viewRepository.saveAndFlush(view);
+
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+
+        // Update the view using partial update
+        View partialUpdatedView = new View();
+        partialUpdatedView.setId(view.getId());
+
+        partialUpdatedView.name(UPDATED_NAME);
+
+        restViewMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedView.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedView))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+        View testView = viewList.get(viewList.size() - 1);
+        assertThat(testView.getName()).isEqualTo(UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingView() throws Exception {
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
+
+        // Create the View
+        ViewDTO viewDTO = viewMapper.toDto(view);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restViewMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, viewDTO.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(viewDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchView() throws Exception {
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
+
+        // Create the View
+        ViewDTO viewDTO = viewMapper.toDto(view);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restViewMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(viewDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamView() throws Exception {
+        int databaseSizeBeforeUpdate = viewRepository.findAll().size();
+        view.setId(count.incrementAndGet());
+
+        // Create the View
+        ViewDTO viewDTO = viewMapper.toDto(view);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restViewMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(viewDTO)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the View in the database
+        List<View> viewList = viewRepository.findAll();
+        assertThat(viewList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteView() throws Exception {
         // Initialize the database
         viewRepository.saveAndFlush(view);
 
@@ -395,7 +568,7 @@ public class ViewResourceIT {
 
         // Delete the view
         restViewMockMvc
-            .perform(delete("/api/views/{id}", view.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_ID, view.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

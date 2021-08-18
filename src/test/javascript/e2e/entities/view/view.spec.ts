@@ -11,12 +11,14 @@ describe('View e2e test', () => {
   let viewComponentsPage: ViewComponentsPage;
   let viewUpdatePage: ViewUpdatePage;
   let viewDeleteDialog: ViewDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -45,8 +47,6 @@ describe('View e2e test', () => {
       // viewUpdatePage.machineSelectLastOption(),
     ]);
 
-    expect(await viewUpdatePage.getNameInput()).to.eq('name', 'Expected Name value to be equals to name');
-
     await viewUpdatePage.save();
     expect(await viewUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -60,6 +60,7 @@ describe('View e2e test', () => {
     viewDeleteDialog = new ViewDeleteDialog();
     expect(await viewDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.view.delete.question');
     await viewDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(viewComponentsPage.title), 5000);
 
     expect(await viewComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

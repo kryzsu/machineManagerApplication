@@ -11,12 +11,14 @@ describe('Job e2e test', () => {
   let jobComponentsPage: JobComponentsPage;
   let jobUpdatePage: JobUpdatePage;
   let jobDeleteDialog: JobDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -51,13 +53,6 @@ describe('Job e2e test', () => {
       jobUpdatePage.machineSelectLastOption(),
     ]);
 
-    expect(await jobUpdatePage.getEstimationInput()).to.eq('5', 'Expected estimation value to be equals to 5');
-    expect(await jobUpdatePage.getProductCountInput()).to.eq('5', 'Expected productCount value to be equals to 5');
-    expect(await jobUpdatePage.getStartDateInput()).to.eq('2000-12-31', 'Expected startDate value to be equals to 2000-12-31');
-    expect(await jobUpdatePage.getEndDateInput()).to.eq('2000-12-31', 'Expected endDate value to be equals to 2000-12-31');
-    expect(await jobUpdatePage.getFactInput()).to.eq('5', 'Expected fact value to be equals to 5');
-    expect(await jobUpdatePage.getOrderNumberInput()).to.eq('orderNumber', 'Expected OrderNumber value to be equals to orderNumber');
-
     await jobUpdatePage.save();
     expect(await jobUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -71,6 +66,7 @@ describe('Job e2e test', () => {
     jobDeleteDialog = new JobDeleteDialog();
     expect(await jobDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.job.delete.question');
     await jobDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(jobComponentsPage.title), 5000);
 
     expect(await jobComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

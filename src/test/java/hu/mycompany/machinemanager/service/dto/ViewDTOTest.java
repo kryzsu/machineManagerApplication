@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hu.mycompany.machinemanager.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class ViewDTOTest {
+class ViewDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(ViewDTO.class);
         ViewDTO viewDTO1 = new ViewDTO();
         viewDTO1.setId(1L);

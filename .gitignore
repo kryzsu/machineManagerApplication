@@ -69,7 +69,12 @@ out/
 ######################
 # Visual Studio Code
 ######################
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 
 ######################
 # Maven
@@ -147,3 +152,9 @@ Desktop.ini
 ######################
 .eslintcache
 /package-lock.json
+
+######################
+# Code coverage
+######################
+/coverage/
+/.nyc_output/

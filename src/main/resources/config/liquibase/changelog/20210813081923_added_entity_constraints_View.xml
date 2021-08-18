@@ -2,23 +2,22 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity View.
     -->
     <changeSet id="20210813081923-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="view_id"
-                                 baseTableName="view_machine"
-                                 constraintName="fk_view_machine_view_id"
+                                 baseTableName="rel_view__machine"
+                                 constraintName="fk_rel_view__machine__view_id"
                                  referencedColumnNames="id"
                                  referencedTableName="view"/>
 
         <addForeignKeyConstraint baseColumnNames="machine_id"
-                                 baseTableName="view_machine"
-                                 constraintName="fk_view_machine_machine_id"
+                                 baseTableName="rel_view__machine"
+                                 constraintName="fk_rel_view__machine__machine_id"
                                  referencedColumnNames="id"
                                  referencedTableName="machine"/>
-        
     </changeSet>
 </databaseChangeLog>

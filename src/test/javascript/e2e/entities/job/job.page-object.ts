@@ -29,6 +29,7 @@ export class JobUpdatePage {
   saveButton = element(by.id('save-entity'));
   cancelButton = element(by.id('cancel-save'));
 
+  idInput = element(by.id('field_id'));
   estimationInput = element(by.id('field_estimation'));
   productCountInput = element(by.id('field_productCount'));
   startDateInput = element(by.id('field_startDate'));
@@ -41,6 +42,14 @@ export class JobUpdatePage {
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
+  }
+
+  async setIdInput(id: string): Promise<void> {
+    await this.idInput.sendKeys(id);
+  }
+
+  async getIdInput(): Promise<string> {
+    return await this.idInput.getAttribute('value');
   }
 
   async setEstimationInput(estimation: string): Promise<void> {

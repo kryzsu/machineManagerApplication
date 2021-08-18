@@ -1,54 +1,24 @@
 <jhi-perps-tree [(machineList)]="machineList"></jhi-perps-tree>
-<hr>
+<hr />
 <div class="row text-center">
   <div class="col-md-4">
     <div class="btn-group">
-      <div
-        class="btn btn-primary"
-        mwlCalendarPreviousView
-        [view]="view"
-        [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()"
-      >
+      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
         Previous
       </div>
-      <div
-        class="btn btn-outline-secondary"
-        mwlCalendarToday
-        [(viewDate)]="viewDate"
-      >
-        Today
-      </div>
-      <div
-        class="btn btn-primary"
-        mwlCalendarNextView
-        [view]="view"
-        [(viewDate)]="viewDate"
-        (viewDateChange)="closeOpenMonthViewDay()"
-      >
+      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">Today</div>
+      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
         Next
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'en' }}</h3>
   </div>
   <div class="col-md-4">
     <div class="btn-group">
-      <div
-        class="btn btn-primary"
-        (click)="setView(CalendarView.Month)"
-        [class.active]="view === CalendarView.Month"
-      >
-        Month
-      </div>
-      <div
-        class="btn btn-primary"
-        (click)="setView(CalendarView.Week)"
-        [class.active]="view === CalendarView.Week"
-      >
-        Week
-      </div>
+      <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">Month</div>
+      <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">Week</div>
     </div>
   </div>
 </div>
@@ -62,20 +32,13 @@
     (dayClicked)="dayClicked($event.day)"
   >
   </mwl-calendar-month-view>
-  <mwl-calendar-week-view
-    *ngSwitchCase="CalendarView.Week"
-    [viewDate]="viewDate"
-    [events]="events2"
-    [refresh]="refresh"
-  >
+  <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events2" [refresh]="refresh">
   </mwl-calendar-week-view>
 </div>
-  
+
 <h3>
   Edit events
-  <button class="btn btn-primary float-right" (click)="addEvent()">
-    Add new
-  </button>
+  <button class="btn btn-primary float-right" (click)="addEvent()">Add new</button>
   <div class="clearfix"></div>
 </h3>
 
@@ -95,47 +58,22 @@
     <tbody>
       <tr *ngFor="let event of events2">
         <td>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="event.title"
-            (keyup)="refresh.next()"
-          />
+          <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
         </td>
         <td>
-          <input
-            type="color"
-            [(ngModel)]="event.color.primary"
-            (change)="refresh.next()"
-          />
+          <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
         </td>
         <td>
-          <input
-            type="color"
-            [(ngModel)]="event.color.secondary"
-            (change)="refresh.next()"
-          />
+          <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
         </td>
         <td>
-          <input
-            class="form-control"
-            type="text"
-            [(ngModel)]="event.start"
-            (ngModelChange)="refresh.next()"
-          />
+          <input class="form-control" type="text" [(ngModel)]="event.start" (ngModelChange)="refresh.next()" />
         </td>
         <td>
-          <input
-            class="form-control"
-            type="text"
-            [(ngModel)]="event.end"
-            (ngModelChange)="refresh.next()"
-          />
+          <input class="form-control" type="text" [(ngModel)]="event.end" (ngModelChange)="refresh.next()" />
         </td>
         <td>
-          <button class="btn btn-danger" (click)="deleteEvent(event)">
-            Delete
-          </button>
+          <button class="btn btn-danger" (click)="deleteEvent(event)">Delete</button>
         </td>
       </tr>
     </tbody>
@@ -151,8 +89,9 @@
     [cdkDropListData]="todo"
     [cdkDropListConnectedTo]="[doneList]"
     class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+    (cdkDropListDropped)="drop($event)"
+  >
+    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item }}</div>
   </div>
 </div>
 
@@ -165,12 +104,13 @@
     [cdkDropListData]="done"
     [cdkDropListConnectedTo]="[todoList]"
     class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
+    (cdkDropListDropped)="drop($event)"
+  >
+    <div class="example-box" *ngFor="let item of done" cdkDrag>{{ item }}</div>
   </div>
 </div>
-<hr>
+<hr />
 <h2>Bar Chart</h2>
 <figure id="bar"></figure>
-<hr>
+<hr />
 <jhi-perps-timeline [events]="events2"></jhi-perps-timeline>

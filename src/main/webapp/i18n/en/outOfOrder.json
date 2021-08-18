@@ -3,6 +3,7 @@
     "outOfOrder": {
       "home": {
         "title": "Out Of Orders",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Out Of Order",
         "createOrEditLabel": "Create or edit a Out Of Order",
         "notFound": "No Out Of Orders found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Out Of Order"
       },
+      "id": "ID",
       "date": "Date",
       "description": "Description",
       "machine": "Machine"

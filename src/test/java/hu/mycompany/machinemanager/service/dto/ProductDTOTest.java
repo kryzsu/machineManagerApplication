@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hu.mycompany.machinemanager.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class ProductDTOTest {
+class ProductDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(ProductDTO.class);
         ProductDTO productDTO1 = new ProductDTO();
         productDTO1.setId(1L);

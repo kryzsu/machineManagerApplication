@@ -2,29 +2,28 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity Job.
     -->
     <changeSet id="20201214140542-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="job_id"
-                                 baseTableName="job_product"
-                                 constraintName="fk_job_product_job_id"
+                                 baseTableName="rel_job__product"
+                                 constraintName="fk_rel_job__product__job_id"
                                  referencedColumnNames="id"
                                  referencedTableName="job"/>
 
         <addForeignKeyConstraint baseColumnNames="product_id"
-                                 baseTableName="job_product"
-                                 constraintName="fk_job_product_product_id"
+                                 baseTableName="rel_job__product"
+                                 constraintName="fk_rel_job__product__product_id"
                                  referencedColumnNames="id"
                                  referencedTableName="product"/>
-        
+
         <addForeignKeyConstraint baseColumnNames="machine_id"
                                  baseTableName="job"
-                                 constraintName="fk_job_machine_id"
+                                 constraintName="fk_job__machine_id"
                                  referencedColumnNames="id"
                                  referencedTableName="machine"/>
-
     </changeSet>
 </databaseChangeLog>

@@ -1,6 +1,6 @@
 package hu.mycompany.machinemanager.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "product")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Product implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -32,7 +33,7 @@ public class Product implements Serializable {
 
     @ManyToMany(mappedBy = "products")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "products", "machine" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -44,8 +45,13 @@ public class Product implements Serializable {
         this.id = id;
     }
 
+    public Product id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Product name(String name) {
@@ -58,7 +64,7 @@ public class Product implements Serializable {
     }
 
     public String getComment() {
-        return comment;
+        return this.comment;
     }
 
     public Product comment(String comment) {
@@ -71,11 +77,11 @@ public class Product implements Serializable {
     }
 
     public Set<Job> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public Product jobs(Set<Job> jobs) {
-        this.jobs = jobs;
+        this.setJobs(jobs);
         return this;
     }
 
@@ -92,6 +98,12 @@ public class Product implements Serializable {
     }
 
     public void setJobs(Set<Job> jobs) {
+        if (this.jobs != null) {
+            this.jobs.forEach(i -> i.removeProduct(this));
+        }
+        if (jobs != null) {
+            jobs.forEach(i -> i.addProduct(this));
+        }
         this.jobs = jobs;
     }
 
@@ -110,7 +122,8 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

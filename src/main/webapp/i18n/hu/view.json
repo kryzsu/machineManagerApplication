@@ -3,6 +3,7 @@
     "view": {
       "home": {
         "title": "Nézetek",
+        "refreshListLabel": "Lista frissitese",
         "createLabel": "Egy új Nézet létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Nézetet",
         "notFound": "Nincs ilyen Nézet"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Nézet"
       },
+      "id": "ID",
       "name": "Név",
       "machine": "Munkagép"
     }

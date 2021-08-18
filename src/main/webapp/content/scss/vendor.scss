@@ -1,4 +1,4 @@
-/* after changing this file run 'npm run webpack:build' */
+/* after changing this file run 'npm run webapp:build' */
 
 /***************************
 put Sass variables here:
@@ -12,5 +12,5 @@ eg $input-color: red;
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
 
 @import '~primeng/resources/primeng.min.css';
-@import '~primeng/resources/themes/nova-light/theme.css';
+@import '~primeng/resources/themes/saga-blue/theme.css';
 @import '~primeicons/primeicons.css';

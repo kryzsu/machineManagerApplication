@@ -3,8 +3,9 @@ import { EventColor } from 'calendar-utils';
 import { addDays } from 'date-fns';
 import { TreeNode } from 'primeng/api';
 
-import { IMachine } from 'app/shared/model/machine.model';
-import { IJob } from 'app/shared/model/job.model';
+import { IMachine } from 'app/entities/machine/machine.model';
+import { IJob } from 'app/entities/job/job.model';
+import { IProduct } from 'app/entities/product/product.model';
 
 const colors: any = {
   red: {
@@ -40,7 +41,7 @@ const colors: any = {
     secondary: '#FDF1BA',
   },
 };
-const colorList: EventColor[] = [];
+export const colorList: EventColor[] = [];
 export const createColors = (): void => {
   colorList.push(colors.cyan);
   colorList.push(colors.olive);
@@ -61,11 +62,11 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
     const color = colorList[Math.floor(Math.random() * 100) % 7];
     if (machine.jobs != null) {
       for (const job of machine.jobs) {
-        const startDate = job?.startDate?.toDate() || new Date();
-        const estimation = job.estimation || 0;
-        let title = machine.name || '';
+        const startDate: Date = job.startDate?.toDate() ?? new Date();
+        const estimation: number = job.estimation ?? 0;
+        let title = machine.name ?? '';
         if (job.products != null) {
-          title += ': ' + job.products[0].name;
+          title += `: ${job.products[0].name ?? ''}`;
         }
 
         rv.push({
@@ -88,27 +89,23 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
   return rv;
 };
 
-export const job2Treenode = (job: IJob): TreeNode => {
-  return {
-    label: job?.products?.map(product => product.name).join(',') + ' ' + job.estimation + ' nap',
-    data: job,
-    leaf: true,
-    draggable: true,
-    droppable: false,
-    selectable: true,
-    key: job?.id + '',
-  };
-};
+export const job2Treenode = (job: IJob): TreeNode => ({
+  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(',') ?? ''} ${job.estimation ?? 0} nap`,
+  data: job,
+  leaf: true,
+  draggable: true,
+  droppable: false,
+  selectable: true,
+  key: `${job.id ?? 0}`,
+});
 
-export const machine2Treenode = (machine: IMachine): TreeNode => {
-  return {
-    label: machine.name,
-    data: machine,
-    children: machine?.jobs?.map(job2Treenode),
-    leaf: false,
-    draggable: false,
-    droppable: true,
-    selectable: true,
-    key: machine.id + '',
-  };
-};
+export const machine2Treenode = (machine: IMachine): TreeNode => ({
+  label: machine.name,
+  data: machine,
+  children: machine.jobs?.map(job2Treenode),
+  leaf: false,
+  draggable: false,
+  droppable: true,
+  selectable: true,
+  key: `${machine.id ?? 0}`,
+});

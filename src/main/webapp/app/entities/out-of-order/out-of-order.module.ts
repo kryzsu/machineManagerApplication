@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { MachineManagerApplicationSharedModule } from 'app/shared/shared.module';
-import { OutOfOrderComponent } from './out-of-order.component';
-import { OutOfOrderDetailComponent } from './out-of-order-detail.component';
-import { OutOfOrderUpdateComponent } from './out-of-order-update.component';
-import { OutOfOrderDeleteDialogComponent } from './out-of-order-delete-dialog.component';
-import { outOfOrderRoute } from './out-of-order.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { OutOfOrderComponent } from './list/out-of-order.component';
+import { OutOfOrderDetailComponent } from './detail/out-of-order-detail.component';
+import { OutOfOrderUpdateComponent } from './update/out-of-order-update.component';
+import { OutOfOrderDeleteDialogComponent } from './delete/out-of-order-delete-dialog.component';
+import { OutOfOrderRoutingModule } from './route/out-of-order-routing.module';
 
 @NgModule({
-  imports: [MachineManagerApplicationSharedModule, RouterModule.forChild(outOfOrderRoute)],
+  imports: [SharedModule, OutOfOrderRoutingModule],
   declarations: [OutOfOrderComponent, OutOfOrderDetailComponent, OutOfOrderUpdateComponent, OutOfOrderDeleteDialogComponent],
   entryComponents: [OutOfOrderDeleteDialogComponent],
 })
-export class MachineManagerApplicationOutOfOrderModule {}
+export class OutOfOrderModule {}

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data  repository for the OutOfOrder entity.
+ * Spring Data SQL repository for the OutOfOrder entity.
  */
 @Repository
 public interface OutOfOrderRepository extends JpaRepository<OutOfOrder, Long>, JpaSpecificationExecutor<OutOfOrder> {

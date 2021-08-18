@@ -5,19 +5,19 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import hu.mycompany.machinemanager.MachineManagerApplicationApp;
+import hu.mycompany.machinemanager.IntegrationTest;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.MachineRepository;
-import hu.mycompany.machinemanager.service.MachineService;
 import hu.mycompany.machinemanager.service.dto.MachineDTO;
 import hu.mycompany.machinemanager.service.mapper.MachineMapper;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,24 +26,28 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link MachineResource} REST controller.
  */
-@SpringBootTest(classes = MachineManagerApplicationApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class MachineResourceIT {
+class MachineResourceIT {
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/machines";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private MachineRepository machineRepository;
 
     @Autowired
     private MachineMapper machineMapper;
-
-    @Autowired
-    private MachineService machineService;
 
     @Autowired
     private EntityManager em;
@@ -82,12 +86,12 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void createMachine() throws Exception {
+    void createMachine() throws Exception {
         int databaseSizeBeforeCreate = machineRepository.findAll().size();
         // Create the Machine
         MachineDTO machineDTO = machineMapper.toDto(machine);
         restMachineMockMvc
-            .perform(post("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Machine in the database
@@ -100,16 +104,16 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void createMachineWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = machineRepository.findAll().size();
-
+    void createMachineWithExistingId() throws Exception {
         // Create the Machine with an existing ID
         machine.setId(1L);
         MachineDTO machineDTO = machineMapper.toDto(machine);
 
+        int databaseSizeBeforeCreate = machineRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
         restMachineMockMvc
-            .perform(post("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Machine in the database
@@ -119,7 +123,7 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = machineRepository.findAll().size();
         // set the field null
         machine.setName(null);
@@ -128,7 +132,7 @@ public class MachineResourceIT {
         MachineDTO machineDTO = machineMapper.toDto(machine);
 
         restMachineMockMvc
-            .perform(post("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
             .andExpect(status().isBadRequest());
 
         List<Machine> machineList = machineRepository.findAll();
@@ -137,7 +141,7 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void checkDescriptionIsRequired() throws Exception {
+    void checkDescriptionIsRequired() throws Exception {
         int databaseSizeBeforeTest = machineRepository.findAll().size();
         // set the field null
         machine.setDescription(null);
@@ -146,7 +150,7 @@ public class MachineResourceIT {
         MachineDTO machineDTO = machineMapper.toDto(machine);
 
         restMachineMockMvc
-            .perform(post("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
             .andExpect(status().isBadRequest());
 
         List<Machine> machineList = machineRepository.findAll();
@@ -155,13 +159,13 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void getAllMachines() throws Exception {
+    void getAllMachines() throws Exception {
         // Initialize the database
         machineRepository.saveAndFlush(machine);
 
         // Get all the machineList
         restMachineMockMvc
-            .perform(get("/api/machines?sort=id,desc"))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(machine.getId().intValue())))
@@ -171,13 +175,13 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void getMachine() throws Exception {
+    void getMachine() throws Exception {
         // Initialize the database
         machineRepository.saveAndFlush(machine);
 
         // Get the machine
         restMachineMockMvc
-            .perform(get("/api/machines/{id}", machine.getId()))
+            .perform(get(ENTITY_API_URL_ID, machine.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(machine.getId().intValue()))
@@ -187,14 +191,14 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingMachine() throws Exception {
+    void getNonExistingMachine() throws Exception {
         // Get the machine
-        restMachineMockMvc.perform(get("/api/machines/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restMachineMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateMachine() throws Exception {
+    void putNewMachine() throws Exception {
         // Initialize the database
         machineRepository.saveAndFlush(machine);
 
@@ -208,7 +212,11 @@ public class MachineResourceIT {
         MachineDTO machineDTO = machineMapper.toDto(updatedMachine);
 
         restMachineMockMvc
-            .perform(put("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, machineDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the Machine in the database
@@ -221,15 +229,20 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingMachine() throws Exception {
+    void putNonExistingMachine() throws Exception {
         int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
 
         // Create the Machine
         MachineDTO machineDTO = machineMapper.toDto(machine);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restMachineMockMvc
-            .perform(put("/api/machines").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, machineDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Machine in the database
@@ -239,7 +252,176 @@ public class MachineResourceIT {
 
     @Test
     @Transactional
-    public void deleteMachine() throws Exception {
+    void putWithIdMismatchMachine() throws Exception {
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
+
+        // Create the Machine
+        MachineDTO machineDTO = machineMapper.toDto(machine);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMachineMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamMachine() throws Exception {
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
+
+        // Create the Machine
+        MachineDTO machineDTO = machineMapper.toDto(machine);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMachineMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(machineDTO)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateMachineWithPatch() throws Exception {
+        // Initialize the database
+        machineRepository.saveAndFlush(machine);
+
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+
+        // Update the machine using partial update
+        Machine partialUpdatedMachine = new Machine();
+        partialUpdatedMachine.setId(machine.getId());
+
+        partialUpdatedMachine.description(UPDATED_DESCRIPTION);
+
+        restMachineMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMachine.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMachine))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+        Machine testMachine = machineList.get(machineList.size() - 1);
+        assertThat(testMachine.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testMachine.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateMachineWithPatch() throws Exception {
+        // Initialize the database
+        machineRepository.saveAndFlush(machine);
+
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+
+        // Update the machine using partial update
+        Machine partialUpdatedMachine = new Machine();
+        partialUpdatedMachine.setId(machine.getId());
+
+        partialUpdatedMachine.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+
+        restMachineMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedMachine.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedMachine))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+        Machine testMachine = machineList.get(machineList.size() - 1);
+        assertThat(testMachine.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testMachine.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingMachine() throws Exception {
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
+
+        // Create the Machine
+        MachineDTO machineDTO = machineMapper.toDto(machine);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restMachineMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, machineDTO.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchMachine() throws Exception {
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
+
+        // Create the Machine
+        MachineDTO machineDTO = machineMapper.toDto(machine);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMachineMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamMachine() throws Exception {
+        int databaseSizeBeforeUpdate = machineRepository.findAll().size();
+        machine.setId(count.incrementAndGet());
+
+        // Create the Machine
+        MachineDTO machineDTO = machineMapper.toDto(machine);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restMachineMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(machineDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Machine in the database
+        List<Machine> machineList = machineRepository.findAll();
+        assertThat(machineList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteMachine() throws Exception {
         // Initialize the database
         machineRepository.saveAndFlush(machine);
 
@@ -247,7 +429,7 @@ public class MachineResourceIT {
 
         // Delete the machine
         restMachineMockMvc
-            .perform(delete("/api/machines/{id}", machine.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_ID, machine.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

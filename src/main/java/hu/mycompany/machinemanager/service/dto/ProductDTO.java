@@ -1,12 +1,14 @@
 package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link hu.mycompany.machinemanager.domain.Product} entity.
  */
 public class ProductDTO implements Serializable {
+
     private Long id;
 
     @NotNull
@@ -48,12 +50,16 @@ public class ProductDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((ProductDTO) o).id);
+        ProductDTO productDTO = (ProductDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, productDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore

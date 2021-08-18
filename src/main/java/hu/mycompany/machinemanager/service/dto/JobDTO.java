@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.service.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.validation.constraints.*;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.*;
  * A DTO for the {@link hu.mycompany.machinemanager.domain.Job} entity.
  */
 public class JobDTO implements Serializable {
+
     private Long id;
 
     private Integer estimation;
@@ -27,9 +29,7 @@ public class JobDTO implements Serializable {
 
     private Set<ProductDTO> products = new HashSet<>();
 
-    private Long machineId;
-
-    private String machineName;
+    private MachineDTO machine;
 
     public Long getId() {
         return id;
@@ -95,20 +95,12 @@ public class JobDTO implements Serializable {
         this.products = products;
     }
 
-    public Long getMachineId() {
-        return machineId;
+    public MachineDTO getMachine() {
+        return machine;
     }
 
-    public void setMachineId(Long machineId) {
-        this.machineId = machineId;
-    }
-
-    public String getMachineName() {
-        return machineName;
-    }
-
-    public void setMachineName(String machineName) {
-        this.machineName = machineName;
+    public void setMachine(MachineDTO machine) {
+        this.machine = machine;
     }
 
     @Override
@@ -120,12 +112,16 @@ public class JobDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((JobDTO) o).id);
+        JobDTO jobDTO = (JobDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, jobDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -139,9 +135,8 @@ public class JobDTO implements Serializable {
             ", endDate='" + getEndDate() + "'" +
             ", fact=" + getFact() +
             ", orderNumber='" + getOrderNumber() + "'" +
-            ", products='" + getProducts() + "'" +
-            ", machineId=" + getMachineId() +
-            ", machineName='" + getMachineName() + "'" +
+            ", products=" + getProducts() +
+            ", machine=" + getMachine() +
             "}";
     }
 }

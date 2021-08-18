@@ -3,10 +3,9 @@ package hu.mycompany.machinemanager.service;
 import hu.mycompany.machinemanager.domain.*; // for static metamodels
 import hu.mycompany.machinemanager.domain.View;
 import hu.mycompany.machinemanager.repository.ViewRepository;
-import hu.mycompany.machinemanager.service.dto.ViewCriteria;
+import hu.mycompany.machinemanager.service.criteria.ViewCriteria;
 import hu.mycompany.machinemanager.service.dto.ViewDTO;
 import hu.mycompany.machinemanager.service.mapper.ViewMapper;
-import io.github.jhipster.service.QueryService;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link View} entities in the database.
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class ViewQueryService extends QueryService<View> {
+
     private final Logger log = LoggerFactory.getLogger(ViewQueryService.class);
 
     private final ViewRepository viewRepository;

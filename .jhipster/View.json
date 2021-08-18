@@ -25,5 +25,6 @@
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": true,
-  "pagination": "pagination"
+  "pagination": "pagination",
+  "name": "View"
 }

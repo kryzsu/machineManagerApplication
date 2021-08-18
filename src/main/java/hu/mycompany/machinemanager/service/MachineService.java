@@ -18,6 +18,14 @@ public interface MachineService {
     MachineDTO save(MachineDTO machineDTO);
 
     /**
+     * Partially updates a machine.
+     *
+     * @param machineDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<MachineDTO> partialUpdate(MachineDTO machineDTO);
+
+    /**
      * Get all the machines.
      *
      * @param pageable the pagination information.

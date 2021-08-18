@@ -17,6 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "job")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Job implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -44,15 +45,12 @@ public class Job implements Serializable {
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(
-        name = "job_product",
-        joinColumns = @JoinColumn(name = "job_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
-    )
+    @JoinTable(name = "rel_job__product", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JsonIgnoreProperties(value = { "jobs" }, allowSetters = true)
     private Set<Product> products = new HashSet<>();
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "jobs", allowSetters = true)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
     private Machine machine;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -64,8 +62,13 @@ public class Job implements Serializable {
         this.id = id;
     }
 
+    public Job id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Integer getEstimation() {
-        return estimation;
+        return this.estimation;
     }
 
     public Job estimation(Integer estimation) {
@@ -78,7 +81,7 @@ public class Job implements Serializable {
     }
 
     public Integer getProductCount() {
-        return productCount;
+        return this.productCount;
     }
 
     public Job productCount(Integer productCount) {
@@ -91,7 +94,7 @@ public class Job implements Serializable {
     }
 
     public LocalDate getStartDate() {
-        return startDate;
+        return this.startDate;
     }
 
     public Job startDate(LocalDate startDate) {
@@ -104,7 +107,7 @@ public class Job implements Serializable {
     }
 
     public LocalDate getEndDate() {
-        return endDate;
+        return this.endDate;
     }
 
     public Job endDate(LocalDate endDate) {
@@ -117,7 +120,7 @@ public class Job implements Serializable {
     }
 
     public Integer getFact() {
-        return fact;
+        return this.fact;
     }
 
     public Job fact(Integer fact) {
@@ -130,7 +133,7 @@ public class Job implements Serializable {
     }
 
     public String getOrderNumber() {
-        return orderNumber;
+        return this.orderNumber;
     }
 
     public Job orderNumber(String orderNumber) {
@@ -143,11 +146,11 @@ public class Job implements Serializable {
     }
 
     public Set<Product> getProducts() {
-        return products;
+        return this.products;
     }
 
     public Job products(Set<Product> products) {
-        this.products = products;
+        this.setProducts(products);
         return this;
     }
 
@@ -168,11 +171,11 @@ public class Job implements Serializable {
     }
 
     public Machine getMachine() {
-        return machine;
+        return this.machine;
     }
 
     public Job machine(Machine machine) {
-        this.machine = machine;
+        this.setMachine(machine);
         return this;
     }
 
@@ -195,7 +198,8 @@ public class Job implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TreeDragDropService, TreeNode } from 'primeng/api';
 
 import { machine2Treenode } from 'app/perspective/converter-utils';
-import { IMachine } from 'app/shared/model/machine.model';
+import { IMachine } from 'app/entities/machine/machine.model';
 
 @Component({
   selector: 'jhi-perps-tree',
@@ -21,7 +21,6 @@ export class PerpsTreeComponent {
   data: TreeNode[] = [];
 
   onDrop(event: any): void {
-    console.log(event.dragNode.label + ' -> ' + event.dropNode.label + ' index:' + event.index);
     event.accept();
   }
   // this.machineListChange.emit(this.machineList);

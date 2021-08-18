@@ -11,12 +11,14 @@ describe('Product e2e test', () => {
   let productComponentsPage: ProductComponentsPage;
   let productUpdatePage: ProductUpdatePage;
   let productDeleteDialog: ProductDeleteDialog;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
     signInPage = await navBarPage.getSignInPage();
-    await signInPage.autoSignInUsing('admin', 'admin');
+    await signInPage.autoSignInUsing(username, password);
     await browser.wait(ec.visibilityOf(navBarPage.entityMenu), 5000);
   });
 
@@ -42,9 +44,6 @@ describe('Product e2e test', () => {
 
     await promise.all([productUpdatePage.setNameInput('name'), productUpdatePage.setCommentInput('comment')]);
 
-    expect(await productUpdatePage.getNameInput()).to.eq('name', 'Expected Name value to be equals to name');
-    expect(await productUpdatePage.getCommentInput()).to.eq('comment', 'Expected Comment value to be equals to comment');
-
     await productUpdatePage.save();
     expect(await productUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
 
@@ -58,6 +57,7 @@ describe('Product e2e test', () => {
     productDeleteDialog = new ProductDeleteDialog();
     expect(await productDeleteDialog.getDialogTitle()).to.eq('machineManagerApplicationApp.product.delete.question');
     await productDeleteDialog.clickOnConfirmButton();
+    await browser.wait(ec.visibilityOf(productComponentsPage.title), 5000);
 
     expect(await productComponentsPage.countDeleteButtons()).to.eq(nbButtonsBeforeDelete - 1);
   });

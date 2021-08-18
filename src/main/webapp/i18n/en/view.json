@@ -3,6 +3,7 @@
     "view": {
       "home": {
         "title": "Views",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new View",
         "createOrEditLabel": "Create or edit a View",
         "notFound": "No Views found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "View"
       },
+      "id": "ID",
       "name": "Name",
       "machine": "Machine"
     }

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ViewServiceImpl implements ViewService {
+
     private final Logger log = LoggerFactory.getLogger(ViewServiceImpl.class);
 
     private final ViewRepository viewRepository;
@@ -36,6 +37,23 @@ public class ViewServiceImpl implements ViewService {
         View view = viewMapper.toEntity(viewDTO);
         view = viewRepository.save(view);
         return viewMapper.toDto(view);
+    }
+
+    @Override
+    public Optional<ViewDTO> partialUpdate(ViewDTO viewDTO) {
+        log.debug("Request to partially update View : {}", viewDTO);
+
+        return viewRepository
+            .findById(viewDTO.getId())
+            .map(
+                existingView -> {
+                    viewMapper.partialUpdate(existingView, viewDTO);
+
+                    return existingView;
+                }
+            )
+            .map(viewRepository::save)
+            .map(viewMapper::toDto);
     }
 
     @Override

@@ -3,6 +3,7 @@
     "outOfOrder": {
       "home": {
         "title": "Üzemen kívűl",
+        "refreshListLabel": "List frissítés",
         "createLabel": "Egy új Üzemszünet létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Üzemszünetet",
         "notFound": "Nincs ilyen Üzemszünet"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Üzemszünet"
       },
+      "id": "ID",
       "date": "Dátum",
       "description": "Leírás",
       "machine": "Munkagép"
