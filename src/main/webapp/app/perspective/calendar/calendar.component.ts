@@ -1,49 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
+import { CalendarEvent, CalendarEventAction, CalendarView } from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { startOfDay, subDays, addDays, endOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
-import { EventColor } from 'calendar-utils';
 
 import { IMachine } from 'app/shared/model/machine.model';
 import { IJob } from 'app/shared/model/job.model';
 import * as moment from 'moment';
-
-const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-  teal: {
-    primary: '#008080',
-    secondary: '#FDF1BA',
-  },
-  olive: {
-    primary: '#808000',
-    secondary: '#FDF1BA',
-  },
-  chocolate: {
-    primary: '#D2691E',
-    secondary: '#FDF1BA',
-  },
-  cyan: {
-    primary: '#00FFFF',
-    secondary: '#FDF1BA',
-  },
-  purple: {
-    primary: '#800080',
-    secondary: '#FDF1BA',
-  },
-};
+import { machineArray2Events } from '../converter-utils';
 
 @Component({
   selector: 'jhi-calendar',
@@ -51,16 +16,17 @@ const colors: any = {
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
-  colorList: EventColor[];
+  CalendarView = CalendarView;
+  view: CalendarView = CalendarView.Month;
 
-  private demoData: IMachine[] = [];
-  private todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
+  private machineList: IMachine[] = [];
+  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
 
-  private done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
+  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
-  private refresh: Subject<any> = new Subject();
+  refresh: Subject<any> = new Subject();
 
-  private activeDayIsOpen = true;
+  activeDayIsOpen = true;
 
   private actions: CalendarEventAction[] = [
     {
@@ -74,7 +40,7 @@ export class CalendarComponent implements OnInit {
       label: '&nbsp; delete &nbsp;',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
+        this.events2 = this.events2.filter(iEvent => iEvent !== event);
         this.handleEvent('Deleted', event);
       },
     },
@@ -91,12 +57,11 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  private viewDate: Date = new Date();
+  viewDate: Date = new Date();
 
-  private events2: CalendarEvent[] = [];
+  events2: CalendarEvent[] = [];
 
   constructor() {
-    this.colorList = this.createColors();
     const startDate = subDays(startOfDay(new Date()), 1);
 
     for (let i = 0; i < 12; i++) {
@@ -119,7 +84,7 @@ export class CalendarComponent implements OnInit {
         estimationSum += estimation;
       }
 
-      this.demoData.push({
+      this.machineList.push({
         id: machineId,
         name: 'gep' + i,
         description: 'gep leiras ' + i,
@@ -127,55 +92,7 @@ export class CalendarComponent implements OnInit {
       });
     }
 
-    this.events2 = this.machineArray2Events(this.demoData);
-  }
-
-  machineArray2Events(machineList: IMachine[]): CalendarEvent[] {
-    const rv: CalendarEvent[] = [];
-
-    for (const machine of machineList) {
-      const color = this.colorList[Math.floor(Math.random() * 100) % 7];
-      if (machine.jobs != null) {
-        for (const job of machine.jobs) {
-          const startDate = job?.startDate?.toDate() || new Date();
-          const estimation = job.estimation || 0;
-          let title = machine.name || '';
-          if (job.products != null) {
-            title += ': ' + job.products[0].name;
-          }
-
-          rv.push({
-            start: startDate,
-            end: addDays(startDate, estimation),
-            title,
-            color,
-            actions: this.actions,
-            allDay: true,
-            resizable: {
-              beforeStart: true,
-              afterEnd: true,
-            },
-            draggable: true,
-          });
-        }
-      }
-    }
-
-    return rv;
-  }
-
-  private createColors(): EventColor[] {
-    const colorList = [];
-    colorList.push(colors.cyan);
-    colorList.push(colors.olive);
-    colorList.push(colors.purple);
-    colorList.push(colors.chocolate);
-    colorList.push(colors.teal);
-    colorList.push(colors.yellow);
-    colorList.push(colors.blue);
-    colorList.push(colors.red);
-
-    return colorList;
+    this.events2 = machineArray2Events(this.machineList, this.actions);
   }
 
   handleEvent(arg0: string, event: CalendarEvent<any>): void {
@@ -194,17 +111,16 @@ export class CalendarComponent implements OnInit {
   }
 
   deleteEvent(eventToDelete: CalendarEvent): void {
-    this.events = this.events.filter(event => event !== eventToDelete);
+    this.events2 = this.events2.filter(event => event !== eventToDelete);
   }
 
   addEvent(): void {
-    this.events = [
-      ...this.events,
+    this.events2 = [
+      ...this.events2,
       {
         title: 'New event',
         start: startOfDay(new Date()),
         end: endOfDay(new Date()),
-        color: colors.red,
         draggable: true,
         resizable: {
           beforeStart: true,
@@ -275,5 +191,13 @@ export class CalendarComponent implements OnInit {
       .attr('width', x.bandwidth())
       .attr('height', (d: any) => this.height - y(d.Stars))
       .attr('fill', '#d04a35');
+  }
+
+  setView(view: CalendarView): void {
+    this.view = view;
+  }
+
+  closeOpenMonthViewDay(): void {
+    this.activeDayIsOpen = false;
   }
 }
