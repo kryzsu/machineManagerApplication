@@ -94,6 +94,7 @@ export const job2Treenode = (job: IJob): TreeNode => {
     data: job,
     leaf: true,
     draggable: true,
+    droppable: false,
     selectable: true,
     key: job?.id + '',
   };

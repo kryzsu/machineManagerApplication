@@ -19,7 +19,7 @@ export class CalendarComponent implements OnInit {
   CalendarView = CalendarView;
   view: CalendarView = CalendarView.Month;
 
-  private machineList: IMachine[] = [];
+  machineList: IMachine[] = [];
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
 
   done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
