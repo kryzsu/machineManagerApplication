@@ -2,6 +2,7 @@ package hu.mycompany.machinemanager.service.mapper;
 
 import hu.mycompany.machinemanager.domain.*;
 import hu.mycompany.machinemanager.service.dto.ViewDTO;
+import java.util.Set;
 import org.mapstruct.*;
 
 /**
@@ -9,13 +10,9 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { MachineMapper.class })
 public interface ViewMapper extends EntityMapper<ViewDTO, View> {
+    @Mapping(target = "machines", source = "machines", qualifiedByName = "nameSet")
+    ViewDTO toDto(View s);
+
     @Mapping(target = "removeMachine", ignore = true)
-    default View fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        View view = new View();
-        view.setId(id);
-        return view;
-    }
+    View toEntity(ViewDTO viewDTO);
 }

@@ -18,6 +18,14 @@ public interface OutOfOrderService {
     OutOfOrderDTO save(OutOfOrderDTO outOfOrderDTO);
 
     /**
+     * Partially updates a outOfOrder.
+     *
+     * @param outOfOrderDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<OutOfOrderDTO> partialUpdate(OutOfOrderDTO outOfOrderDTO);
+
+    /**
      * Get all the outOfOrders.
      *
      * @param pageable the pagination information.
@@ -28,6 +36,7 @@ public interface OutOfOrderService {
     /**
      * Get all the outOfOrders with eager load of many-to-many relationships.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<OutOfOrderDTO> findAllWithEagerRelationships(Pageable pageable);

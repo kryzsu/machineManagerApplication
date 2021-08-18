@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class MachineServiceImpl implements MachineService {
+
     private final Logger log = LoggerFactory.getLogger(MachineServiceImpl.class);
 
     private final MachineRepository machineRepository;
@@ -36,6 +37,23 @@ public class MachineServiceImpl implements MachineService {
         Machine machine = machineMapper.toEntity(machineDTO);
         machine = machineRepository.save(machine);
         return machineMapper.toDto(machine);
+    }
+
+    @Override
+    public Optional<MachineDTO> partialUpdate(MachineDTO machineDTO) {
+        log.debug("Request to partially update Machine : {}", machineDTO);
+
+        return machineRepository
+            .findById(machineDTO.getId())
+            .map(
+                existingMachine -> {
+                    machineMapper.partialUpdate(existingMachine, machineDTO);
+
+                    return existingMachine;
+                }
+            )
+            .map(machineRepository::save)
+            .map(machineMapper::toDto);
     }
 
     @Override

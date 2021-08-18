@@ -2,23 +2,22 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity OutOfOrder.
     -->
     <changeSet id="20210811182927-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="out_of_order_id"
-                                 baseTableName="out_of_order_machine"
-                                 constraintName="fk_out_of_order_machine_out_of_order_id"
+                                 baseTableName="rel_out_of_order__machine"
+                                 constraintName="fk_rel_out_of_order__machine__out_of_order_id"
                                  referencedColumnNames="id"
                                  referencedTableName="out_of_order"/>
 
         <addForeignKeyConstraint baseColumnNames="machine_id"
-                                 baseTableName="out_of_order_machine"
-                                 constraintName="fk_out_of_order_machine_machine_id"
+                                 baseTableName="rel_out_of_order__machine"
+                                 constraintName="fk_rel_out_of_order__machine__machine_id"
                                  referencedColumnNames="id"
                                  referencedTableName="machine"/>
-        
     </changeSet>
 </databaseChangeLog>

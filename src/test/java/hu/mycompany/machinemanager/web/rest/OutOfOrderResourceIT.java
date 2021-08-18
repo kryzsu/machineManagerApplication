@@ -6,19 +6,20 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import hu.mycompany.machinemanager.MachineManagerApplicationApp;
+import hu.mycompany.machinemanager.IntegrationTest;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.domain.OutOfOrder;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
-import hu.mycompany.machinemanager.service.OutOfOrderQueryService;
 import hu.mycompany.machinemanager.service.OutOfOrderService;
-import hu.mycompany.machinemanager.service.dto.OutOfOrderCriteria;
+import hu.mycompany.machinemanager.service.criteria.OutOfOrderCriteria;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.OutOfOrderMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -38,17 +38,24 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link OutOfOrderResource} REST controller.
  */
-@SpringBootTest(classes = MachineManagerApplicationApp.class)
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class OutOfOrderResourceIT {
+class OutOfOrderResourceIT {
+
     private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
     private static final LocalDate SMALLER_DATE = LocalDate.ofEpochDay(-1L);
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/out-of-orders";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private OutOfOrderRepository outOfOrderRepository;
@@ -61,12 +68,6 @@ public class OutOfOrderResourceIT {
 
     @Mock
     private OutOfOrderService outOfOrderServiceMock;
-
-    @Autowired
-    private OutOfOrderService outOfOrderService;
-
-    @Autowired
-    private OutOfOrderQueryService outOfOrderQueryService;
 
     @Autowired
     private EntityManager em;
@@ -105,14 +106,12 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void createOutOfOrder() throws Exception {
+    void createOutOfOrder() throws Exception {
         int databaseSizeBeforeCreate = outOfOrderRepository.findAll().size();
         // Create the OutOfOrder
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
         restOutOfOrderMockMvc
-            .perform(
-                post("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
             .andExpect(status().isCreated());
 
         // Validate the OutOfOrder in the database
@@ -125,18 +124,16 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void createOutOfOrderWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = outOfOrderRepository.findAll().size();
-
+    void createOutOfOrderWithExistingId() throws Exception {
         // Create the OutOfOrder with an existing ID
         outOfOrder.setId(1L);
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
 
+        int databaseSizeBeforeCreate = outOfOrderRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
         restOutOfOrderMockMvc
-            .perform(
-                post("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the OutOfOrder in the database
@@ -146,7 +143,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void checkDateIsRequired() throws Exception {
+    void checkDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = outOfOrderRepository.findAll().size();
         // set the field null
         outOfOrder.setDate(null);
@@ -155,9 +152,7 @@ public class OutOfOrderResourceIT {
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
 
         restOutOfOrderMockMvc
-            .perform(
-                post("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
             .andExpect(status().isBadRequest());
 
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
@@ -166,7 +161,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void checkDescriptionIsRequired() throws Exception {
+    void checkDescriptionIsRequired() throws Exception {
         int databaseSizeBeforeTest = outOfOrderRepository.findAll().size();
         // set the field null
         outOfOrder.setDescription(null);
@@ -175,9 +170,7 @@ public class OutOfOrderResourceIT {
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
 
         restOutOfOrderMockMvc
-            .perform(
-                post("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
             .andExpect(status().isBadRequest());
 
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
@@ -186,13 +179,13 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrders() throws Exception {
+    void getAllOutOfOrders() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
         // Get all the outOfOrderList
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders?sort=id,desc"))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(outOfOrder.getId().intValue())))
@@ -201,32 +194,32 @@ public class OutOfOrderResourceIT {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void getAllOutOfOrdersWithEagerRelationshipsIsEnabled() throws Exception {
+    void getAllOutOfOrdersWithEagerRelationshipsIsEnabled() throws Exception {
         when(outOfOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restOutOfOrderMockMvc.perform(get("/api/out-of-orders?eagerload=true")).andExpect(status().isOk());
+        restOutOfOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(outOfOrderServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void getAllOutOfOrdersWithEagerRelationshipsIsNotEnabled() throws Exception {
+    void getAllOutOfOrdersWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(outOfOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restOutOfOrderMockMvc.perform(get("/api/out-of-orders?eagerload=true")).andExpect(status().isOk());
+        restOutOfOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(outOfOrderServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    public void getOutOfOrder() throws Exception {
+    void getOutOfOrder() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
         // Get the outOfOrder
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders/{id}", outOfOrder.getId()))
+            .perform(get(ENTITY_API_URL_ID, outOfOrder.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(outOfOrder.getId().intValue()))
@@ -236,7 +229,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getOutOfOrdersByIdFiltering() throws Exception {
+    void getOutOfOrdersByIdFiltering() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -254,7 +247,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -267,7 +260,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsNotEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsNotEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -280,7 +273,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsInShouldWork() throws Exception {
+    void getAllOutOfOrdersByDateIsInShouldWork() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -293,7 +286,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsNullOrNotNull() throws Exception {
+    void getAllOutOfOrdersByDateIsNullOrNotNull() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -306,7 +299,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -319,7 +312,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsLessThanOrEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -332,7 +325,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsLessThanSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsLessThanSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -345,7 +338,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDateIsGreaterThanSomething() throws Exception {
+    void getAllOutOfOrdersByDateIsGreaterThanSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -358,7 +351,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionIsEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDescriptionIsEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -371,7 +364,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionIsNotEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByDescriptionIsNotEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -384,7 +377,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionIsInShouldWork() throws Exception {
+    void getAllOutOfOrdersByDescriptionIsInShouldWork() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -397,7 +390,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionIsNullOrNotNull() throws Exception {
+    void getAllOutOfOrdersByDescriptionIsNullOrNotNull() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -410,7 +403,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionContainsSomething() throws Exception {
+    void getAllOutOfOrdersByDescriptionContainsSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -423,7 +416,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByDescriptionNotContainsSomething() throws Exception {
+    void getAllOutOfOrdersByDescriptionNotContainsSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -436,7 +429,7 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOutOfOrdersByMachineIsEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByMachineIsEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
         Machine machine = MachineResourceIT.createEntity(em);
@@ -449,7 +442,7 @@ public class OutOfOrderResourceIT {
         // Get all the outOfOrderList where machine equals to machineId
         defaultOutOfOrderShouldBeFound("machineId.equals=" + machineId);
 
-        // Get all the outOfOrderList where machine equals to machineId + 1
+        // Get all the outOfOrderList where machine equals to (machineId + 1)
         defaultOutOfOrderShouldNotBeFound("machineId.equals=" + (machineId + 1));
     }
 
@@ -458,7 +451,7 @@ public class OutOfOrderResourceIT {
      */
     private void defaultOutOfOrderShouldBeFound(String filter) throws Exception {
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(outOfOrder.getId().intValue())))
@@ -467,7 +460,7 @@ public class OutOfOrderResourceIT {
 
         // Check, that the count call also returns 1
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders/count?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -478,7 +471,7 @@ public class OutOfOrderResourceIT {
      */
     private void defaultOutOfOrderShouldNotBeFound(String filter) throws Exception {
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
@@ -486,7 +479,7 @@ public class OutOfOrderResourceIT {
 
         // Check, that the count call also returns 0
         restOutOfOrderMockMvc
-            .perform(get("/api/out-of-orders/count?sort=id,desc&" + filter))
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
@@ -494,14 +487,14 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingOutOfOrder() throws Exception {
+    void getNonExistingOutOfOrder() throws Exception {
         // Get the outOfOrder
-        restOutOfOrderMockMvc.perform(get("/api/out-of-orders/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restOutOfOrderMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateOutOfOrder() throws Exception {
+    void putNewOutOfOrder() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -516,7 +509,9 @@ public class OutOfOrderResourceIT {
 
         restOutOfOrderMockMvc
             .perform(
-                put("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+                put(ENTITY_API_URL_ID, outOfOrderDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
             )
             .andExpect(status().isOk());
 
@@ -530,8 +525,9 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingOutOfOrder() throws Exception {
+    void putNonExistingOutOfOrder() throws Exception {
         int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
 
         // Create the OutOfOrder
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
@@ -539,7 +535,9 @@ public class OutOfOrderResourceIT {
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOutOfOrderMockMvc
             .perform(
-                put("/api/out-of-orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+                put(ENTITY_API_URL_ID, outOfOrderDTO.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -550,7 +548,176 @@ public class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    public void deleteOutOfOrder() throws Exception {
+    void putWithIdMismatchOutOfOrder() throws Exception {
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
+
+        // Create the OutOfOrder
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restOutOfOrderMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamOutOfOrder() throws Exception {
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
+
+        // Create the OutOfOrder
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restOutOfOrderMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateOutOfOrderWithPatch() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+
+        // Update the outOfOrder using partial update
+        OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
+        partialUpdatedOutOfOrder.setId(outOfOrder.getId());
+
+        partialUpdatedOutOfOrder.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+
+        restOutOfOrderMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedOutOfOrder.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOutOfOrder))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+        OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
+        assertThat(testOutOfOrder.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateOutOfOrderWithPatch() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+
+        // Update the outOfOrder using partial update
+        OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
+        partialUpdatedOutOfOrder.setId(outOfOrder.getId());
+
+        partialUpdatedOutOfOrder.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+
+        restOutOfOrderMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedOutOfOrder.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedOutOfOrder))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+        OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
+        assertThat(testOutOfOrder.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingOutOfOrder() throws Exception {
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
+
+        // Create the OutOfOrder
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restOutOfOrderMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, outOfOrderDTO.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchOutOfOrder() throws Exception {
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
+
+        // Create the OutOfOrder
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restOutOfOrderMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamOutOfOrder() throws Exception {
+        int databaseSizeBeforeUpdate = outOfOrderRepository.findAll().size();
+        outOfOrder.setId(count.incrementAndGet());
+
+        // Create the OutOfOrder
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restOutOfOrderMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the OutOfOrder in the database
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteOutOfOrder() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
@@ -558,7 +725,7 @@ public class OutOfOrderResourceIT {
 
         // Delete the outOfOrder
         restOutOfOrderMockMvc
-            .perform(delete("/api/out-of-orders/{id}", outOfOrder.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_ID, outOfOrder.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -18,6 +18,14 @@ public interface JobService {
     JobDTO save(JobDTO jobDTO);
 
     /**
+     * Partially updates a job.
+     *
+     * @param jobDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<JobDTO> partialUpdate(JobDTO jobDTO);
+
+    /**
      * Get all the jobs.
      *
      * @param pageable the pagination information.
@@ -28,6 +36,7 @@ public interface JobService {
     /**
      * Get all the jobs with eager load of many-to-many relationships.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<JobDTO> findAllWithEagerRelationships(Pageable pageable);

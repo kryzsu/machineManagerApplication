@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class JobServiceImpl implements JobService {
+
     private final Logger log = LoggerFactory.getLogger(JobServiceImpl.class);
 
     private final JobRepository jobRepository;
@@ -36,6 +37,23 @@ public class JobServiceImpl implements JobService {
         Job job = jobMapper.toEntity(jobDTO);
         job = jobRepository.save(job);
         return jobMapper.toDto(job);
+    }
+
+    @Override
+    public Optional<JobDTO> partialUpdate(JobDTO jobDTO) {
+        log.debug("Request to partially update Job : {}", jobDTO);
+
+        return jobRepository
+            .findById(jobDTO.getId())
+            .map(
+                existingJob -> {
+                    jobMapper.partialUpdate(existingJob, jobDTO);
+
+                    return existingJob;
+                }
+            )
+            .map(jobRepository::save)
+            .map(jobMapper::toDto);
     }
 
     @Override

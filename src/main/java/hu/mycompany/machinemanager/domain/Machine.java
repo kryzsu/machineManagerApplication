@@ -1,6 +1,6 @@
 package hu.mycompany.machinemanager.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "machine")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Machine implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -32,16 +33,17 @@ public class Machine implements Serializable {
 
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "machines" }, allowSetters = true)
     private Set<OutOfOrder> outOfOrders = new HashSet<>();
 
     @OneToMany(mappedBy = "machine")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "products", "machine" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "machines" }, allowSetters = true)
     private Set<View> views = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -53,8 +55,13 @@ public class Machine implements Serializable {
         this.id = id;
     }
 
+    public Machine id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Machine name(String name) {
@@ -67,7 +74,7 @@ public class Machine implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Machine description(String description) {
@@ -80,11 +87,11 @@ public class Machine implements Serializable {
     }
 
     public Set<OutOfOrder> getOutOfOrders() {
-        return outOfOrders;
+        return this.outOfOrders;
     }
 
     public Machine outOfOrders(Set<OutOfOrder> outOfOrders) {
-        this.outOfOrders = outOfOrders;
+        this.setOutOfOrders(outOfOrders);
         return this;
     }
 
@@ -101,15 +108,21 @@ public class Machine implements Serializable {
     }
 
     public void setOutOfOrders(Set<OutOfOrder> outOfOrders) {
+        if (this.outOfOrders != null) {
+            this.outOfOrders.forEach(i -> i.removeMachine(this));
+        }
+        if (outOfOrders != null) {
+            outOfOrders.forEach(i -> i.addMachine(this));
+        }
         this.outOfOrders = outOfOrders;
     }
 
     public Set<Job> getJobs() {
-        return jobs;
+        return this.jobs;
     }
 
     public Machine jobs(Set<Job> jobs) {
-        this.jobs = jobs;
+        this.setJobs(jobs);
         return this;
     }
 
@@ -126,15 +139,21 @@ public class Machine implements Serializable {
     }
 
     public void setJobs(Set<Job> jobs) {
+        if (this.jobs != null) {
+            this.jobs.forEach(i -> i.setMachine(null));
+        }
+        if (jobs != null) {
+            jobs.forEach(i -> i.setMachine(this));
+        }
         this.jobs = jobs;
     }
 
     public Set<View> getViews() {
-        return views;
+        return this.views;
     }
 
     public Machine views(Set<View> views) {
-        this.views = views;
+        this.setViews(views);
         return this;
     }
 
@@ -151,6 +170,12 @@ public class Machine implements Serializable {
     }
 
     public void setViews(Set<View> views) {
+        if (this.views != null) {
+            this.views.forEach(i -> i.removeMachine(this));
+        }
+        if (views != null) {
+            views.forEach(i -> i.addMachine(this));
+        }
         this.views = views;
     }
 
@@ -169,7 +194,8 @@ public class Machine implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

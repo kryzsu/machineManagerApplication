@@ -1,12 +1,13 @@
 package hu.mycompany.machinemanager.web.rest.vm;
 
-import hu.mycompany.machinemanager.service.dto.UserDTO;
+import hu.mycompany.machinemanager.service.dto.AdminUserDTO;
 import javax.validation.constraints.Size;
 
 /**
- * View Model extending the UserDTO, which is meant to be used in the user management UI.
+ * View Model extending the AdminUserDTO, which is meant to be used in the user management UI.
  */
-public class ManagedUserVM extends UserDTO {
+public class ManagedUserVM extends AdminUserDTO {
+
     public static final int PASSWORD_MIN_LENGTH = 4;
 
     public static final int PASSWORD_MAX_LENGTH = 100;

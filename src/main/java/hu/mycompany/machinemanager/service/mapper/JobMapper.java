@@ -2,6 +2,7 @@ package hu.mycompany.machinemanager.service.mapper;
 
 import hu.mycompany.machinemanager.domain.*;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
+import java.util.Set;
 import org.mapstruct.*;
 
 /**
@@ -9,20 +10,10 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { ProductMapper.class, MachineMapper.class })
 public interface JobMapper extends EntityMapper<JobDTO, Job> {
-    @Mapping(source = "machine.id", target = "machineId")
-    @Mapping(source = "machine.name", target = "machineName")
-    JobDTO toDto(Job job);
+    @Mapping(target = "products", source = "products", qualifiedByName = "nameSet")
+    @Mapping(target = "machine", source = "machine", qualifiedByName = "name")
+    JobDTO toDto(Job s);
 
     @Mapping(target = "removeProduct", ignore = true)
-    @Mapping(source = "machineId", target = "machine")
     Job toEntity(JobDTO jobDTO);
-
-    default Job fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Job job = new Job();
-        job.setId(id);
-        return job;
-    }
 }

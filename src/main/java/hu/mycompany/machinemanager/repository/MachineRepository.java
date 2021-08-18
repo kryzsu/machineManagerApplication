@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data  repository for the Machine entity.
+ * Spring Data SQL repository for the Machine entity.
  */
 @SuppressWarnings("unused")
 @Repository

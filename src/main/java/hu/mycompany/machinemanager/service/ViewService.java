@@ -18,6 +18,14 @@ public interface ViewService {
     ViewDTO save(ViewDTO viewDTO);
 
     /**
+     * Partially updates a view.
+     *
+     * @param viewDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<ViewDTO> partialUpdate(ViewDTO viewDTO);
+
+    /**
      * Get all the views.
      *
      * @param pageable the pagination information.
@@ -28,6 +36,7 @@ public interface ViewService {
     /**
      * Get all the views with eager load of many-to-many relationships.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     Page<ViewDTO> findAllWithEagerRelationships(Pageable pageable);

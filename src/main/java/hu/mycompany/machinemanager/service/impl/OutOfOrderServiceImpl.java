@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class OutOfOrderServiceImpl implements OutOfOrderService {
+
     private final Logger log = LoggerFactory.getLogger(OutOfOrderServiceImpl.class);
 
     private final OutOfOrderRepository outOfOrderRepository;
@@ -36,6 +37,23 @@ public class OutOfOrderServiceImpl implements OutOfOrderService {
         OutOfOrder outOfOrder = outOfOrderMapper.toEntity(outOfOrderDTO);
         outOfOrder = outOfOrderRepository.save(outOfOrder);
         return outOfOrderMapper.toDto(outOfOrder);
+    }
+
+    @Override
+    public Optional<OutOfOrderDTO> partialUpdate(OutOfOrderDTO outOfOrderDTO) {
+        log.debug("Request to partially update OutOfOrder : {}", outOfOrderDTO);
+
+        return outOfOrderRepository
+            .findById(outOfOrderDTO.getId())
+            .map(
+                existingOutOfOrder -> {
+                    outOfOrderMapper.partialUpdate(existingOutOfOrder, outOfOrderDTO);
+
+                    return existingOutOfOrder;
+                }
+            )
+            .map(outOfOrderRepository::save)
+            .map(outOfOrderMapper::toDto);
     }
 
     @Override

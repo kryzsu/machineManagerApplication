@@ -3,6 +3,7 @@
     "view": {
       "home": {
         "title": "Views",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Egy új View létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Viewt",
         "notFound": "No Views found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "View"
       },
+      "id": "ID",
       "name": "Name",
       "machine": "Machine"
     }

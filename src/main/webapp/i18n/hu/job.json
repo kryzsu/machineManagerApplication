@@ -3,6 +3,7 @@
     "job": {
       "home": {
         "title": "Jobs",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Egy új Job létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Jobt",
         "notFound": "No Jobs found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Job"
       },
+      "id": "ID",
       "estimation": "Estimation",
       "productCount": "Product Count",
       "startDate": "Start Date",

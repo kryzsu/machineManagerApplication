@@ -18,6 +18,14 @@ public interface ProductService {
     ProductDTO save(ProductDTO productDTO);
 
     /**
+     * Partially updates a product.
+     *
+     * @param productDTO the entity to update partially.
+     * @return the persisted entity.
+     */
+    Optional<ProductDTO> partialUpdate(ProductDTO productDTO);
+
+    /**
      * Get all the products.
      *
      * @param pageable the pagination information.

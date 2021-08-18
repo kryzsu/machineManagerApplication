@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { MachineManagerApplicationSharedModule } from 'app/shared/shared.module';
-import { MachineComponent } from './machine.component';
-import { MachineDetailComponent } from './machine-detail.component';
-import { MachineUpdateComponent } from './machine-update.component';
-import { MachineDeleteDialogComponent } from './machine-delete-dialog.component';
-import { machineRoute } from './machine.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { MachineComponent } from './list/machine.component';
+import { MachineDetailComponent } from './detail/machine-detail.component';
+import { MachineUpdateComponent } from './update/machine-update.component';
+import { MachineDeleteDialogComponent } from './delete/machine-delete-dialog.component';
+import { MachineRoutingModule } from './route/machine-routing.module';
 
 @NgModule({
-  imports: [MachineManagerApplicationSharedModule, RouterModule.forChild(machineRoute)],
+  imports: [SharedModule, MachineRoutingModule],
   declarations: [MachineComponent, MachineDetailComponent, MachineUpdateComponent, MachineDeleteDialogComponent],
   entryComponents: [MachineDeleteDialogComponent],
 })
-export class MachineManagerApplicationMachineModule {}
+export class MachineModule {}

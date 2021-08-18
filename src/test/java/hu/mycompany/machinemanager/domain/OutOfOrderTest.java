@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hu.mycompany.machinemanager.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class OutOfOrderTest {
+class OutOfOrderTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(OutOfOrder.class);
         OutOfOrder outOfOrder1 = new OutOfOrder();
         outOfOrder1.setId(1L);

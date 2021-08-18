@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import hu.mycompany.machinemanager.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class OutOfOrderDTOTest {
+class OutOfOrderDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(OutOfOrderDTO.class);
         OutOfOrderDTO outOfOrderDTO1 = new OutOfOrderDTO();
         outOfOrderDTO1.setId(1L);

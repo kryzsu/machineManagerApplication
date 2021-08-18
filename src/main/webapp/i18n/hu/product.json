@@ -3,6 +3,7 @@
     "product": {
       "home": {
         "title": "Products",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Egy új Product létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Productt",
         "notFound": "No Products found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Product"
       },
+      "id": "ID",
       "name": "Name",
       "comment": "Comment",
       "job": "Job"

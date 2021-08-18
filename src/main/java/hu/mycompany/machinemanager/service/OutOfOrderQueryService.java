@@ -3,10 +3,9 @@ package hu.mycompany.machinemanager.service;
 import hu.mycompany.machinemanager.domain.*; // for static metamodels
 import hu.mycompany.machinemanager.domain.OutOfOrder;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
-import hu.mycompany.machinemanager.service.dto.OutOfOrderCriteria;
+import hu.mycompany.machinemanager.service.criteria.OutOfOrderCriteria;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.OutOfOrderMapper;
-import io.github.jhipster.service.QueryService;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link OutOfOrder} entities in the database.
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class OutOfOrderQueryService extends QueryService<OutOfOrder> {
+
     private final Logger log = LoggerFactory.getLogger(OutOfOrderQueryService.class);
 
     private final OutOfOrderRepository outOfOrderRepository;

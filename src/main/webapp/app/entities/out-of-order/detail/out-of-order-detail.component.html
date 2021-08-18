@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="outOfOrder">
+      <h2 data-cy="outOfOrderDetailsHeading">
+        <span jhiTranslate="machineManagerApplicationApp.outOfOrder.detail.title">Out Of Order</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ outOfOrder.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.date">Date</span></dt>
+        <dd>
+          <span>{{ outOfOrder.date | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.description">Description</span></dt>
+        <dd>
+          <span>{{ outOfOrder.description }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.machine">Machine</span></dt>
+        <dd>
+          <span *ngFor="let machine of outOfOrder.machines; let last = last">
+            <a [routerLink]="['/machine', machine?.id, 'view']">{{ machine.name }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/out-of-order', outOfOrder.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

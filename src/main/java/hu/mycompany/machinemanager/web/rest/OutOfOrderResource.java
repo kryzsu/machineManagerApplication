@@ -1,18 +1,18 @@
 package hu.mycompany.machinemanager.web.rest;
 
+import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
 import hu.mycompany.machinemanager.service.OutOfOrderQueryService;
 import hu.mycompany.machinemanager.service.OutOfOrderService;
-import hu.mycompany.machinemanager.service.dto.OutOfOrderCriteria;
+import hu.mycompany.machinemanager.service.criteria.OutOfOrderCriteria;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.web.rest.errors.BadRequestAlertException;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link hu.mycompany.machinemanager.domain.OutOfOrder}.
@@ -30,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class OutOfOrderResource {
+
     private final Logger log = LoggerFactory.getLogger(OutOfOrderResource.class);
 
     private static final String ENTITY_NAME = "outOfOrder";
@@ -39,10 +43,17 @@ public class OutOfOrderResource {
 
     private final OutOfOrderService outOfOrderService;
 
+    private final OutOfOrderRepository outOfOrderRepository;
+
     private final OutOfOrderQueryService outOfOrderQueryService;
 
-    public OutOfOrderResource(OutOfOrderService outOfOrderService, OutOfOrderQueryService outOfOrderQueryService) {
+    public OutOfOrderResource(
+        OutOfOrderService outOfOrderService,
+        OutOfOrderRepository outOfOrderRepository,
+        OutOfOrderQueryService outOfOrderQueryService
+    ) {
         this.outOfOrderService = outOfOrderService;
+        this.outOfOrderRepository = outOfOrderRepository;
         this.outOfOrderQueryService = outOfOrderQueryService;
     }
 
@@ -67,25 +78,73 @@ public class OutOfOrderResource {
     }
 
     /**
-     * {@code PUT  /out-of-orders} : Updates an existing outOfOrder.
+     * {@code PUT  /out-of-orders/:id} : Updates an existing outOfOrder.
      *
+     * @param id the id of the outOfOrderDTO to save.
      * @param outOfOrderDTO the outOfOrderDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated outOfOrderDTO,
      * or with status {@code 400 (Bad Request)} if the outOfOrderDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the outOfOrderDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/out-of-orders")
-    public ResponseEntity<OutOfOrderDTO> updateOutOfOrder(@Valid @RequestBody OutOfOrderDTO outOfOrderDTO) throws URISyntaxException {
-        log.debug("REST request to update OutOfOrder : {}", outOfOrderDTO);
+    @PutMapping("/out-of-orders/{id}")
+    public ResponseEntity<OutOfOrderDTO> updateOutOfOrder(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody OutOfOrderDTO outOfOrderDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update OutOfOrder : {}, {}", id, outOfOrderDTO);
         if (outOfOrderDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, outOfOrderDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!outOfOrderRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         OutOfOrderDTO result = outOfOrderService.save(outOfOrderDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, outOfOrderDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /out-of-orders/:id} : Partial updates given fields of an existing outOfOrder, field will ignore if it is null
+     *
+     * @param id the id of the outOfOrderDTO to save.
+     * @param outOfOrderDTO the outOfOrderDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated outOfOrderDTO,
+     * or with status {@code 400 (Bad Request)} if the outOfOrderDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the outOfOrderDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the outOfOrderDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/out-of-orders/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<OutOfOrderDTO> partialUpdateOutOfOrder(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody OutOfOrderDTO outOfOrderDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update OutOfOrder partially : {}, {}", id, outOfOrderDTO);
+        if (outOfOrderDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, outOfOrderDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!outOfOrderRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<OutOfOrderDTO> result = outOfOrderService.partialUpdate(outOfOrderDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, outOfOrderDTO.getId().toString())
+        );
     }
 
     /**

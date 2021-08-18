@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.service.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.validation.constraints.*;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.*;
  * A DTO for the {@link hu.mycompany.machinemanager.domain.OutOfOrder} entity.
  */
 public class OutOfOrderDTO implements Serializable {
+
     private Long id;
 
     @NotNull
@@ -62,12 +64,16 @@ public class OutOfOrderDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((OutOfOrderDTO) o).id);
+        OutOfOrderDTO outOfOrderDTO = (OutOfOrderDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, outOfOrderDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -77,7 +83,7 @@ public class OutOfOrderDTO implements Serializable {
             "id=" + getId() +
             ", date='" + getDate() + "'" +
             ", description='" + getDescription() + "'" +
-            ", machines='" + getMachines() + "'" +
+            ", machines=" + getMachines() +
             "}";
     }
 }

@@ -2,12 +2,14 @@ package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * A DTO for the {@link hu.mycompany.machinemanager.domain.View} entity.
  */
 public class ViewDTO implements Serializable {
+
     private Long id;
 
     private String name;
@@ -47,12 +49,16 @@ public class ViewDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((ViewDTO) o).id);
+        ViewDTO viewDTO = (ViewDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, viewDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -61,7 +67,7 @@ public class ViewDTO implements Serializable {
         return "ViewDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", machines='" + getMachines() + "'" +
+            ", machines=" + getMachines() +
             "}";
     }
 }

@@ -1,16 +1,16 @@
 package hu.mycompany.machinemanager.web.rest;
 
+import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.service.MachineService;
 import hu.mycompany.machinemanager.service.dto.MachineDTO;
 import hu.mycompany.machinemanager.web.rest.errors.BadRequestAlertException;
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +21,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link hu.mycompany.machinemanager.domain.Machine}.
@@ -28,6 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class MachineResource {
+
     private final Logger log = LoggerFactory.getLogger(MachineResource.class);
 
     private static final String ENTITY_NAME = "machine";
@@ -37,8 +41,11 @@ public class MachineResource {
 
     private final MachineService machineService;
 
-    public MachineResource(MachineService machineService) {
+    private final MachineRepository machineRepository;
+
+    public MachineResource(MachineService machineService, MachineRepository machineRepository) {
         this.machineService = machineService;
+        this.machineRepository = machineRepository;
     }
 
     /**
@@ -62,25 +69,73 @@ public class MachineResource {
     }
 
     /**
-     * {@code PUT  /machines} : Updates an existing machine.
+     * {@code PUT  /machines/:id} : Updates an existing machine.
      *
+     * @param id the id of the machineDTO to save.
      * @param machineDTO the machineDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated machineDTO,
      * or with status {@code 400 (Bad Request)} if the machineDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the machineDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/machines")
-    public ResponseEntity<MachineDTO> updateMachine(@Valid @RequestBody MachineDTO machineDTO) throws URISyntaxException {
-        log.debug("REST request to update Machine : {}", machineDTO);
+    @PutMapping("/machines/{id}")
+    public ResponseEntity<MachineDTO> updateMachine(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody MachineDTO machineDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Machine : {}, {}", id, machineDTO);
         if (machineDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, machineDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!machineRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         MachineDTO result = machineService.save(machineDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, machineDTO.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /machines/:id} : Partial updates given fields of an existing machine, field will ignore if it is null
+     *
+     * @param id the id of the machineDTO to save.
+     * @param machineDTO the machineDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated machineDTO,
+     * or with status {@code 400 (Bad Request)} if the machineDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the machineDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the machineDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/machines/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<MachineDTO> partialUpdateMachine(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody MachineDTO machineDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Machine partially : {}, {}", id, machineDTO);
+        if (machineDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, machineDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!machineRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<MachineDTO> result = machineService.partialUpdate(machineDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, machineDTO.getId().toString())
+        );
     }
 
     /**

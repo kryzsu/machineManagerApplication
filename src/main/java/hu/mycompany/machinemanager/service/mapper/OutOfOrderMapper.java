@@ -2,6 +2,7 @@ package hu.mycompany.machinemanager.service.mapper;
 
 import hu.mycompany.machinemanager.domain.*;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
+import java.util.Set;
 import org.mapstruct.*;
 
 /**
@@ -9,13 +10,9 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { MachineMapper.class })
 public interface OutOfOrderMapper extends EntityMapper<OutOfOrderDTO, OutOfOrder> {
+    @Mapping(target = "machines", source = "machines", qualifiedByName = "nameSet")
+    OutOfOrderDTO toDto(OutOfOrder s);
+
     @Mapping(target = "removeMachine", ignore = true)
-    default OutOfOrder fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        OutOfOrder outOfOrder = new OutOfOrder();
-        outOfOrder.setId(id);
-        return outOfOrder;
-    }
+    OutOfOrder toEntity(OutOfOrderDTO outOfOrderDTO);
 }

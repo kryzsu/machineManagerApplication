@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
+
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private final ProductRepository productRepository;
@@ -36,6 +37,23 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.toEntity(productDTO);
         product = productRepository.save(product);
         return productMapper.toDto(product);
+    }
+
+    @Override
+    public Optional<ProductDTO> partialUpdate(ProductDTO productDTO) {
+        log.debug("Request to partially update Product : {}", productDTO);
+
+        return productRepository
+            .findById(productDTO.getId())
+            .map(
+                existingProduct -> {
+                    productMapper.partialUpdate(existingProduct, productDTO);
+
+                    return existingProduct;
+                }
+            )
+            .map(productRepository::save)
+            .map(productMapper::toDto);
     }
 
     @Override

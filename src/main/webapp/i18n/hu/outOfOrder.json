@@ -3,6 +3,7 @@
     "outOfOrder": {
       "home": {
         "title": "OutOfOrders",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Egy új Out Of Order létrehozása",
         "createOrEditLabel": "Hozzon létre, vagy módosítson Out Of Ordert",
         "notFound": "No Out Of Orders found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Out Of Order"
       },
+      "id": "ID",
       "date": "Date",
       "description": "Description",
       "machine": "Machine"
