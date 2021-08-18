@@ -1,0 +1,26 @@
+{
+  "machineManagerApplicationApp": {
+    "machine": {
+      "home": {
+        "title": "Machines",
+        "createLabel": "Create a new Machine",
+        "createOrEditLabel": "Create or edit a Machine",
+        "notFound": "No Machines found"
+      },
+      "created": "A new Machine is created with identifier {{ param }}",
+      "updated": "A Machine is updated with identifier {{ param }}",
+      "deleted": "A Machine is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Machine {{ id }}?"
+      },
+      "detail": {
+        "title": "Machine"
+      },
+      "name": "Name",
+      "description": "Description",
+      "outOfOrder": "Out Of Order",
+      "job": "Job",
+      "view": "View"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "machineManagerApplicationApp": {
+    "view": {
+      "home": {
+        "title": "Views",
+        "createLabel": "Egy új View létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Viewt",
+        "notFound": "No Views found"
+      },
+      "created": "Egy új View lett létrehozva {{ param }} azonosítóval",
+      "updated": "A View módosítva lett {{ param }} azonosítóval",
+      "deleted": "A View törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Viewt {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "View"
+      },
+      "name": "Name",
+      "machine": "Machine"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="job">
+            <h2><span jhiTranslate="machineManagerApplicationApp.job.detail.title">Job</span> {{ job.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.estimation">Estimation</span></dt>
+                <dd>
+                    <span>{{ job.estimation }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.productCount">Product Count</span></dt>
+                <dd>
+                    <span>{{ job.productCount }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.startDate">Start Date</span></dt>
+                <dd>
+                    <span>{{ job.startDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.endDate">End Date</span></dt>
+                <dd>
+                    <span>{{ job.endDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.fact">Fact</span></dt>
+                <dd>
+                    <span>{{ job.fact }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.orderNumber">Order Number</span></dt>
+                <dd>
+                    <span>{{ job.orderNumber }}</span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.product">Product</span></dt>
+                <dd>
+                    <span *ngFor="let product of job.products; let last = last">
+                        <a [routerLink]="['/product', product?.id, 'view']">{{ product.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span></dt>
+                <dd>
+                    <div *ngIf="job.machineId">
+                        <a [routerLink]="['/machine', job.machineId, 'view']">{{ job.machineName }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/job', job.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

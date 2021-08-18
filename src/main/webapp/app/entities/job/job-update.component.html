@@ -1,0 +1,95 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-job-heading" jhiTranslate="machineManagerApplicationApp.job.home.createOrEditLabel">Create or edit a Job</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.estimation" for="field_estimation">Estimation</label>
+                    <input type="number" class="form-control" name="estimation" id="field_estimation"
+                           formControlName="estimation"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.productCount" for="field_productCount">Product Count</label>
+                    <input type="number" class="form-control" name="productCount" id="field_productCount"
+                           formControlName="productCount"/>
+                    <div *ngIf="editForm.get('productCount')!.invalid && (editForm.get('productCount')!.dirty || editForm.get('productCount')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('productCount')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('productCount')?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate">Start Date</label>
+                    <div class="input-group">
+                        <input id="field_startDate" type="text" class="form-control" name="startDate" ngbDatepicker #startDateDp="ngbDatepicker" formControlName="startDate"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.endDate" for="field_endDate">End Date</label>
+                    <div class="input-group">
+                        <input id="field_endDate" type="text" class="form-control" name="endDate" ngbDatepicker #endDateDp="ngbDatepicker" formControlName="endDate"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.fact" for="field_fact">Fact</label>
+                    <input type="number" class="form-control" name="fact" id="field_fact"
+                           formControlName="fact"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.orderNumber" for="field_orderNumber">Order Number</label>
+                    <input type="text" class="form-control" name="orderNumber" id="field_orderNumber"
+                           formControlName="orderNumber"/>
+                </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="machineManagerApplicationApp.job.product" for="field_products">Product</label>
+                    <select class="form-control" id="field_products" multiple name="products" formControlName="products">
+                        <option [ngValue]="getSelected(editForm.get('products')!.value, productOption)" *ngFor="let productOption of products; trackBy: trackById">{{ productOption.name }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
+                    <select class="form-control" id="field_machine" name="machine" formControlName="machineId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="machineOption.id" *ngFor="let machineOption of machines; trackBy: trackById">{{ machineOption.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

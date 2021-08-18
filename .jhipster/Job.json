@@ -1,0 +1,60 @@
+{
+  "name": "Job",
+  "fields": [
+    {
+      "fieldName": "estimation",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "productCount",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fact",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "orderNumber",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "product",
+      "otherEntityName": "product",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "name",
+      "ownerSide": true,
+      "otherEntityRelationshipName": "job"
+    },
+    {
+      "relationshipName": "machine",
+      "otherEntityName": "machine",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "name",
+      "otherEntityRelationshipName": "job"
+    }
+  ],
+  "changelogDate": "20201214140542",
+  "entityTableName": "job",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
+}

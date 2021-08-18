@@ -1,0 +1,26 @@
+{
+  "machineManagerApplicationApp": {
+    "machine": {
+      "home": {
+        "title": "Machines",
+        "createLabel": "Egy új Machine létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Machinet",
+        "notFound": "No Machines found"
+      },
+      "created": "Egy új Machine lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Machine módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Machine törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Machinet {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Machine"
+      },
+      "name": "Name",
+      "description": "Description",
+      "outOfOrder": "Out Of Order",
+      "job": "Job",
+      "view": "View"
+    }
+  }
+}

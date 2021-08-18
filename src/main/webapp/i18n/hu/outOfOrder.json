@@ -1,0 +1,24 @@
+{
+  "machineManagerApplicationApp": {
+    "outOfOrder": {
+      "home": {
+        "title": "OutOfOrders",
+        "createLabel": "Egy új Out Of Order létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Out Of Ordert",
+        "notFound": "No Out Of Orders found"
+      },
+      "created": "Egy új Out Of Order lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Out Of Order módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Out Of Order törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Out Of Ordert {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Out Of Order"
+      },
+      "date": "Date",
+      "description": "Description",
+      "machine": "Machine"
+    }
+  }
+}

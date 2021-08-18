@@ -1,0 +1,24 @@
+{
+  "machineManagerApplicationApp": {
+    "outOfOrder": {
+      "home": {
+        "title": "Out Of Orders",
+        "createLabel": "Create a new Out Of Order",
+        "createOrEditLabel": "Create or edit a Out Of Order",
+        "notFound": "No Out Of Orders found"
+      },
+      "created": "A new Out Of Order is created with identifier {{ param }}",
+      "updated": "A Out Of Order is updated with identifier {{ param }}",
+      "deleted": "A Out Of Order is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Out Of Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Out Of Order"
+      },
+      "date": "Date",
+      "description": "Description",
+      "machine": "Machine"
+    }
+  }
+}
