@@ -1,7 +1,7 @@
 import { machine2Treenode } from 'app/perspective/converter-utils';
-import { IMachine } from 'app/shared/model/machine.model';
+import { IMachine } from '../entities/machine/machine.model';
 
-fdescribe('converter utils', () => {
+describe('converter utils', () => {
   describe('machine2Treenode', () => {
     it('no child machine not a problem', () => {
       const machine: IMachine = {
@@ -13,7 +13,8 @@ fdescribe('converter utils', () => {
       // GIVEN
       const rv = machine2Treenode(machine);
       // THEN
-      expect(rv).toBeNull();
+      expect(rv).not.toBeNull();
+      expect(rv.children).toBeUndefined();
     });
   });
 });
