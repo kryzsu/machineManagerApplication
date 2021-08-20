@@ -6,6 +6,8 @@ import { TreeNode } from 'primeng/api';
 import { IMachine } from 'app/entities/machine/machine.model';
 import { IJob } from 'app/entities/job/job.model';
 import { IProduct } from 'app/entities/product/product.model';
+import { AppState } from '../redux/app.state';
+import { BarData } from '../shared/bar-chart/bar-chart.component';
 
 const colors: any = {
   red: {
@@ -54,6 +56,19 @@ export const createColors = (): void => {
 };
 
 createColors();
+
+export const machine2BarData = (appState: AppState): BarData => {
+  const labels: string[] = [];
+  const data: number[] = [];
+  appState.machineList.forEach((machine: IMachine) => {
+    labels.push(machine.name ?? '');
+    let sum = 0;
+    machine.jobs?.forEach((job: IJob): number => (sum += job.estimation ?? 0));
+    data.push(sum);
+  });
+
+  return { labels, datasets: [{ label: 'becsült idők', data }] };
+};
 
 export const machineArray2Events = (machineList: IMachine[], actions: CalendarEventAction[]): CalendarEvent[] => {
   const rv: CalendarEvent[] = [];

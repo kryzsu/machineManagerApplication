@@ -11,7 +11,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { perspectiveState } from './perspective.route';
 import { PerpsTimelineComponent } from './component/perps-timeline/perps-timeline.component';
 import { PerpsTreeComponent } from './component/perps-tree/perps-tree.component';
-
+import { AccordionModule } from 'primeng/accordion';
 @NgModule({
   imports: [
     SharedModule,
@@ -23,6 +23,7 @@ import { PerpsTreeComponent } from './component/perps-tree/perps-tree.component'
     }),
     DragDropModule,
     TreeModule,
+    AccordionModule,
   ],
   declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent],
 })

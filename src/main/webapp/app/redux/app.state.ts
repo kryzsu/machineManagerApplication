@@ -9,3 +9,8 @@ export interface AppState {
   machineList: IMachine[];
   machineNames: string[];
 }
+
+export const initialState: AppState = {
+  machineList: [],
+  machineNames: [],
+};

@@ -1,18 +1,21 @@
 /* tslint:disable: no-unsafe-return */
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventAction, CalendarView } from 'angular-calendar';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startOfDay, subDays, addDays, endOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 
-import { colorList, machineArray2Events } from '../converter-utils';
-import { IMachine } from 'app/entities/machine/machine.model';
+import { machine2BarData, machineArray2Events } from '../converter-utils';
 import { IJob } from 'app/entities/job/job.model';
 import * as dayjs from 'dayjs';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../redux/selectors';
-import { createMachineList } from '../../redux/actions';
+import * as Actions from '../../redux/actions';
+import { AppState } from '../../redux/app.state';
+import { filter, map } from 'rxjs/operators';
+import { BarData } from '../../shared/bar-chart/bar-chart.component';
+import { IMachine } from '../../entities/machine/machine.model';
 
 @Component({
   selector: 'jhi-calendar',
@@ -32,14 +35,24 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
   activeDayIsOpen = true;
-  machineList$ = this.store.select(selectMachineList);
+  machineList$: Observable<AppState> | undefined;
+  barData: BarData = { labels: [], datasets: [] };
 
+  private store: Store;
   private actions: CalendarEventAction[] = [
     {
       label: '&nbsp; edit &nbsp;',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
+        let jobId = -1;
+        if (event.id === undefined) {
+          jobId = -1;
+        } else if (typeof event.id === 'string') {
+          jobId = Number.parseInt(event.id, 10);
+        } else {
+          jobId = event.id;
+        }
+        this.store.dispatch(Actions.editJob({ jobId }));
       },
     },
     {
@@ -47,7 +60,6 @@ export class CalendarComponent implements OnInit {
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events2 = this.events2.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
       },
     },
   ];
@@ -63,9 +75,25 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  constructor(private readonly store: Store) {
-    const startDate = subDays(startOfDay(new Date()), 1);
+  constructor(store: Store) {
+    this.store = store;
+    this.machineList$ = this.store.select(selectMachineList);
+    const machineList = this.generateDemoData();
+    this.store.dispatch(Actions.createMachineList({ machineList }));
+    this.events2 = machineArray2Events(machineList, this.actions);
+
+    this.store
+      .select(selectMachineList)
+      .pipe(
+        filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        map(machine2BarData)
+      )
+      .subscribe(data => (this.barData = data));
+  }
+
+  generateDemoData(): IMachine[] {
     const machineList = [];
+    const startDate = subDays(startOfDay(new Date()), 1);
 
     for (let i = 0; i < 12; i++) {
       const machineId = i * 100;
@@ -91,12 +119,7 @@ export class CalendarComponent implements OnInit {
         jobs,
       });
     }
-    this.store.dispatch(createMachineList({ machineList }));
-    this.events2 = machineArray2Events(machineList, this.actions);
-  }
-
-  handleEvent(arg0: string, event: CalendarEvent<any>): void {
-    alert(`handleEvent ${arg0} event`);
+    return machineList;
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

@@ -1,5 +1,14 @@
 import { Component, Input } from '@angular/core';
 
+export interface Dataset {
+  label: string;
+  data: number[];
+}
+
+export interface BarData {
+  labels: string[];
+  datasets: Dataset[];
+}
 @Component({
   selector: 'jhi-bar-chart',
   templateUrl: './bar-chart.component.html',
@@ -36,7 +45,7 @@ export class BarChartComponent {
   };
 
   @Input()
-  data = {
+  data: BarData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {

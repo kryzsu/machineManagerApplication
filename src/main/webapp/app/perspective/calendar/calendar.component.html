@@ -1,116 +1,127 @@
-<jhi-perps-tree></jhi-perps-tree>
-<hr />
-<div class="row text-center">
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-        Previous
+<p-accordion [multiple]="true">
+  <p-accordionTab header="gépek, jobok fa nézetben">
+    <jhi-perps-tree></jhi-perps-tree>
+  </p-accordionTab>
+  <p-accordionTab header="Naptár">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <div class="btn-group">
+          <div
+            class="btn btn-primary"
+            mwlCalendarPreviousView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
+          >
+            Previous
+          </div>
+          <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">Today</div>
+          <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+            Next
+          </div>
+        </div>
       </div>
-      <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">Today</div>
-      <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-        Next
+      <div class="col-md-4">
+        <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'en' }}</h3>
+      </div>
+      <div class="col-md-4">
+        <div class="btn-group">
+          <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">Month</div>
+          <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">Week</div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'en' }}</h3>
-  </div>
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="view === CalendarView.Month">Month</div>
-      <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="view === CalendarView.Week">Week</div>
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [viewDate]="viewDate"
+        [events]="events2"
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        (dayClicked)="dayClicked($event.day)"
+      >
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events2" [refresh]="refresh">
+      </mwl-calendar-week-view>
     </div>
-  </div>
-</div>
-<div [ngSwitch]="view">
-  <mwl-calendar-month-view
-    *ngSwitchCase="CalendarView.Month"
-    [viewDate]="viewDate"
-    [events]="events2"
-    [refresh]="refresh"
-    [activeDayIsOpen]="activeDayIsOpen"
-    (dayClicked)="dayClicked($event.day)"
-  >
-  </mwl-calendar-month-view>
-  <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events2" [refresh]="refresh">
-  </mwl-calendar-week-view>
-</div>
+  </p-accordionTab>
+  <p-accordionTab header="Job lista">
+    <h3>
+      <button class="btn btn-primary float-right" (click)="addEvent()">Add new</button>
+      <div class="clearfix"></div>
+    </h3>
 
-<h3>
-  Edit events
-  <button class="btn btn-primary float-right" (click)="addEvent()">Add new</button>
-  <div class="clearfix"></div>
-</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Primary color</th>
+            <th>Secondary color</th>
+            <th>Starts at</th>
+            <th>Ends at</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
 
-<div class="table-responsive">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Primary color</th>
-        <th>Secondary color</th>
-        <th>Starts at</th>
-        <th>Ends at</th>
-        <th>Remove</th>
-      </tr>
-    </thead>
+        <tbody>
+          <tr *ngFor="let event of events2">
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
+            </td>
+            <td>
+              <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input class="form-control" type="text" [(ngModel)]="event.start" (ngModelChange)="refresh.next()" />
+            </td>
+            <td>
+              <input class="form-control" type="text" [(ngModel)]="event.end" (ngModelChange)="refresh.next()" />
+            </td>
+            <td>
+              <button class="btn btn-danger" (click)="deleteEvent(event)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-accordionTab>
+  <p-accordionTab header="dnd demo">
+    <div class="example-container">
+      <h2>To do</h2>
 
-    <tbody>
-      <tr *ngFor="let event of events2">
-        <td>
-          <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
-        </td>
-        <td>
-          <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
-        </td>
-        <td>
-          <input *ngIf="event.color != null" type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
-        </td>
-        <td>
-          <input class="form-control" type="text" [(ngModel)]="event.start" (ngModelChange)="refresh.next()" />
-        </td>
-        <td>
-          <input class="form-control" type="text" [(ngModel)]="event.end" (ngModelChange)="refresh.next()" />
-        </td>
-        <td>
-          <button class="btn btn-danger" (click)="deleteEvent(event)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+      <div
+        cdkDropList
+        #todoList="cdkDropList"
+        [cdkDropListData]="todo"
+        [cdkDropListConnectedTo]="[doneList]"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item }}</div>
+      </div>
+    </div>
 
-<div class="example-container">
-  <h2>To do</h2>
+    <div class="example-container">
+      <h2>Done</h2>
 
-  <div
-    cdkDropList
-    #todoList="cdkDropList"
-    [cdkDropListData]="todo"
-    [cdkDropListConnectedTo]="[doneList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item }}</div>
-  </div>
-</div>
-
-<div class="example-container">
-  <h2>Done</h2>
-
-  <div
-    cdkDropList
-    #doneList="cdkDropList"
-    [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="[todoList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <div class="example-box" *ngFor="let item of done" cdkDrag>{{ item }}</div>
-  </div>
-</div>
-<hr />
+      <div
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="done"
+        [cdkDropListConnectedTo]="[todoList]"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div class="example-box" *ngFor="let item of done" cdkDrag>{{ item }}</div>
+      </div>
+    </div>
+  </p-accordionTab>
+  <p-accordionTab header="becsült terhelés">
+    <jhi-bar-chart [data]="barData"> </jhi-bar-chart>
+  </p-accordionTab>
+</p-accordion>
 <jhi-perps-timeline [events]="events2"></jhi-perps-timeline>
-<hr />
-<h2>Bar Chart</h2>
-<jhi-bar-chart> </jhi-bar-chart>

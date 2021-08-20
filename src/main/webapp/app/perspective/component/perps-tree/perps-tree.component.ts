@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { TreeDragDropService, TreeNode } from 'primeng/api';
 
 import { machine2Treenode } from 'app/perspective/converter-utils';
-import { IMachine } from 'app/entities/machine/machine.model';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../../redux/selectors';
-import { map } from 'rxjs/operators';
-import { AppState } from '../../../redux/app.state';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-perps-tree',
@@ -16,12 +14,15 @@ import { AppState } from '../../../redux/app.state';
 })
 export class PerpsTreeComponent {
   data: TreeNode[] = [];
-
-  constructor(private readonly store: Store) {
-    this.store
+  constructor(pstore: Store) {
+    pstore
       .select(selectMachineList)
-      .pipe(map(appState => appState.machineList.map(machine2Treenode)))
+      .pipe(
+        filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        map(appState => appState.machineList.map(machine2Treenode))
+      )
       .subscribe((nodes: TreeNode[]) => {
+        debugger; // eslint-disable-line no-debugger
         this.data = nodes;
       });
   }
