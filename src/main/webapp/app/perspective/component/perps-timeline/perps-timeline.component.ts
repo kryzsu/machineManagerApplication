@@ -21,15 +21,16 @@ export class PerpsTimelineComponent implements OnInit {
       timestamp: eventObj.start.toISOString().slice(0, 10),
       text: eventObj.title,
     }));
+    this.refresh();
   }
 
   private _events: Item[] = [];
 
   ngOnInit(): void {
-    this.createMilestone();
+    this.refresh();
   }
 
-  private createMilestone(): void {
+  private refresh(): void {
     milestones.default('#timeline').parseTime('%Y-%m-%d').aggregateBy('day').render(this._events);
   }
 }

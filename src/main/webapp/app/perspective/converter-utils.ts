@@ -96,6 +96,7 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
             afterEnd: true,
           },
           draggable: true,
+          meta: job,
         });
       }
     }

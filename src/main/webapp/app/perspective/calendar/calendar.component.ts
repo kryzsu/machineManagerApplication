@@ -59,6 +59,8 @@ export class CalendarComponent implements OnInit {
       label: '&nbsp; delete &nbsp;',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
+        const job: IJob = event.meta;
+        this.store.dispatch(Actions.deleteJob({ jobId: job.id ?? -1 }));
         this.events2 = this.events2.filter(iEvent => iEvent !== event);
       },
     },
@@ -80,7 +82,6 @@ export class CalendarComponent implements OnInit {
     this.machineList$ = this.store.select(selectMachineList);
     const machineList = this.generateDemoData();
     this.store.dispatch(Actions.createMachineList({ machineList }));
-    this.events2 = machineArray2Events(machineList, this.actions);
 
     this.store
       .select(selectMachineList)
@@ -89,6 +90,14 @@ export class CalendarComponent implements OnInit {
         map(machine2BarData)
       )
       .subscribe(data => (this.barData = data));
+
+    this.store
+      .select(selectMachineList)
+      .pipe(
+        filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        map(state => machineArray2Events(state.machineList, this.actions))
+      )
+      .subscribe(data => (this.events2 = data));
   }
 
   generateDemoData(): IMachine[] {
