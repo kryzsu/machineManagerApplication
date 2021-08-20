@@ -10,6 +10,9 @@ import { colorList, machineArray2Events } from '../converter-utils';
 import { IMachine } from 'app/entities/machine/machine.model';
 import { IJob } from 'app/entities/job/job.model';
 import * as dayjs from 'dayjs';
+import { Store } from '@ngrx/store';
+import { selectMachineList } from '../../redux/selectors';
+import { createMachineList } from '../../redux/actions';
 
 @Component({
   selector: 'jhi-calendar',
@@ -23,14 +26,13 @@ export class CalendarComponent implements OnInit {
 
   events2: CalendarEvent[] = [];
 
-  machineList: IMachine[] = [];
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
 
   done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
   refresh: Subject<any> = new Subject();
-
   activeDayIsOpen = true;
+  machineList$ = this.store.select(selectMachineList);
 
   private actions: CalendarEventAction[] = [
     {
@@ -61,8 +63,9 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  constructor() {
+  constructor(private readonly store: Store) {
     const startDate = subDays(startOfDay(new Date()), 1);
+    const machineList = [];
 
     for (let i = 0; i < 12; i++) {
       const machineId = i * 100;
@@ -81,16 +84,15 @@ export class CalendarComponent implements OnInit {
 
         estimationSum += estimation;
       }
-
-      this.machineList.push({
+      machineList.push({
         id: machineId,
         name: `gep ${i}`,
         description: `gep leiras ${i}`,
         jobs,
       });
     }
-
-    this.events2 = machineArray2Events(this.machineList, this.actions);
+    this.store.dispatch(createMachineList({ machineList }));
+    this.events2 = machineArray2Events(machineList, this.actions);
   }
 
   handleEvent(arg0: string, event: CalendarEvent<any>): void {

@@ -3,6 +3,10 @@ import { TreeDragDropService, TreeNode } from 'primeng/api';
 
 import { machine2Treenode } from 'app/perspective/converter-utils';
 import { IMachine } from 'app/entities/machine/machine.model';
+import { Store } from '@ngrx/store';
+import { selectMachineList } from '../../../redux/selectors';
+import { map } from 'rxjs/operators';
+import { AppState } from '../../../redux/app.state';
 
 @Component({
   selector: 'jhi-perps-tree',
@@ -11,14 +15,16 @@ import { IMachine } from 'app/entities/machine/machine.model';
   styleUrls: ['./perps-tree.component.scss'],
 })
 export class PerpsTreeComponent {
-  @Input()
-  set machineList(machineList: IMachine[]) {
-    this.data = machineList.map(machine2Treenode);
-  }
-
-  @Output() machineListChange = new EventEmitter<IMachine[]>();
-
   data: TreeNode[] = [];
+
+  constructor(private readonly store: Store) {
+    this.store
+      .select(selectMachineList)
+      .pipe(map(appState => appState.machineList.map(machine2Treenode)))
+      .subscribe((nodes: TreeNode[]) => {
+        this.data = nodes;
+      });
+  }
 
   onDrop(event: any): void {
     event.accept();

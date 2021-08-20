@@ -4,6 +4,15 @@ This application was generated using JHipster 7.1.0, you can find documentation 
 
 ## Development
 
+node -v && npm -v
+v14.16.1
+6.14.14
+
+### redux
+
+https://malcoded.com/posts/angular-ngrx-guide/
+https://blog.angular-university.io/angular-2-redux-ngrx-rxjs/
+
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
 1. [Node.js][]: We use Node to run a development web server and build the project.

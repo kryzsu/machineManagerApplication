@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ChartModule } from 'primeng/chart';
 
 import { SharedLibsModule } from './shared-libs.module';
 import { FindLanguageFromKeyPipe } from './language/find-language-from-key.pipe';
@@ -12,9 +13,10 @@ import { FormatMediumDatePipe } from './date/format-medium-date.pipe';
 import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 @NgModule({
-  imports: [SharedLibsModule],
+  imports: [SharedLibsModule, ChartModule],
   declarations: [
     FindLanguageFromKeyPipe,
     TranslateDirective,
@@ -27,6 +29,7 @@ import { ItemCountComponent } from './pagination/item-count.component';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
+    BarChartComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -41,6 +44,7 @@ import { ItemCountComponent } from './pagination/item-count.component';
     SortByDirective,
     SortDirective,
     ItemCountComponent,
+    BarChartComponent,
   ],
 })
 export class SharedModule {}
