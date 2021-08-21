@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { BarChartComponent } from './bar-chart.component';
 
@@ -9,6 +10,7 @@ describe('BarChartComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [BarChartComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
