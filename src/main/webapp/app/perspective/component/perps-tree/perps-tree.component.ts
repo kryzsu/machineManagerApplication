@@ -22,7 +22,6 @@ export class PerpsTreeComponent {
         map(appState => appState.machineList.map(machine2Treenode))
       )
       .subscribe((nodes: TreeNode[]) => {
-        debugger; // eslint-disable-line no-debugger
         this.data = nodes;
       });
   }

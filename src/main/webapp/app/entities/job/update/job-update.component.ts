@@ -4,7 +4,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import * as R from 'ramda';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
@@ -17,6 +16,7 @@ import { IMachine } from 'app/entities/machine/machine.model';
 import { MachineService } from 'app/entities/machine/service/machine.service';
 import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
+import { sortByNameCaseInsensitive } from '../../../util/common-util';
 
 @Component({
   selector: 'jhi-job-update',
@@ -201,7 +201,6 @@ export class JobUpdateComponent implements OnInit {
         )
       )
       .subscribe((customers: ICustomer[]) => {
-        const sortByNameCaseInsensitive = R.sortBy(R.compose(R.toLower, (item: ICustomer) => item.name ?? ''));
         this.customersSharedCollection = sortByNameCaseInsensitive(customers);
       });
   }

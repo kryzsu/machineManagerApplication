@@ -2,13 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarEventAction, CalendarView } from 'angular-calendar';
 import { Observable, Subject } from 'rxjs';
-import { startOfDay, subDays, addDays, endOfDay, isSameDay, isSameMonth } from 'date-fns';
+import { startOfDay, endOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 
 import { machine2BarData, machineArray2Events } from '../converter-utils';
 import { IJob } from 'app/entities/job/job.model';
-import * as dayjs from 'dayjs';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../redux/selectors';
 import * as Actions from '../../redux/actions';
@@ -16,6 +15,8 @@ import { AppState } from '../../redux/app.state';
 import { filter, map } from 'rxjs/operators';
 import { BarData } from '../../shared/bar-chart/bar-chart.component';
 import { IMachine } from '../../entities/machine/machine.model';
+import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
+import { sortByNameCaseInsensitive } from '../../util/common-util';
 
 @Component({
   selector: 'jhi-calendar',
@@ -38,13 +39,14 @@ export class CalendarComponent implements OnInit {
   machineList$: Observable<AppState> | undefined;
   barData: BarData = { labels: [], datasets: [] };
 
+  private perspectiveService: PerspectiveService;
   private store: Store;
   private actions: CalendarEventAction[] = [
     {
       label: '&nbsp; edit &nbsp;',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        let jobId = -1;
+        let jobId;
         if (event.id === undefined) {
           jobId = -1;
         } else if (typeof event.id === 'string') {
@@ -77,11 +79,12 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  constructor(store: Store) {
+  constructor(store: Store, perspectiveService: PerspectiveService) {
     this.store = store;
+    this.perspectiveService = perspectiveService;
     this.machineList$ = this.store.select(selectMachineList);
-    const machineList = this.generateDemoData();
-    this.store.dispatch(Actions.createMachineList({ machineList }));
+    //  const machineList = this.generateDemoData();
+    //  this.store.dispatch(Actions.createMachineList({ machineList }));
 
     this.store
       .select(selectMachineList)
@@ -89,7 +92,9 @@ export class CalendarComponent implements OnInit {
         filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
         map(machine2BarData)
       )
-      .subscribe(data => (this.barData = data));
+      .subscribe(data => {
+        this.barData = data;
+      });
 
     this.store
       .select(selectMachineList)
@@ -98,37 +103,6 @@ export class CalendarComponent implements OnInit {
         map(state => machineArray2Events(state.machineList, this.actions))
       )
       .subscribe(data => (this.events2 = data));
-  }
-
-  generateDemoData(): IMachine[] {
-    const machineList = [];
-    const startDate = subDays(startOfDay(new Date()), 1);
-
-    for (let i = 0; i < 12; i++) {
-      const machineId = i * 100;
-      const jobs: IJob[] = [];
-      let estimationSum = 0;
-
-      for (let j = 0; j < 6; j++) {
-        const estimation = Math.floor(Math.random() * 100) % 3;
-        jobs.push({
-          id: machineId + 10 * j + 1,
-          startDate: dayjs(addDays(startDate, estimationSum)),
-          estimation,
-          orderNumber: `order ${machineId + j + 1}`,
-          products: [{ id: machineId + 10 * j + 1, name: `termek ${machineId + j + 1}` }],
-        });
-
-        estimationSum += estimation;
-      }
-      machineList.push({
-        id: machineId,
-        name: `gep ${i}`,
-        description: `gep leiras ${i}`,
-        jobs,
-      });
-    }
-    return machineList;
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -171,6 +145,13 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.perspectiveService
+      .getDetailedMachineList()
+      .pipe(map((response: EntityArrayResponseType) => response.body ?? []))
+      .subscribe((machineList: IMachine[]) => {
+        machineList = sortByNameCaseInsensitive(machineList);
+        this.store.dispatch(Actions.createMachineList({ machineList }));
+      });
     this.createSvg();
     this.drawBars(this.data);
   }

@@ -13,6 +13,11 @@ v14.16.1
 https://malcoded.com/posts/angular-ngrx-guide/
 https://blog.angular-university.io/angular-2-redux-ngrx-rxjs/
 
+### Angular debug
+
+ng.getComponent($0)
+https://juristr.com/blog/2019/09/debugging-angular-ivy-console/
+
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
 1. [Node.js][]: We use Node to run a development web server and build the project.

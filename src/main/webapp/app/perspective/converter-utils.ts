@@ -8,6 +8,7 @@ import { IJob } from 'app/entities/job/job.model';
 import { IProduct } from 'app/entities/product/product.model';
 import { AppState } from '../redux/app.state';
 import { BarData } from '../shared/bar-chart/bar-chart.component';
+import { toDate, wrongDate } from '../util/common-util';
 
 const colors: any = {
   red: {
@@ -77,11 +78,16 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
     const color = colorList[Math.floor(Math.random() * 100) % 7];
     if (machine.jobs != null) {
       for (const job of machine.jobs) {
-        const startDate: Date = job.startDate?.toDate() ?? new Date();
+        // eslint-disable-next-line no-console
+        console.warn(job.startDate);
+        // const startDate: Date = stringToDate(job.startDate ?? null) ?? wrongDate;
+        // eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition
+        const startDate: Date =
+          job.startDate === undefined || job.startDate === null ? wrongDate : toDate(job.startDate.toString()) ?? wrongDate;
         const estimation: number = job.estimation ?? 0;
         let title = machine.name ?? '';
         if (job.products != null) {
-          title += `: ${job.products[0].name ?? ''}`;
+          title += `: ${job.products[0]?.name ?? ''}`;
         }
 
         rv.push({

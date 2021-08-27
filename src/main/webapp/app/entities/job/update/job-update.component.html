@@ -14,6 +14,61 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
+          <select class="form-control" id="field_machine" data-cy="machine" name="machine" formControlName="machine">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
+              *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
+            >
+              {{ machineOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate"
+            >Start Date</label
+          >
+          <div class="input-group">
+            <input
+              id="field_startDate"
+              data-cy="startDate"
+              type="text"
+              class="form-control"
+              name="startDate"
+              ngbDatepicker
+              #startDateDp="ngbDatepicker"
+              formControlName="startDate"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.endDate" for="field_endDate">End Date</label>
+          <div class="input-group">
+            <input
+              id="field_endDate"
+              data-cy="endDate"
+              type="text"
+              class="form-control"
+              name="endDate"
+              ngbDatepicker
+              #endDateDp="ngbDatepicker"
+              formControlName="endDate"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.estimation" for="field_estimation"
             >Estimation</label
           >
@@ -56,48 +111,6 @@
             >
               This field should be a number.
             </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate"
-            >Start Date</label
-          >
-          <div class="input-group">
-            <input
-              id="field_startDate"
-              data-cy="startDate"
-              type="text"
-              class="form-control"
-              name="startDate"
-              ngbDatepicker
-              #startDateDp="ngbDatepicker"
-              formControlName="startDate"
-            />
-            <span class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
-                <fa-icon icon="calendar-alt"></fa-icon>
-              </button>
-            </span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.endDate" for="field_endDate">End Date</label>
-          <div class="input-group">
-            <input
-              id="field_endDate"
-              data-cy="endDate"
-              type="text"
-              class="form-control"
-              name="endDate"
-              ngbDatepicker
-              #endDateDp="ngbDatepicker"
-              formControlName="endDate"
-            />
-            <span class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-            </span>
           </div>
         </div>
 
@@ -180,19 +193,6 @@
               *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
             >
               {{ productOption.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
-          <select class="form-control" id="field_machine" data-cy="machine" name="machine" formControlName="machine">
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
-              *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
-            >
-              {{ machineOption.name }}
             </option>
           </select>
         </div>
