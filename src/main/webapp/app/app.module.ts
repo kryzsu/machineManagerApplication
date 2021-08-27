@@ -66,7 +66,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   ],
   providers: [
     Title,
-    { provide: LOCALE_ID, useValue: 'hu' },
+    { provide: LOCALE_ID, useValue: 'en' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
