@@ -32,6 +32,9 @@ describe('Service Tests', () => {
         endDate: currentDate,
         fact: 0,
         orderNumber: 'AAAAAAA',
+        drawingNumber: 'AAAAAAA',
+        drawingContentType: 'image/png',
+        drawing: 'AAAAAAA',
       };
     });
 
@@ -87,6 +90,8 @@ describe('Service Tests', () => {
             endDate: currentDate.format(DATE_FORMAT),
             fact: 1,
             orderNumber: 'BBBBBB',
+            drawingNumber: 'BBBBBB',
+            drawing: 'BBBBBB',
           },
           elemDefault
         );
@@ -113,6 +118,7 @@ describe('Service Tests', () => {
             startDate: currentDate.format(DATE_FORMAT),
             endDate: currentDate.format(DATE_FORMAT),
             fact: 1,
+            drawing: 'BBBBBB',
           },
           new Job()
         );
@@ -144,6 +150,8 @@ describe('Service Tests', () => {
             endDate: currentDate.format(DATE_FORMAT),
             fact: 1,
             orderNumber: 'BBBBBB',
+            drawingNumber: 'BBBBBB',
+            drawing: 'BBBBBB',
           },
           elemDefault
         );
@@ -201,7 +209,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique Job to an array', () => {
-          const jobArray: IJob[] = [{ id: 123 }, { id: 456 }, { id: 9434 }];
+          const jobArray: IJob[] = [{ id: 123 }, { id: 456 }, { id: 68060 }];
           const jobCollection: IJob[] = [{ id: 123 }];
           expectedResult = service.addJobToCollectionIfMissing(jobCollection, ...jobArray);
           expect(expectedResult).toHaveLength(3);

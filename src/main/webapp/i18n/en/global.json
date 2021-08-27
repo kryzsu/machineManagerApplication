@@ -12,6 +12,7 @@
         "outOfOrder": "Out Of Order",
         "product": "Product",
         "view": "View",
+        "customer": "Customer",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

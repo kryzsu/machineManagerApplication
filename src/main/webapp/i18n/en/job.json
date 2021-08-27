@@ -24,8 +24,11 @@
       "endDate": "End Date",
       "fact": "Fact",
       "orderNumber": "Order Number",
+      "drawingNumber": "Drawing Number",
+      "drawing": "Drawing",
       "product": "Product",
-      "machine": "Machine"
+      "machine": "Machine",
+      "customer": "Customer"
     }
   }
 }

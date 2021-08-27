@@ -13,6 +13,8 @@ import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
 import { IMachine } from 'app/entities/machine/machine.model';
 import { MachineService } from 'app/entities/machine/service/machine.service';
+import { ICustomer } from 'app/entities/customer/customer.model';
+import { CustomerService } from 'app/entities/customer/service/customer.service';
 
 import { JobUpdateComponent } from './job-update.component';
 
@@ -24,6 +26,7 @@ describe('Component Tests', () => {
     let jobService: JobService;
     let productService: ProductService;
     let machineService: MachineService;
+    let customerService: CustomerService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -39,6 +42,7 @@ describe('Component Tests', () => {
       jobService = TestBed.inject(JobService);
       productService = TestBed.inject(ProductService);
       machineService = TestBed.inject(MachineService);
+      customerService = TestBed.inject(CustomerService);
 
       comp = fixture.componentInstance;
     });
@@ -82,12 +86,33 @@ describe('Component Tests', () => {
         expect(comp.machinesSharedCollection).toEqual(expectedCollection);
       });
 
+      it('Should call Customer query and add missing value', () => {
+        const job: IJob = { id: 456 };
+        const customer: ICustomer = { id: 25929 };
+        job.customer = customer;
+
+        const customerCollection: ICustomer[] = [{ id: 26711 }];
+        jest.spyOn(customerService, 'query').mockReturnValue(of(new HttpResponse({ body: customerCollection })));
+        const additionalCustomers = [customer];
+        const expectedCollection: ICustomer[] = [...additionalCustomers, ...customerCollection];
+        jest.spyOn(customerService, 'addCustomerToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+        activatedRoute.data = of({ job });
+        comp.ngOnInit();
+
+        expect(customerService.query).toHaveBeenCalled();
+        expect(customerService.addCustomerToCollectionIfMissing).toHaveBeenCalledWith(customerCollection, ...additionalCustomers);
+        expect(comp.customersSharedCollection).toEqual(expectedCollection);
+      });
+
       it('Should update editForm', () => {
         const job: IJob = { id: 456 };
         const products: IProduct = { id: 63338 };
         job.products = [products];
         const machine: IMachine = { id: 30800 };
         job.machine = machine;
+        const customer: ICustomer = { id: 22663 };
+        job.customer = customer;
 
         activatedRoute.data = of({ job });
         comp.ngOnInit();
@@ -95,6 +120,7 @@ describe('Component Tests', () => {
         expect(comp.editForm.value).toEqual(expect.objectContaining(job));
         expect(comp.productsSharedCollection).toContain(products);
         expect(comp.machinesSharedCollection).toContain(machine);
+        expect(comp.customersSharedCollection).toContain(customer);
       });
     });
 
@@ -175,6 +201,14 @@ describe('Component Tests', () => {
         it('Should return tracked Machine primary key', () => {
           const entity = { id: 123 };
           const trackResult = comp.trackMachineById(0, entity);
+          expect(trackResult).toEqual(entity.id);
+        });
+      });
+
+      describe('trackCustomerById', () => {
+        it('Should return tracked Customer primary key', () => {
+          const entity = { id: 123 };
+          const trackResult = comp.trackCustomerById(0, entity);
           expect(trackResult).toEqual(entity.id);
         });
       });

@@ -25,6 +25,15 @@
     {
       "fieldName": "orderNumber",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "drawingNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "drawing",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
     }
   ],
   "relationships": [
@@ -42,6 +51,12 @@
       "relationshipType": "many-to-one",
       "otherEntityField": "name",
       "otherEntityRelationshipName": "job"
+    },
+    {
+      "relationshipName": "customer",
+      "otherEntityName": "customer",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201214140542",

@@ -60,6 +60,8 @@ public class CacheConfiguration {
             createCache(cm, hu.mycompany.machinemanager.domain.View.class.getName());
             createCache(cm, hu.mycompany.machinemanager.domain.View.class.getName() + ".machines");
             createCache(cm, hu.mycompany.machinemanager.domain.Machine.class.getName() + ".views");
+            createCache(cm, hu.mycompany.machinemanager.domain.Customer.class.getName());
+            createCache(cm, hu.mycompany.machinemanager.domain.Customer.class.getName() + ".jobs");
             // jhipster-needle-ehcache-add-entry
         };
     }

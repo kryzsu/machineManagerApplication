@@ -33,7 +33,7 @@ public class Product implements Serializable {
 
     @ManyToMany(mappedBy = "products")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

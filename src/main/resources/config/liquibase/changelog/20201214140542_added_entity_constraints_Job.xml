@@ -25,5 +25,11 @@
                                  constraintName="fk_job__machine_id"
                                  referencedColumnNames="id"
                                  referencedTableName="machine"/>
+
+        <addForeignKeyConstraint baseColumnNames="customer_id"
+                                 baseTableName="job"
+                                 constraintName="fk_job__customer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="customer"/>
     </changeSet>
 </databaseChangeLog>

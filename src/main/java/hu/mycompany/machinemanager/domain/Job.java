@@ -43,6 +43,16 @@ public class Job implements Serializable {
     @Column(name = "order_number")
     private String orderNumber;
 
+    @Column(name = "drawing_number")
+    private String drawingNumber;
+
+    @Lob
+    @Column(name = "drawing")
+    private byte[] drawing;
+
+    @Column(name = "drawing_content_type")
+    private String drawingContentType;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "rel_job__product", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
@@ -52,6 +62,10 @@ public class Job implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
     private Machine machine;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "jobs" }, allowSetters = true)
+    private Customer customer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -145,6 +159,45 @@ public class Job implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    public String getDrawingNumber() {
+        return this.drawingNumber;
+    }
+
+    public Job drawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+        return this;
+    }
+
+    public void setDrawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+    }
+
+    public byte[] getDrawing() {
+        return this.drawing;
+    }
+
+    public Job drawing(byte[] drawing) {
+        this.drawing = drawing;
+        return this;
+    }
+
+    public void setDrawing(byte[] drawing) {
+        this.drawing = drawing;
+    }
+
+    public String getDrawingContentType() {
+        return this.drawingContentType;
+    }
+
+    public Job drawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+        return this;
+    }
+
+    public void setDrawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+    }
+
     public Set<Product> getProducts() {
         return this.products;
     }
@@ -183,6 +236,19 @@ public class Job implements Serializable {
         this.machine = machine;
     }
 
+    public Customer getCustomer() {
+        return this.customer;
+    }
+
+    public Job customer(Customer customer) {
+        this.setCustomer(customer);
+        return this;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -213,6 +279,9 @@ public class Job implements Serializable {
             ", endDate='" + getEndDate() + "'" +
             ", fact=" + getFact() +
             ", orderNumber='" + getOrderNumber() + "'" +
+            ", drawingNumber='" + getDrawingNumber() + "'" +
+            ", drawing='" + getDrawing() + "'" +
+            ", drawingContentType='" + getDrawingContentType() + "'" +
             "}";
     }
 }

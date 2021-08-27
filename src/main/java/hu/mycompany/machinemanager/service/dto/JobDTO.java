@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Lob;
 import javax.validation.constraints.*;
 
 /**
@@ -27,9 +28,17 @@ public class JobDTO implements Serializable {
 
     private String orderNumber;
 
+    private String drawingNumber;
+
+    @Lob
+    private byte[] drawing;
+
+    private String drawingContentType;
     private Set<ProductDTO> products = new HashSet<>();
 
     private MachineDTO machine;
+
+    private CustomerDTO customer;
 
     public Long getId() {
         return id;
@@ -87,6 +96,30 @@ public class JobDTO implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    public String getDrawingNumber() {
+        return drawingNumber;
+    }
+
+    public void setDrawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+    }
+
+    public byte[] getDrawing() {
+        return drawing;
+    }
+
+    public void setDrawing(byte[] drawing) {
+        this.drawing = drawing;
+    }
+
+    public String getDrawingContentType() {
+        return drawingContentType;
+    }
+
+    public void setDrawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+    }
+
     public Set<ProductDTO> getProducts() {
         return products;
     }
@@ -101,6 +134,14 @@ public class JobDTO implements Serializable {
 
     public void setMachine(MachineDTO machine) {
         this.machine = machine;
+    }
+
+    public CustomerDTO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerDTO customer) {
+        this.customer = customer;
     }
 
     @Override
@@ -135,8 +176,11 @@ public class JobDTO implements Serializable {
             ", endDate='" + getEndDate() + "'" +
             ", fact=" + getFact() +
             ", orderNumber='" + getOrderNumber() + "'" +
+            ", drawingNumber='" + getDrawingNumber() + "'" +
+            ", drawing='" + getDrawing() + "'" +
             ", products=" + getProducts() +
             ", machine=" + getMachine() +
+            ", customer=" + getCustomer() +
             "}";
     }
 }

@@ -1,0 +1,25 @@
+{
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique", "minlength"],
+      "fieldValidateRulesMinlength": "3"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "job",
+      "otherEntityName": "job",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "customer"
+    }
+  ],
+  "service": "serviceImpl",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": true,
+  "readOnly": false,
+  "pagination": "pagination",
+  "name": "Customer",
+  "changelogDate": "20210827084130"
+}

@@ -36,9 +36,12 @@ export class JobUpdatePage {
   endDateInput = element(by.id('field_endDate'));
   factInput = element(by.id('field_fact'));
   orderNumberInput = element(by.id('field_orderNumber'));
+  drawingNumberInput = element(by.id('field_drawingNumber'));
+  drawingInput = element(by.id('file_drawing'));
 
   productSelect = element(by.id('field_product'));
   machineSelect = element(by.id('field_machine'));
+  customerSelect = element(by.id('field_customer'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
@@ -100,6 +103,22 @@ export class JobUpdatePage {
     return await this.orderNumberInput.getAttribute('value');
   }
 
+  async setDrawingNumberInput(drawingNumber: string): Promise<void> {
+    await this.drawingNumberInput.sendKeys(drawingNumber);
+  }
+
+  async getDrawingNumberInput(): Promise<string> {
+    return await this.drawingNumberInput.getAttribute('value');
+  }
+
+  async setDrawingInput(drawing: string): Promise<void> {
+    await this.drawingInput.sendKeys(drawing);
+  }
+
+  async getDrawingInput(): Promise<string> {
+    return await this.drawingInput.getAttribute('value');
+  }
+
   async productSelectLastOption(): Promise<void> {
     await this.productSelect.all(by.tagName('option')).last().click();
   }
@@ -130,6 +149,22 @@ export class JobUpdatePage {
 
   async getMachineSelectedOption(): Promise<string> {
     return await this.machineSelect.element(by.css('option:checked')).getText();
+  }
+
+  async customerSelectLastOption(): Promise<void> {
+    await this.customerSelect.all(by.tagName('option')).last().click();
+  }
+
+  async customerSelectOption(option: string): Promise<void> {
+    await this.customerSelect.sendKeys(option);
+  }
+
+  getCustomerSelect(): ElementFinder {
+    return this.customerSelect;
+  }
+
+  async getCustomerSelectedOption(): Promise<string> {
+    return await this.customerSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

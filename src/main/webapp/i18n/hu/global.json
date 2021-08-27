@@ -12,6 +12,7 @@
         "outOfOrder": "Üzemszünet",
         "product": "Termék",
         "view": "Nézet",
+        "customer": "Vevők",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

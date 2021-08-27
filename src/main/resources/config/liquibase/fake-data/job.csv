@@ -1,11 +1,11 @@
-id;estimation;product_count;start_date;end_date;fact;order_number
-1;64690;52826;2020-12-14;2020-12-14;95887;Fresh Communications
-2;14348;28833;2020-12-14;2020-12-13;75953;deposit
-3;3530;36232;2020-12-13;2020-12-13;69442;Keyboard up
-4;9604;77867;2020-12-14;2020-12-13;36043;Beauty eyeballs
-5;19721;43568;2020-12-13;2020-12-13;80937;action-items
-6;47964;22647;2020-12-14;2020-12-13;88722;Ecuador Incredible
-7;49758;67462;2020-12-13;2020-12-14;71259;Multi-channelled
-8;59351;82795;2020-12-14;2020-12-13;69808;Keyboard solution
-9;72082;50198;2020-12-13;2020-12-13;51439;Operations Balboa
-10;6603;7797;2020-12-14;2020-12-14;94556;mobile Incredible
+id;estimation;product_count;start_date;end_date;fact;order_number;drawing_number;drawing;drawing_content_type
+1;64690;52826;2020-12-14;2020-12-14;95887;Fresh Communications;exuding;../fake-data/blob/hipster.png;image/png
+2;75953;13628;2020-12-13;2020-12-14;45650;ubiquitous;Drive optimizing primary;../fake-data/blob/hipster.png;image/png
+3;47774;81983;2020-12-14;2020-12-14;108;Berkshire mission-critical;synthesizing action-items Flat;../fake-data/blob/hipster.png;image/png
+4;63091;88722;2020-12-14;2020-12-14;24658;Incredible;Somoni card;../fake-data/blob/hipster.png;image/png
+5;45399;50469;2020-12-13;2020-12-13;35784;Riel Shirt Tanzania;Mobility invoice;../fake-data/blob/hipster.png;image/png
+6;7769;69068;2020-12-13;2020-12-14;6603;help-desk;mobile Incredible;../fake-data/blob/hipster.png;image/png
+7;72891;6128;2020-12-14;2020-12-14;16606;Optimization;Markets content-based mission-critical;../fake-data/blob/hipster.png;image/png
+8;2090;68072;2020-12-13;2020-12-14;54151;orchestration Turnpike;Cotton;../fake-data/blob/hipster.png;image/png
+9;81619;75952;2020-12-13;2020-12-14;62698;blue;Sleek;../fake-data/blob/hipster.png;image/png
+10;25168;29471;2020-12-13;2020-12-13;59696;Legacy parsing;national strategy Outdoors;../fake-data/blob/hipster.png;image/png

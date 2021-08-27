@@ -121,6 +121,58 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.drawingNumber" for="field_drawingNumber"
+            >Drawing Number</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="drawingNumber"
+            id="field_drawingNumber"
+            data-cy="drawingNumber"
+            formControlName="drawingNumber"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.drawing" for="field_drawing">Drawing</label>
+          <div>
+            <img
+              [src]="'data:' + editForm.get('drawingContentType')!.value + ';base64,' + editForm.get('drawing')!.value"
+              style="max-height: 100px"
+              *ngIf="editForm.get('drawing')!.value"
+              alt="job image"
+            />
+            <div *ngIf="editForm.get('drawing')!.value" class="form-text text-danger clearfix">
+              <span class="pull-left">{{ editForm.get('drawingContentType')!.value }}, {{ byteSize(editForm.get('drawing')!.value) }}</span>
+              <button
+                type="button"
+                (click)="clearInputImage('drawing', 'drawingContentType', 'file_drawing')"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="file_drawing"
+              data-cy="drawing"
+              (change)="setFileData($event, 'drawing', true)"
+              accept="image/*"
+              jhiTranslate="entity.action.addimage"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="drawing" id="field_drawing" data-cy="drawing" formControlName="drawing" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="drawingContentType"
+            id="field_drawingContentType"
+            formControlName="drawingContentType"
+          />
+        </div>
+
+        <div class="form-group">
           <label jhiTranslate="machineManagerApplicationApp.job.product" for="field_products">Product</label>
           <select class="form-control" id="field_products" data-cy="product" multiple name="products" formControlName="products">
             <option
@@ -141,6 +193,19 @@
               *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
             >
               {{ machineOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.customer" for="field_customer">Customer</label>
+          <select class="form-control" id="field_customer" data-cy="customer" name="customer" formControlName="customer">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="customerOption.id === editForm.get('customer')!.value?.id ? editForm.get('customer')!.value : customerOption"
+              *ngFor="let customerOption of customersSharedCollection; trackBy: trackCustomerById"
+            >
+              {{ customerOption.name }}
             </option>
           </select>
         </div>

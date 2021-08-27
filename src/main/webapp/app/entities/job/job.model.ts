@@ -1,6 +1,7 @@
 import * as dayjs from 'dayjs';
 import { IProduct } from 'app/entities/product/product.model';
 import { IMachine } from 'app/entities/machine/machine.model';
+import { ICustomer } from 'app/entities/customer/customer.model';
 
 export interface IJob {
   id?: number;
@@ -10,8 +11,12 @@ export interface IJob {
   endDate?: dayjs.Dayjs | null;
   fact?: number | null;
   orderNumber?: string | null;
+  drawingNumber?: string | null;
+  drawingContentType?: string | null;
+  drawing?: string | null;
   products?: IProduct[] | null;
   machine?: IMachine | null;
+  customer?: ICustomer | null;
 }
 
 export class Job implements IJob {
@@ -23,8 +28,12 @@ export class Job implements IJob {
     public endDate?: dayjs.Dayjs | null,
     public fact?: number | null,
     public orderNumber?: string | null,
+    public drawingNumber?: string | null,
+    public drawingContentType?: string | null,
+    public drawing?: string | null,
     public products?: IProduct[] | null,
-    public machine?: IMachine | null
+    public machine?: IMachine | null,
+    public customer?: ICustomer | null
   ) {}
 }
 

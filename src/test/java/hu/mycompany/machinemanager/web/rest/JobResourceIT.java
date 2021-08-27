@@ -32,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link JobResource} REST controller.
@@ -59,6 +60,14 @@ class JobResourceIT {
 
     private static final String DEFAULT_ORDER_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_ORDER_NUMBER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DRAWING_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_DRAWING_NUMBER = "BBBBBBBBBB";
+
+    private static final byte[] DEFAULT_DRAWING = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_DRAWING = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_DRAWING_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_DRAWING_CONTENT_TYPE = "image/png";
 
     private static final String ENTITY_API_URL = "/api/jobs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -99,7 +108,10 @@ class JobResourceIT {
             .startDate(DEFAULT_START_DATE)
             .endDate(DEFAULT_END_DATE)
             .fact(DEFAULT_FACT)
-            .orderNumber(DEFAULT_ORDER_NUMBER);
+            .orderNumber(DEFAULT_ORDER_NUMBER)
+            .drawingNumber(DEFAULT_DRAWING_NUMBER)
+            .drawing(DEFAULT_DRAWING)
+            .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE);
         return job;
     }
 
@@ -116,7 +128,10 @@ class JobResourceIT {
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
-            .orderNumber(UPDATED_ORDER_NUMBER);
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
         return job;
     }
 
@@ -145,6 +160,9 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(DEFAULT_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(DEFAULT_ORDER_NUMBER);
+        assertThat(testJob.getDrawingNumber()).isEqualTo(DEFAULT_DRAWING_NUMBER);
+        assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
+        assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -201,7 +219,10 @@ class JobResourceIT {
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].fact").value(hasItem(DEFAULT_FACT)))
-            .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER)));
+            .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER)))
+            .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
+            .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -239,7 +260,10 @@ class JobResourceIT {
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.fact").value(DEFAULT_FACT))
-            .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER));
+            .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER))
+            .andExpect(jsonPath("$.drawingNumber").value(DEFAULT_DRAWING_NUMBER))
+            .andExpect(jsonPath("$.drawingContentType").value(DEFAULT_DRAWING_CONTENT_TYPE))
+            .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)));
     }
 
     @Test
@@ -267,7 +291,10 @@ class JobResourceIT {
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
-            .orderNumber(UPDATED_ORDER_NUMBER);
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
         JobDTO jobDTO = jobMapper.toDto(updatedJob);
 
         restJobMockMvc
@@ -288,6 +315,9 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
+        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
+        assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -367,7 +397,11 @@ class JobResourceIT {
         Job partialUpdatedJob = new Job();
         partialUpdatedJob.setId(job.getId());
 
-        partialUpdatedJob.productCount(UPDATED_PRODUCT_COUNT).fact(UPDATED_FACT).orderNumber(UPDATED_ORDER_NUMBER);
+        partialUpdatedJob
+            .productCount(UPDATED_PRODUCT_COUNT)
+            .fact(UPDATED_FACT)
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .drawingNumber(UPDATED_DRAWING_NUMBER);
 
         restJobMockMvc
             .perform(
@@ -387,6 +421,9 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
+        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
+        assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -407,7 +444,10 @@ class JobResourceIT {
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
-            .orderNumber(UPDATED_ORDER_NUMBER);
+            .orderNumber(UPDATED_ORDER_NUMBER)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
 
         restJobMockMvc
             .perform(
@@ -427,6 +467,9 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
+        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
+        assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
     }
 
     @Test

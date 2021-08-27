@@ -38,7 +38,7 @@ public class Machine implements Serializable {
 
     @OneToMany(mappedBy = "machine")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     @ManyToMany(mappedBy = "machines")

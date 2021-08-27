@@ -66,7 +66,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   ],
   providers: [
     Title,
-    { provide: LOCALE_ID, useValue: 'en' },
+    { provide: LOCALE_ID, useValue: 'hu' },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
@@ -85,9 +85,9 @@ export class AppModule {
     registerLocaleData(locale);
     iconLibrary.addIcons(...fontAwesomeIcons);
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
-    translateService.setDefaultLang('en');
+    translateService.setDefaultLang('hu');
     // if user have changed language and navigates away from the application and back to the application then use previously choosed language
-    const langKey = sessionStorageService.retrieve('locale') ?? 'en';
+    const langKey = sessionStorageService.retrieve('locale') ?? 'hu';
     translateService.use(langKey);
   }
 }

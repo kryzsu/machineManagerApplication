@@ -25,7 +25,10 @@
       "fact": "Tény (nap)",
       "orderNumber": "Megrendelés szám",
       "product": "Termék",
-      "machine": "Munkagép"
+      "drawingNumber": "Rajzszám",
+      "drawing": "Rajz",
+      "machine": "Munkagép",
+      "customer": "Vevő"
     }
   }
 }

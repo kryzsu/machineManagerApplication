@@ -32,7 +32,19 @@
             <column name="order_number" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="drawing_number" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="drawing" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="drawing_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="machine_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="customer_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -75,6 +87,9 @@
             <column name="end_date" type="date"/>
             <column name="fact" type="numeric"/>
             <column name="order_number" type="string"/>
+            <column name="drawing_number" type="string"/>
+            <column name="drawing" type="blob"/>
+            <column name="drawing_content_type" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

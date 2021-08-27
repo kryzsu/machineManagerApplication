@@ -51,8 +51,17 @@
           <th scope="col" jhiSortBy="orderNumber">
             <span jhiTranslate="machineManagerApplicationApp.job.orderNumber">Order Number</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="drawingNumber">
+            <span jhiTranslate="machineManagerApplicationApp.job.drawingNumber">Drawing Number</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="drawing">
+            <span jhiTranslate="machineManagerApplicationApp.job.drawing">Drawing</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col" jhiSortBy="machine.name">
             <span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="customer.name">
+            <span jhiTranslate="machineManagerApplicationApp.job.customer">Customer</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col"></th>
         </tr>
@@ -68,9 +77,21 @@
           <td>{{ job.endDate | formatMediumDate }}</td>
           <td>{{ job.fact }}</td>
           <td>{{ job.orderNumber }}</td>
+          <td>{{ job.drawingNumber }}</td>
+          <td>
+            <a *ngIf="job.drawing" (click)="openFile(job.drawing, job.drawingContentType)">
+              <img [src]="'data:' + job.drawingContentType + ';base64,' + job.drawing" style="max-height: 30px" alt="job image" />
+            </a>
+            <span *ngIf="job.drawing">{{ job.drawingContentType }}, {{ byteSize(job.drawing) }}</span>
+          </td>
           <td>
             <div *ngIf="job.machine">
               <a [routerLink]="['/machine', job.machine?.id, 'view']">{{ job.machine?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="job.customer">
+              <a [routerLink]="['/customer', job.customer?.id, 'view']">{{ job.customer?.name }}</a>
             </div>
           </td>
           <td class="text-right">

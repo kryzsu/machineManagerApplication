@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+import * as R from 'ramda';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IProduct } from 'app/entities/product/product.model';
 import { ProductService } from 'app/entities/product/service/product.service';
 import { IMachine } from 'app/entities/machine/machine.model';
 import { MachineService } from 'app/entities/machine/service/machine.service';
+import { ICustomer } from 'app/entities/customer/customer.model';
+import { CustomerService } from 'app/entities/customer/service/customer.service';
 
 @Component({
   selector: 'jhi-job-update',
@@ -21,6 +27,7 @@ export class JobUpdateComponent implements OnInit {
 
   productsSharedCollection: IProduct[] = [];
   machinesSharedCollection: IMachine[] = [];
+  customersSharedCollection: ICustomer[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -30,14 +37,22 @@ export class JobUpdateComponent implements OnInit {
     endDate: [],
     fact: [],
     orderNumber: [],
+    drawingNumber: [],
+    drawing: [],
+    drawingContentType: [],
     products: [],
     machine: [],
+    customer: [],
   });
 
   constructor(
+    protected dataUtils: DataUtils,
+    protected eventManager: EventManager,
     protected jobService: JobService,
     protected productService: ProductService,
     protected machineService: MachineService,
+    protected customerService: CustomerService,
+    protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
   ) {}
@@ -48,6 +63,33 @@ export class JobUpdateComponent implements OnInit {
 
       this.loadRelationshipsOptions();
     });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(base64String: string, contentType: string | null | undefined): void {
+    this.dataUtils.openFile(base64String, contentType);
+  }
+
+  setFileData(event: Event, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
+      error: (err: FileLoadError) =>
+        this.eventManager.broadcast(
+          new EventWithContent<AlertError>('machineManagerApplicationApp.error', { ...err, key: 'error.file.' + err.key })
+        ),
+    });
+  }
+
+  clearInputImage(field: string, fieldContentType: string, idInput: string): void {
+    this.editForm.patchValue({
+      [field]: null,
+      [fieldContentType]: null,
+    });
+    if (idInput && this.elementRef.nativeElement.querySelector('#' + idInput)) {
+      this.elementRef.nativeElement.querySelector('#' + idInput).value = null;
+    }
   }
 
   previousState(): void {
@@ -69,6 +111,10 @@ export class JobUpdateComponent implements OnInit {
   }
 
   trackMachineById(index: number, item: IMachine): number {
+    return item.id!;
+  }
+
+  trackCustomerById(index: number, item: ICustomer): number {
     return item.id!;
   }
 
@@ -111,8 +157,12 @@ export class JobUpdateComponent implements OnInit {
       endDate: job.endDate,
       fact: job.fact,
       orderNumber: job.orderNumber,
+      drawingNumber: job.drawingNumber,
+      drawing: job.drawing,
+      drawingContentType: job.drawingContentType,
       products: job.products,
       machine: job.machine,
+      customer: job.customer,
     });
 
     this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(
@@ -120,6 +170,7 @@ export class JobUpdateComponent implements OnInit {
       ...(job.products ?? [])
     );
     this.machinesSharedCollection = this.machineService.addMachineToCollectionIfMissing(this.machinesSharedCollection, job.machine);
+    this.customersSharedCollection = this.customerService.addCustomerToCollectionIfMissing(this.customersSharedCollection, job.customer);
   }
 
   protected loadRelationshipsOptions(): void {
@@ -140,6 +191,19 @@ export class JobUpdateComponent implements OnInit {
         map((machines: IMachine[]) => this.machineService.addMachineToCollectionIfMissing(machines, this.editForm.get('machine')!.value))
       )
       .subscribe((machines: IMachine[]) => (this.machinesSharedCollection = machines));
+
+    this.customerService
+      .query({ size: 1000, sort: name })
+      .pipe(map((res: HttpResponse<ICustomer[]>) => res.body ?? []))
+      .pipe(
+        map((customers: ICustomer[]) =>
+          this.customerService.addCustomerToCollectionIfMissing(customers, this.editForm.get('customer')!.value)
+        )
+      )
+      .subscribe((customers: ICustomer[]) => {
+        const sortByNameCaseInsensitive = R.sortBy(R.compose(R.toLower, (item: ICustomer) => item.name ?? ''));
+        this.customersSharedCollection = sortByNameCaseInsensitive(customers);
+      });
   }
 
   protected createFromForm(): IJob {
@@ -152,8 +216,12 @@ export class JobUpdateComponent implements OnInit {
       endDate: this.editForm.get(['endDate'])!.value,
       fact: this.editForm.get(['fact'])!.value,
       orderNumber: this.editForm.get(['orderNumber'])!.value,
+      drawingNumber: this.editForm.get(['drawingNumber'])!.value,
+      drawingContentType: this.editForm.get(['drawingContentType'])!.value,
+      drawing: this.editForm.get(['drawing'])!.value,
       products: this.editForm.get(['products'])!.value,
       machine: this.editForm.get(['machine'])!.value,
+      customer: this.editForm.get(['customer'])!.value,
     };
   }
 }
