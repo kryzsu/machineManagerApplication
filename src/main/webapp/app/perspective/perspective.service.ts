@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { IMachine } from 'app/entities/machine/machine.model';
+import { dayjsToString } from '../util/common-util';
+import { FilterInterval } from './component/interval-filter/filter-interval';
+import { createRequestOption } from '../core/request/request-util';
 
 export type EntityArrayResponseType = HttpResponse<IMachine[]>;
 
@@ -13,8 +16,12 @@ export class PerspectiveService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  getDetailedMachineList(): Observable<EntityArrayResponseType> {
-    const options = {};
+  getDetailedMachineList(interval: FilterInterval): Observable<EntityArrayResponseType> {
+    const options = createRequestOption({
+      startDate: dayjsToString(interval.startDate),
+      endDate: dayjsToString(interval.endDate),
+    });
+
     return this.http.get<IMachine[]>(`${this.resourceUrl}/get-detailed-machine-list`, { params: options, observe: 'response' });
   }
 }

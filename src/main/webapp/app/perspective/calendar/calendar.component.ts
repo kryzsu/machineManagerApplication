@@ -17,6 +17,7 @@ import { BarData } from '../../shared/bar-chart/bar-chart.component';
 import { IMachine } from '../../entities/machine/machine.model';
 import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
 import { sortByNameCaseInsensitive } from '../../util/common-util';
+import { defaultInterval, FilterInterval } from 'app/perspective/component/interval-filter/filter-interval';
 
 @Component({
   selector: 'jhi-calendar',
@@ -24,6 +25,7 @@ import { sortByNameCaseInsensitive } from '../../util/common-util';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
+  isLoading = false;
   CalendarView = CalendarView;
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
@@ -145,15 +147,19 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.doRefresh(defaultInterval);
+    this.createSvg();
+    this.drawBars(this.data);
+  }
+
+  doRefresh(interval: FilterInterval): void {
     this.perspectiveService
-      .getDetailedMachineList()
+      .getDetailedMachineList(interval)
       .pipe(map((response: EntityArrayResponseType) => response.body ?? []))
       .subscribe((machineList: IMachine[]) => {
         machineList = sortByNameCaseInsensitive(machineList);
         this.store.dispatch(Actions.createMachineList({ machineList }));
       });
-    this.createSvg();
-    this.drawBars(this.data);
   }
 
   setView(view: CalendarView): void {
@@ -162,6 +168,10 @@ export class CalendarComponent implements OnInit {
 
   closeOpenMonthViewDay(): void {
     this.activeDayIsOpen = false;
+  }
+
+  onRefresh(interval: FilterInterval): void {
+    this.doRefresh(interval);
   }
 
   private createSvg(): void {

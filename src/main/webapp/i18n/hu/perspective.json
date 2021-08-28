@@ -1,0 +1,11 @@
+{
+  "perspective": {
+    "interval-begin": "Intervallum kezdete",
+    "interval-end": "Intervallum vége",
+
+    "messages": {
+      "error": "<strong>Hiba történt!</strong> A jelszót nem sikerült megváltoztatni.",
+      "success": "<strong>A jelszó megváltozott!</strong>"
+    }
+  }
+}

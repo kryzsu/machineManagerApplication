@@ -12,6 +12,7 @@ import { perspectiveState } from './perspective.route';
 import { PerpsTimelineComponent } from './component/perps-timeline/perps-timeline.component';
 import { PerpsTreeComponent } from './component/perps-tree/perps-tree.component';
 import { AccordionModule } from 'primeng/accordion';
+import { IntervalFilterComponent } from './component/interval-filter/interval-filter.component';
 @NgModule({
   imports: [
     SharedModule,
@@ -25,6 +26,6 @@ import { AccordionModule } from 'primeng/accordion';
     TreeModule,
     AccordionModule,
   ],
-  declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent],
+  declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent],
 })
 export class PerspectiveModule {}

@@ -78,10 +78,6 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
     const color = colorList[Math.floor(Math.random() * 100) % 7];
     if (machine.jobs != null) {
       for (const job of machine.jobs) {
-        // eslint-disable-next-line no-console
-        console.warn(job.startDate);
-        // const startDate: Date = stringToDate(job.startDate ?? null) ?? wrongDate;
-        // eslint-disable-next-line  @typescript-eslint/no-unnecessary-condition
         const startDate: Date =
           job.startDate === undefined || job.startDate === null ? wrongDate : toDate(job.startDate.toString()) ?? wrongDate;
         const estimation: number = job.estimation ?? 0;
