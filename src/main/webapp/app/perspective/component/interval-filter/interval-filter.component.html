@@ -1,49 +1,55 @@
 <p>interval-filter works!</p>
 
 <form name="filterForm" role="form" [formGroup]="filterForm">
-  <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.perspective.interval-begin" for="field_startDate">
-    Start Date
-  </label>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.perspective.interval-begin" for="field_startDate">
+        Start Date
+      </label>
 
-  <span class="input-group">
-    <input
-      id="field_startDate"
-      data-cy="startDate"
-      type="text"
-      class="form-control"
-      name="startDate"
-      ngbDatepicker
-      #startDateDp="ngbDatepicker"
-      formControlName="startDate"
-    />
-    <span class="input-group-append">
-      <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
-        <fa-icon icon="calendar-alt"></fa-icon>
+      <span class="input-group">
+        <input
+          id="field_startDate"
+          data-cy="startDate"
+          type="text"
+          class="form-control"
+          name="startDate"
+          ngbDatepicker
+          #startDateDp="ngbDatepicker"
+          formControlName="startDate"
+        />
+        <span class="input-group-append">
+          <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
+            <fa-icon icon="calendar-alt"></fa-icon>
+          </button>
+        </span>
+      </span>
+    </div>
+    <div class="col-md-4">
+      <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.perspective.interval-end" for="field_endDate">
+        End Date
+      </label>
+      <span class="input-group">
+        <input
+          id="field_endDate"
+          data-cy="endDate"
+          type="text"
+          class="form-control"
+          name="endDate"
+          ngbDatepicker
+          #endDateDp="ngbDatepicker"
+          formControlName="endDate"
+        />
+        <span class="input-group-append">
+          <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+        </span>
+      </span>
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="machineManagerApplicationApp.job.home.refreshListLabel">Refresh List</span>
       </button>
-    </span>
-  </span>
-
-  <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.perspective.interval-end" for="field_endDate">
-    End Date
-  </label>
-  <span class="input-group">
-    <input
-      id="field_endDate"
-      data-cy="endDate"
-      type="text"
-      class="form-control"
-      name="endDate"
-      ngbDatepicker
-      #endDateDp="ngbDatepicker"
-      formControlName="endDate"
-    />
-    <span class="input-group-append">
-      <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-    </span>
-  </span>
-
-  <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
-    <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-    <span jhiTranslate="machineManagerApplicationApp.job.home.refreshListLabel">Refresh List</span>
-  </button>
+    </div>
+  </div>
 </form>
