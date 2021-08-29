@@ -118,7 +118,7 @@ export const job2Treenode = (job: IJob): TreeNode => ({
 });
 
 export const machine2Treenode = (machine: IMachine): TreeNode => ({
-  label: machine.name,
+  label: `${machine.name ?? 'machine'} (${machine.jobs?.length ?? '0'})`,
   data: machine,
   children: machine.jobs?.map(job2Treenode),
   leaf: false,
