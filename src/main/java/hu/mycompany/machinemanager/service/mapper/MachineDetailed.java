@@ -28,6 +28,15 @@ public class MachineDetailed implements Serializable {
         this.jobs = jobs.stream().map(JobWithoutDrawing::fromJob).collect(Collectors.toSet());
     }
 
+    public static MachineDetailed createUsingJobWithoutDrawing(Long id, String name, String description, Set<JobWithoutDrawing> jobs) {
+        MachineDetailed rv = new MachineDetailed();
+        rv.id = id;
+        rv.name = name;
+        rv.description = description;
+        rv.jobs = jobs;
+        return rv;
+    }
+
     public static MachineDetailed toDetailed(Machine machine) {
         machine.getJobs().forEach(job -> job.getProducts().size());
         return new MachineDetailed(machine.getId(), machine.getName(), machine.getDescription(), machine.getJobs());
