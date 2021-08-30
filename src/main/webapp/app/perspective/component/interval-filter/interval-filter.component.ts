@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { defaultInterval, FilterInterval } from './filter-interval';
-import { DATE_FORMAT } from '../../../config/input.constants';
 
 @Component({
   selector: 'jhi-interval-filter',

@@ -72,43 +72,41 @@ export const machine2BarData = (appState: AppState): BarData => {
 };
 
 export const machineArray2Events = (machineList: IMachine[], actions: CalendarEventAction[]): CalendarEvent[] => {
-  const rv: CalendarEvent[] = [];
+  const events: CalendarEvent[] = [];
+  machineList.forEach(machine => machine.jobs?.forEach(job => events.push(job2Event(machine, job, actions))));
+  return events;
+};
 
-  for (const machine of machineList) {
-    const color = colorList[Math.floor(Math.random() * 100) % 7];
-    if (machine.jobs != null) {
-      for (const job of machine.jobs) {
-        const startDate: Date =
-          job.startDate === undefined || job.startDate === null ? wrongDate : toDate(job.startDate.toString()) ?? wrongDate;
-        const estimation: number = job.estimation ?? 0;
-        let title = machine.name ?? '';
-        if (job.products != null) {
-          title += `: ${job.products[0]?.name ?? ''}`;
-        }
-
-        rv.push({
-          start: startDate,
-          end: addDays(startDate, estimation),
-          title,
-          color,
-          actions,
-          allDay: true,
-          resizable: {
-            beforeStart: true,
-            afterEnd: true,
-          },
-          draggable: true,
-          meta: job,
-        });
-      }
-    }
+export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAction[]): CalendarEvent => {
+  const color = colorList[Math.floor(Math.random() * 100) % 7];
+  const startDate: Date =
+    job.startDate === undefined || job.startDate === null ? wrongDate : toDate(job.startDate as unknown as string) ?? wrongDate;
+  const estimation: number = job.estimation ?? 0;
+  let title = machine.name ?? '';
+  if (job.products != null) {
+    title += `: ${job.products[0]?.name ?? ''}`;
   }
+  const endDate: Date | undefined = job.endDate instanceof Date ? job.endDate : job.endDate?.toDate();
+  const end: Date = endDate ?? addDays(startDate, estimation);
 
-  return rv;
+  return {
+    start: startDate,
+    end,
+    title,
+    color,
+    actions,
+    allDay: true,
+    resizable: {
+      beforeStart: true,
+      afterEnd: true,
+    },
+    draggable: true,
+    meta: job,
+  };
 };
 
 export const job2Treenode = (job: IJob): TreeNode => ({
-  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(',') ?? ''} ${job.estimation ?? 0} nap`,
+  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''} ${job.estimation ?? 0} nap`,
   data: job,
   leaf: true,
   draggable: true,

@@ -10,12 +10,15 @@ describe('common utils', () => {
     });
     it('not null', () => {
       // GIVEN
-      const rv = toDate('2021-08-27');
+      const year = 2021;
+      const month = 8;
+      const day = 27;
+      const rv = toDate(`${year}-${month}-${day}`);
       // THEN
       expect(rv).not.toBeNull();
-      expect(rv?.getDate()).toEqual(2021);
-      expect(rv?.getMonth()).toEqual(8);
-      expect(rv?.getDay()).toEqual(27);
+      expect(rv?.getFullYear()).toEqual(year);
+      expect(rv?.getMonth()).toEqual(month - 1);
+      expect(rv?.getDate()).toEqual(day);
     });
   });
 });

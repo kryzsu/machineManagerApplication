@@ -32,10 +32,6 @@ export class CalendarComponent implements OnInit {
 
   events2: CalendarEvent[] = [];
 
-  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
-
-  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
-
   refresh: Subject<any> = new Subject();
   activeDayIsOpen = true;
   machineList$: Observable<AppState> | undefined;
@@ -69,13 +65,7 @@ export class CalendarComponent implements OnInit {
       },
     },
   ];
-  private data = [
-    { Framework: 'Vue', Stars: '166443', Released: '2014' },
-    { Framework: 'React', Stars: '150793', Released: '2013' },
-    { Framework: 'Angular', Stars: '62342', Released: '2016' },
-    { Framework: 'Backbone', Stars: '27647', Released: '2010' },
-    { Framework: 'Ember', Stars: '21471', Released: '2011' },
-  ];
+
   private svg: any;
   private margin = 50;
   private width = 750 - this.margin * 2;
@@ -85,8 +75,6 @@ export class CalendarComponent implements OnInit {
     this.store = store;
     this.perspectiveService = perspectiveService;
     this.machineList$ = this.store.select(selectMachineList);
-    //  const machineList = this.generateDemoData();
-    //  this.store.dispatch(Actions.createMachineList({ machineList }));
 
     this.store
       .select(selectMachineList)
@@ -149,7 +137,6 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.doRefresh(defaultInterval);
     this.createSvg();
-    this.drawBars(this.data);
   }
 
   doRefresh(interval: FilterInterval): void {
