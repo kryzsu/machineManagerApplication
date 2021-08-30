@@ -41,18 +41,6 @@ public class PerspectiveResource {
         @RequestParam LocalDate endDate
     ) {
         log.debug("REST request to get a page of Machines detailed a");
-
-        Predicate<JobWithoutDrawing> isBetween = job -> job.getStartDate().isAfter(startDate) && job.getStartDate().isBefore(endDate);
-
-        Function<MachineDetailed, MachineDetailed> mapMachine = machine ->
-            MachineDetailed.createUsingJobWithoutDrawing(
-                machine.getId(),
-                machine.getName(),
-                machine.getDescription(),
-                machine.getJobs().stream().filter(isBetween).collect(Collectors.toSet())
-            );
-        Page<MachineDetailed> page = perspectiveService.findAll(PageRequest.of(0, 1000));
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(mapMachine).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(perspectiveService.findAllOpenInInterval(startDate, endDate));
     }
 }
