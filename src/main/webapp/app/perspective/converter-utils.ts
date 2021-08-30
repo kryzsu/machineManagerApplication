@@ -90,6 +90,7 @@ export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAc
   const end: Date = endDate ?? addDays(startDate, estimation);
 
   return {
+    id: job.id,
     start: startDate,
     end,
     title,

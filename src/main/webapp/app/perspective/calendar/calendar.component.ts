@@ -18,6 +18,7 @@ import { IMachine } from '../../entities/machine/machine.model';
 import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
 import { sortByNameCaseInsensitive } from '../../util/common-util';
 import { defaultInterval, FilterInterval } from 'app/perspective/component/interval-filter/filter-interval';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-calendar',
@@ -52,7 +53,8 @@ export class CalendarComponent implements OnInit {
         } else {
           jobId = event.id;
         }
-        this.store.dispatch(Actions.editJob({ jobId }));
+        this.router.navigate(['/job', jobId, 'edit']);
+        // this.store.dispatch(Actions.editJob({ jobId }));
       },
     },
     {
@@ -71,7 +73,7 @@ export class CalendarComponent implements OnInit {
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
 
-  constructor(store: Store, perspectiveService: PerspectiveService) {
+  constructor(store: Store, perspectiveService: PerspectiveService, protected router: Router) {
     this.store = store;
     this.perspectiveService = perspectiveService;
     this.machineList$ = this.store.select(selectMachineList);
