@@ -1,4 +1,5 @@
 <p>Feladatok, gep bontasban</p>
+
 <p-tree
   [value]="data"
   [draggableNodes]="true"
@@ -6,4 +7,8 @@
   [validateDrop]="true"
   (onNodeDrop)="onDrop($event)"
   [filter]="true"
+  [contextMenu]="cm"
+  selectionMode="single"
+  [(selection)]="selectedItem"
 ></p-tree>
+<p-contextMenu #cm [model]="menuitems"></p-contextMenu>

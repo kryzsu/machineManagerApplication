@@ -111,9 +111,8 @@ export const job2Treenode = (job: IJob): TreeNode => ({
   data: job,
   leaf: true,
   draggable: true,
-  droppable: false,
-  selectable: true,
-  key: `${job.id ?? 0}`,
+  droppable: true,
+  key: `job ${job.id ?? 0}`,
 });
 
 export const machine2Treenode = (machine: IMachine): TreeNode => ({
@@ -123,6 +122,6 @@ export const machine2Treenode = (machine: IMachine): TreeNode => ({
   leaf: false,
   draggable: false,
   droppable: true,
-  selectable: true,
-  key: `${machine.id ?? 0}`,
+  selectable: false,
+  key: `machine ${machine.id ?? 0}`,
 });

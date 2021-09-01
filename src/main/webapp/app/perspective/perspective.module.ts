@@ -5,8 +5,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TreeModule } from 'primeng/tree';
-import { SharedModule } from 'app/shared/shared.module';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
+import { SharedModule } from 'app/shared/shared.module';
 import { CalendarComponent } from './calendar/calendar.component';
 import { perspectiveState } from './perspective.route';
 import { PerpsTimelineComponent } from './component/perps-timeline/perps-timeline.component';
@@ -25,6 +26,7 @@ import { IntervalFilterComponent } from './component/interval-filter/interval-fi
     DragDropModule,
     TreeModule,
     AccordionModule,
+    ContextMenuModule,
   ],
   declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent],
 })

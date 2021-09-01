@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
@@ -13,11 +13,13 @@ export class JobRoutingResolveService implements Resolve<IJob> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<IJob> | Observable<never> {
     const id = route.params['id'];
+    const st = this.router.getCurrentNavigation()?.extras.state;
     if (id) {
       return this.service.find(id).pipe(
         mergeMap((job: HttpResponse<Job>) => {
           if (job.body) {
-            return of(job.body);
+            const jobEntity = job.body;
+            return of(jobEntity);
           } else {
             this.router.navigate(['404']);
             return EMPTY;

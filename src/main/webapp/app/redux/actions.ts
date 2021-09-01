@@ -7,3 +7,7 @@ export const deleteMachine = createAction('[machine] delete', props<{ machineId:
 
 export const deleteJob = createAction('[job] delete', props<{ jobId: number }>());
 export const editJob = createAction('[job] edit', props<{ jobId: number }>());
+export const editJobEnd = createAction('[job] edit end', props<{ jobId: number }>());
+
+export const newJob = createAction('[job] new', props<{ machineId: number }>());
+export const newJobEnd = createAction('[job] new end');

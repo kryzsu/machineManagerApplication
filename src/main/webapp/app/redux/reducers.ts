@@ -31,5 +31,16 @@ export const reducers = createReducer(
       ...state,
       machineList,
     };
-  })
+  }),
+  on(Actions.editJob, (state: AppState, { jobId }) => {
+    const selectedJob = state.machineList.reduce((acc: IMachine[], x: IMachine) => acc.concat(x), []).find(job => job.id === jobId);
+    return {
+      ...state,
+      selectedJob,
+    };
+  }),
+  on(Actions.editJobEnd, (state: AppState, { jobId }) => ({
+    ...state,
+    selectedJob: undefined,
+  }))
 );

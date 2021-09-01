@@ -33,6 +33,9 @@ import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { reducers } from 'app/redux/reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { RouteToJobEditEffect } from './redux/route-to-job-edit-effect';
+import { EffectsModule } from '@ngrx/effects';
+import { RouteToJobNewEffect } from './redux/route-to-job-new-effect';
 
 @NgModule({
   imports: [
@@ -63,6 +66,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
         useFactory: missingTranslationHandler,
       },
     }),
+    EffectsModule.forRoot([RouteToJobEditEffect, RouteToJobNewEffect]),
   ],
   providers: [
     Title,
