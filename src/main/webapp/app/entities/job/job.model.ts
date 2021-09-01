@@ -17,6 +17,7 @@ export interface IJob {
   products?: IProduct[] | null;
   machine?: IMachine | null;
   customer?: ICustomer | null;
+  consumerName?: string | null;
 }
 
 export class Job implements IJob {

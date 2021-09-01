@@ -107,7 +107,9 @@ export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAc
 };
 
 export const job2Treenode = (job: IJob): TreeNode => ({
-  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''} ${job.estimation ?? 0} nap`,
+  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''}
+  ${job.estimation ?? 0} nap
+  (${job.productCount ?? 0} db ${job.consumerName ?? ''})`,
   data: job,
   leaf: true,
   draggable: true,

@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+import * as R from 'ramda';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
@@ -17,6 +18,8 @@ import { MachineService } from 'app/entities/machine/service/machine.service';
 import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
 import { sortByNameCaseInsensitive } from '../../../util/common-util';
+import { EntityArrayResponseType, PerspectiveService } from '../../../perspective/perspective.service';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'jhi-job-update',
@@ -54,7 +57,8 @@ export class JobUpdateComponent implements OnInit {
     protected customerService: CustomerService,
     protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder
+    protected fb: FormBuilder,
+    protected perspectiveService: PerspectiveService
   ) {}
 
   ngOnInit(): void {
@@ -127,6 +131,19 @@ export class JobUpdateComponent implements OnInit {
       }
     }
     return option;
+  }
+
+  onMachineChange(p: any | undefined): void {
+    const machineId = this.editForm.get('machine')?.value?.id;
+    const startDate = this.editForm.get('startDate')?.value;
+    if (machineId !== undefined && R.isNil(startDate)) {
+      this.perspectiveService
+        .getNextDateForMachine(machineId)
+        .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
+        .subscribe(newDate => {
+          this.editForm.patchValue({ startDate: dayjs(newDate) });
+        });
+    }
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IJob>>): void {

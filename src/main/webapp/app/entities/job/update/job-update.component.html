@@ -15,7 +15,14 @@
 
         <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
-          <select class="form-control" id="field_machine" data-cy="machine" name="machine" formControlName="machine">
+          <select
+            class="form-control"
+            id="field_machine"
+            data-cy="machine"
+            name="machine"
+            formControlName="machine"
+            (ngModelChange)="onMachineChange($event)"
+          >
             <option [ngValue]="null"></option>
             <option
               [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
@@ -115,6 +122,18 @@
         </div>
 
         <div class="form-group">
+          <label jhiTranslate="machineManagerApplicationApp.job.product" for="field_products">Product</label>
+          <select class="form-control" id="field_products" data-cy="product" multiple name="products" formControlName="products">
+            <option
+              [ngValue]="getSelectedProduct(productOption, editForm.get('products')!.value)"
+              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+            >
+              {{ productOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.fact" for="field_fact">Fact</label>
           <input type="number" class="form-control" name="fact" id="field_fact" data-cy="fact" formControlName="fact" />
         </div>
@@ -183,18 +202,6 @@
             id="field_drawingContentType"
             formControlName="drawingContentType"
           />
-        </div>
-
-        <div class="form-group">
-          <label jhiTranslate="machineManagerApplicationApp.job.product" for="field_products">Product</label>
-          <select class="form-control" id="field_products" data-cy="product" multiple name="products" formControlName="products">
-            <option
-              [ngValue]="getSelectedProduct(productOption, editForm.get('products')!.value)"
-              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
-            >
-              {{ productOption.name }}
-            </option>
-          </select>
         </div>
 
         <div class="form-group">

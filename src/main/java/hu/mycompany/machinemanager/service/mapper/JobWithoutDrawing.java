@@ -16,6 +16,7 @@ public class JobWithoutDrawing {
     private Integer fact;
     private String orderNumber;
     private String drawingNumber;
+    private String consumerName;
     private Set<Product> products = new HashSet<>();
 
     public static JobWithoutDrawing fromJob(Job job) {
@@ -28,7 +29,8 @@ public class JobWithoutDrawing {
             job.getFact(),
             job.getOrderNumber(),
             job.getDrawingNumber(),
-            job.getProducts()
+            job.getProducts(),
+            (job.getCustomer() == null) ? null : job.getCustomer().getName()
         );
     }
 
@@ -41,7 +43,8 @@ public class JobWithoutDrawing {
         Integer fact,
         String orderNumber,
         String drawingNumber,
-        Set<Product> products
+        Set<Product> products,
+        String consumerName
     ) {
         this.id = id;
         this.estimation = estimation;
@@ -52,6 +55,7 @@ public class JobWithoutDrawing {
         this.orderNumber = orderNumber;
         this.drawingNumber = drawingNumber;
         this.products = products;
+        this.consumerName = consumerName;
     }
 
     public Long getId() {
@@ -124,5 +128,13 @@ public class JobWithoutDrawing {
 
     public void setProducts(Set<Product> products) {
         this.products = products;
+    }
+
+    public String getConsumerName() {
+        return consumerName;
+    }
+
+    public void setConsumerName(String consumerName) {
+        this.consumerName = consumerName;
     }
 }

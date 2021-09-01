@@ -1,16 +1,20 @@
 package hu.mycompany.machinemanager.service.impl;
 
+import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.MachineDetailedDTO;
 import hu.mycompany.machinemanager.service.mapper.JobWithoutDrawing;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailedMapper;
+import hu.mycompany.machinemanager.service.util.Util;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,10 +30,12 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final Logger log = LoggerFactory.getLogger(PerspectiveServiceImpl.class);
     private final MachineRepository machineRepository;
     private final MachineDetailedMapper machineDetailedMapper;
+    private final Util util;
 
-    public PerspectiveServiceImpl(MachineRepository machineRepository, MachineDetailedMapper machineDetailedMapper) {
+    public PerspectiveServiceImpl(MachineRepository machineRepository, MachineDetailedMapper machineDetailedMapper, Util util) {
         this.machineRepository = machineRepository;
         this.machineDetailedMapper = machineDetailedMapper;
+        this.util = util;
     }
 
     @Override
@@ -52,5 +58,20 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());
+    }
+
+    @Override
+    public LocalDate getNextDateForMachine(long machineId) {
+        Optional<Machine> machineOpt = machineRepository.findById(machineId);
+
+        LocalDate defaultDate = LocalDate.now();
+        if (machineOpt.isEmpty()) {
+            return defaultDate;
+        } else {
+            return Stream
+                .concat(machineOpt.get().getJobs().stream().map(util::getNextAvailableStartDate), Stream.of(defaultDate))
+                .max((a, b) -> a.compareTo(b))
+                .get();
+        }
     }
 }

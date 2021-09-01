@@ -1,6 +1,7 @@
 package hu.mycompany.machinemanager.repository;
 
 import hu.mycompany.machinemanager.domain.Job;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
