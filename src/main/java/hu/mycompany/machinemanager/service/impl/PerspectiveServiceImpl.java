@@ -65,13 +65,13 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         Optional<Machine> machineOpt = machineRepository.findById(machineId);
 
         LocalDate defaultDate = LocalDate.now();
-        if (machineOpt.isEmpty()) {
-            return defaultDate;
-        } else {
+        if (machineOpt.isPresent()) {
             return Stream
                 .concat(machineOpt.get().getJobs().stream().map(util::getNextAvailableStartDate), Stream.of(defaultDate))
                 .max((a, b) -> a.compareTo(b))
                 .get();
+        } else {
+            return defaultDate;
         }
     }
 }

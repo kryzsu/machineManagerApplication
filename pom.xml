@@ -24,7 +24,7 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <node.version>v15.12.0</node.version>
         <npm.version>6.14.14</npm.version>
 
@@ -373,7 +373,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+         	<configuration>
+                  <executable>true</executable>
+		</configuration>
+	    </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
