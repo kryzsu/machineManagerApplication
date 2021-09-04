@@ -47,6 +47,7 @@
               ngbDatepicker
               #startDateDp="ngbDatepicker"
               formControlName="startDate"
+              [markDisabled]="isDisabled"
             />
             <span class="input-group-append">
               <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
@@ -68,6 +69,7 @@
               ngbDatepicker
               #endDateDp="ngbDatepicker"
               formControlName="endDate"
+              [markDisabled]="isDisabled"
             />
             <span class="input-group-append">
               <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>

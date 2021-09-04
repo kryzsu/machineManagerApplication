@@ -3,10 +3,8 @@ package hu.mycompany.machinemanager.service.impl;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.service.PerspectiveService;
-import hu.mycompany.machinemanager.service.dto.MachineDetailedDTO;
-import hu.mycompany.machinemanager.service.mapper.JobWithoutDrawing;
-import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
-import hu.mycompany.machinemanager.service.mapper.MachineDetailedMapper;
+import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
+import hu.mycompany.machinemanager.service.mapper.*;
 import hu.mycompany.machinemanager.service.util.Util;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,11 +29,18 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final MachineRepository machineRepository;
     private final MachineDetailedMapper machineDetailedMapper;
     private final Util util;
+    private final OutOfOrderMapper outOfOrderMapper;
 
-    public PerspectiveServiceImpl(MachineRepository machineRepository, MachineDetailedMapper machineDetailedMapper, Util util) {
+    public PerspectiveServiceImpl(
+        MachineRepository machineRepository,
+        MachineDetailedMapper machineDetailedMapper,
+        Util util,
+        OutOfOrderMapper outOfOrderMapper
+    ) {
         this.machineRepository = machineRepository;
         this.machineDetailedMapper = machineDetailedMapper;
         this.util = util;
+        this.outOfOrderMapper = outOfOrderMapper;
     }
 
     @Override
@@ -73,5 +78,18 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         } else {
             return defaultDate;
         }
+    }
+
+    @Override
+    public List<OutOfOrderDTO> getRelatedOutOfOrder(long machineId) {
+        OutOfOrderDTO[] rv = {};
+        // TODO Auto-generated method stub
+        return machineRepository
+            .findById(machineId)
+            .orElse(new Machine())
+            .getOutOfOrders()
+            .stream()
+            .map(outOfOrderMapper::toDto)
+            .collect(Collectors.toList());
     }
 }

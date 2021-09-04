@@ -1,6 +1,7 @@
 package hu.mycompany.machinemanager.web.rest;
 
 import hu.mycompany.machinemanager.service.PerspectiveService;
+import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,7 +32,7 @@ public class PerspectiveResource {
         @RequestParam LocalDate startDate,
         @RequestParam LocalDate endDate
     ) {
-        log.debug("REST request to get a page of Machines detailed list");
+        log.debug("REST request to get the getDetailedMachineList");
         return ResponseEntity.ok().body(perspectiveService.findAllOpenInInterval(startDate, endDate));
     }
 
@@ -39,5 +40,11 @@ public class PerspectiveResource {
     public LocalDate getNextDateForMachine(@RequestParam long machineId) {
         log.debug("REST request to get the getNextDateForMachine");
         return perspectiveService.getNextDateForMachine(machineId);
+    }
+
+    @GetMapping("/get-related-out-of-order")
+    public List<OutOfOrderDTO> getRelatedOutOfOrder(@RequestParam long machineId) {
+        log.debug("REST request to get the getRelatedOutOfOrder");
+        return perspectiveService.getRelatedOutOfOrder(machineId);
     }
 }

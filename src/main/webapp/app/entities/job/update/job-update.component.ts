@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import * as R from 'ramda';
+import * as dayjs from 'dayjs';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
@@ -19,7 +20,8 @@ import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
 import { sortByNameCaseInsensitive } from '../../../util/common-util';
 import { EntityArrayResponseType, PerspectiveService } from '../../../perspective/perspective.service';
-import * as dayjs from 'dayjs';
+import { OutOfOrder } from '../../out-of-order/out-of-order.model';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-job-update',
@@ -48,6 +50,8 @@ export class JobUpdateComponent implements OnInit {
     customer: [],
   });
 
+  disabledDayList: NgbDate[] = [];
+
   constructor(
     protected dataUtils: DataUtils,
     protected eventManager: EventManager,
@@ -64,7 +68,9 @@ export class JobUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ job }) => {
       this.updateForm(job);
-
+      if (job.id !== undefined) {
+        this.refreshMachineRelatedData();
+      }
       this.loadRelationshipsOptions();
     });
   }
@@ -134,17 +140,38 @@ export class JobUpdateComponent implements OnInit {
   }
 
   onMachineChange(p: any | undefined): void {
+    this.refreshMachineRelatedData();
+  }
+
+  refreshMachineRelatedData(): void {
     const machineId = this.editForm.get('machine')?.value?.id;
     const startDate = this.editForm.get('startDate')?.value;
-    if (machineId !== undefined && R.isNil(startDate)) {
+    if (machineId !== undefined) {
+      if (R.isNil(startDate)) {
+        this.perspectiveService
+          .getNextDateForMachine(machineId)
+          .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
+          .subscribe(newDate => {
+            this.editForm.patchValue({ startDate: dayjs(newDate) });
+          });
+      }
+
       this.perspectiveService
-        .getNextDateForMachine(machineId)
-        .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
-        .subscribe(newDate => {
-          this.editForm.patchValue({ startDate: dayjs(newDate) });
+        .getRelatedOutOfOrder(machineId)
+        .pipe(map((response: HttpResponse<OutOfOrder[]>) => response.body ?? []))
+        .subscribe((data: OutOfOrder[]) => {
+          this.disabledDayList = data.map((item: OutOfOrder) => {
+            const date = dayjs(item.date);
+            return new NgbDate(date.year(), date.month() + 1, date.date());
+          });
         });
     }
   }
+
+  isDisabled = (date: NgbDate, current?: { year: number; month: number } | undefined): boolean => {
+    const da = dayjs(`${date.year}-${date.month}-${date.day}`);
+    return da.day() === 0 || this.disabledDayList.some((d: NgbDate) => d.equals(date));
+  };
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IJob>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
