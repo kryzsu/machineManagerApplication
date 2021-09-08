@@ -15,11 +15,13 @@ public class JobDTO implements Serializable {
 
     private Long id;
 
+    @NotNull
     private Integer estimation;
 
     @NotNull
     private Integer productCount;
 
+    @NotNull
     private LocalDate startDate;
 
     private LocalDate endDate;

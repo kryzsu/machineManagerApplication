@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="20210905-1" author="krz">
+        <createView
+                    remarks="calculate end date if missing (start date + estimation)"
+                    replaceIfExists="true"
+                    schemaName="public"
+                    viewName="v_job">
+            SELECT ID ,
+            ESTIMATION ,
+            PRODUCT_COUNT ,
+            START_DATE ,
+            case
+            when END_DATE is null THEN job.START_DATE + job.ESTIMATION - 1
+            else END_DATE END,
+            FACT ,
+            ORDER_NUMBER ,
+            DRAWING_NUMBER ,
+            DRAWING ,
+            DRAWING_CONTENT_TYPE ,
+            MACHINE_ID ,
+            CUSTOMER_ID
+            FROM JOB as job
+        </createView>
+    </changeSet>
+</databaseChangeLog>

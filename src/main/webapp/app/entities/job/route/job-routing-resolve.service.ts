@@ -13,7 +13,6 @@ export class JobRoutingResolveService implements Resolve<IJob> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<IJob> | Observable<never> {
     const id = route.params['id'];
-    const st = this.router.getCurrentNavigation()?.extras.state;
     if (id) {
       return this.service.find(id).pipe(
         mergeMap((job: HttpResponse<Job>) => {
