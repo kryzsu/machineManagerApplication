@@ -8,6 +8,8 @@ node -v && npm -v
 v14.16.1
 6.14.14
 
+ssh -L 8081:127.0.0.1:8080 -L 18081:127.0.0.1:18080 krz@bim001.duckdns.org
+
 ### redux
 
 https://malcoded.com/posts/angular-ngrx-guide/
