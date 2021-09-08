@@ -1,12 +1,16 @@
-id;name;description
-1;CSM10T;CSM10T
-2;RFM20T;RFM20T
-3;RFM35T;RFM35T
-4;HAX10T;HAX10T
-5;HCM20T;HCM20T
-6;HCM35T;HCM35T
-7;HCM50HD;HCM50HD
-8;YSM26T;YSM26T
-9;ATM380;ATM380
-10;SEG405;SEG405
-11;BM14;BM14
+ID;NAME;DESCRIPTION
+1;CSM20T;Tárcsás torziós hajlító gép Z nélkül. Mérettartomány: d0,4-2,0 mm
+2;RFM20T;Tárcsás torziós hajlító gép Z-vel. Mérettartomány: d0,4-2,0 mm
+3;RFM35T;Tárcsás torziós hajlító gép Z-vel. Mérettartomány: d1,0-4,0 mm
+4;HAX10T;Revolverfejes, szervós torziós hajlító gép. Mérettartomány: d0,2-1,0 mm
+5;HCM20T;All SERVO torziós hajlító gép. Mérettartomány: d0,4 mm-2,5 mm
+6;HCM35T;All SERVO torziós hajlító gép. Mérettartomány: d1,0 mm-4 mm
+7;HCM50HD;All SERVO torziós hajlító gép. Mérettartomány: d2,0-6,0 mm
+8;YSM26T;Bihler elvű lemezrugó automata. Mérettartomány: d0,6-2,5 mm t=0,3-1,2 mm w=max 30 mm
+9;ATM380;Automata köszörű gép. d max 3 mm
+10;SEG405;Automata köszörű gép. Mérettartomány d2,0-10,0 mm
+11;BM14;Asztali hajlító gép. Mérettartomány: d max14 mm
+12;CSC80T;CNC 3 tengelyű nyomórugó automata. Mérettartomány: d3-9,0
+13;CSC16T;CNC 3 tengelyű nyomórugó automata. Mérettartomány: d0,4-2,0
+14;CSC08H;CNC 3 tengelyű nyomórugó automata. Mérettartomány: d0,2-0,8
+15;HCA30T;CNC 6 tengelyű nyomórugó automata. Mérettartomány: d0,6-3,0

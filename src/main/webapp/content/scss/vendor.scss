@@ -6,6 +6,8 @@ eg $input-color: red;
 ****************************/
 // Override Bootstrap variables
 @import 'bootstrap-variables';
+@import 'd3-milestones';
+
 // Import Bootstrap source files from node_modules
 @import '~bootstrap/scss/bootstrap';
 
@@ -14,3 +16,4 @@ eg $input-color: red;
 @import '~primeng/resources/primeng.min.css';
 @import '~primeng/resources/themes/saga-blue/theme.css';
 @import '~primeicons/primeicons.css';
+@import '~angular-calendar/css/angular-calendar.css';

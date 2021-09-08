@@ -58,6 +58,11 @@ export const createColors = (): void => {
 
 createColors();
 
+export const getJobLabel = (job: IJob): string =>
+  `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''}
+  ${job.estimation ?? 0} nap
+  (${job.productCount ?? 0} db ${job.consumerName ?? ''})`;
+
 export const machine2BarData = (appState: AppState): BarData => {
   const labels: string[] = [];
   const data: number[] = [];
@@ -83,9 +88,7 @@ export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAc
     job.startDate === undefined || job.startDate === null ? wrongDate : toDate(job.startDate as unknown as string) ?? wrongDate;
   const estimation: number = job.estimation ?? 0;
   let title = machine.name ?? '';
-  if (job.products != null) {
-    title += `: ${job.products[0]?.name ?? ''}`;
-  }
+  title += `: ${getJobLabel(job)}`;
   const endDate: Date | undefined = job.endDate instanceof Date ? job.endDate : job.endDate?.toDate();
   const end: Date = endDate ?? addDays(startDate, estimation);
 
@@ -107,9 +110,7 @@ export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAc
 };
 
 export const job2Treenode = (job: IJob): TreeNode => ({
-  label: `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''}
-  ${job.estimation ?? 0} nap
-  (${job.productCount ?? 0} db ${job.consumerName ?? ''})`,
+  label: getJobLabel(job),
   data: job,
   leaf: true,
   draggable: true,

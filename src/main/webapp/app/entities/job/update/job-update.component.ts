@@ -19,7 +19,7 @@ import { MachineService } from 'app/entities/machine/service/machine.service';
 import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
 import { sortByNameCaseInsensitive } from '../../../util/common-util';
-import { EntityArrayResponseType, PerspectiveService } from '../../../perspective/perspective.service';
+import { PerspectiveService } from '../../../perspective/perspective.service';
 import { OutOfOrder } from '../../out-of-order/out-of-order.model';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -168,7 +168,7 @@ export class JobUpdateComponent implements OnInit {
     }
   }
 
-  isDisabled = (date: NgbDate, current?: { year: number; month: number } | undefined): boolean => {
+  isDisabled = (date: NgbDate): boolean => {
     const da = dayjs(`${date.year}-${date.month}-${date.day}`);
     return da.day() === 0 || this.disabledDayList.some((d: NgbDate) => d.equals(date));
   };
