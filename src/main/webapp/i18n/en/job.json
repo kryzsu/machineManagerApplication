@@ -26,6 +26,7 @@
       "orderNumber": "Order Number",
       "drawingNumber": "Drawing Number",
       "drawing": "Drawing",
+      "worknumber": "Worknumber",
       "product": "Product",
       "machine": "Machine",
       "customer": "Customer"

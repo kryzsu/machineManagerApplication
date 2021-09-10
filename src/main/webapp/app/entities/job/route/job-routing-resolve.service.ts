@@ -17,8 +17,7 @@ export class JobRoutingResolveService implements Resolve<IJob> {
       return this.service.find(id).pipe(
         mergeMap((job: HttpResponse<Job>) => {
           if (job.body) {
-            const jobEntity = job.body;
-            return of(jobEntity);
+            return of(job.body);
           } else {
             this.router.navigate(['404']);
             return EMPTY;

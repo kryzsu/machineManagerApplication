@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="krz" id="20210910084130-1">
+        <addColumn tableName="job" >
+            <column name="worknumber" type="varchar(255)">
+                <constraints nullable="true" unique="true" uniqueConstraintName="ux_job__worknumber" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20210910084130-2-update" author="krz">
+        <sql endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">update job set worknumber=drawing_number
+
+            <comment>What about Bob?</comment>
+        </sql>
+    </changeSet>
+
+    <changeSet author="krz" id="20210910084130-3-constraint">
+        <addNotNullConstraint columnDataType="varchar(255)"
+                              columnName="worknumber"
+                              constraintName="ux_job__worknumber"
+                              defaultNullValue="A String"
+                              tableName="job"/>
+    </changeSet>
+</databaseChangeLog>

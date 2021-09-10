@@ -38,6 +38,7 @@ export class JobUpdatePage {
   orderNumberInput = element(by.id('field_orderNumber'));
   drawingNumberInput = element(by.id('field_drawingNumber'));
   drawingInput = element(by.id('file_drawing'));
+  worknumberInput = element(by.id('field_worknumber'));
 
   productSelect = element(by.id('field_product'));
   machineSelect = element(by.id('field_machine'));
@@ -117,6 +118,14 @@ export class JobUpdatePage {
 
   async getDrawingInput(): Promise<string> {
     return await this.drawingInput.getAttribute('value');
+  }
+
+  async setWorknumberInput(worknumber: string): Promise<void> {
+    await this.worknumberInput.sendKeys(worknumber);
+  }
+
+  async getWorknumberInput(): Promise<string> {
+    return await this.worknumberInput.getAttribute('value');
   }
 
   async productSelectLastOption(): Promise<void> {

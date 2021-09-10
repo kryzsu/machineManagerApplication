@@ -34,6 +34,10 @@ public class JobDTO implements Serializable {
     private byte[] drawing;
 
     private String drawingContentType;
+
+    @NotNull
+    private String worknumber;
+
     private Set<ProductDTO> products = new HashSet<>();
 
     private MachineDTO machine;
@@ -120,6 +124,14 @@ public class JobDTO implements Serializable {
         this.drawingContentType = drawingContentType;
     }
 
+    public String getWorknumber() {
+        return worknumber;
+    }
+
+    public void setWorknumber(String worknumber) {
+        this.worknumber = worknumber;
+    }
+
     public Set<ProductDTO> getProducts() {
         return products;
     }
@@ -178,6 +190,7 @@ public class JobDTO implements Serializable {
             ", orderNumber='" + getOrderNumber() + "'" +
             ", drawingNumber='" + getDrawingNumber() + "'" +
             ", drawing='" + getDrawing() + "'" +
+            ", worknumber='" + getWorknumber() + "'" +
             ", products=" + getProducts() +
             ", machine=" + getMachine() +
             ", customer=" + getCustomer() +

@@ -27,6 +27,7 @@
       "product": "Termék",
       "drawingNumber": "Rajzszám",
       "drawing": "Rajz",
+      "worknumber": "Munkaszám",
       "machine": "Munkagép",
       "customer": "Vevő"
     }

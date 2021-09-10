@@ -5,10 +5,10 @@ import { TreeNode } from 'primeng/api';
 
 import { IMachine } from 'app/entities/machine/machine.model';
 import { IJob } from 'app/entities/job/job.model';
-import { IProduct } from 'app/entities/product/product.model';
 import { AppState } from '../redux/app.state';
 import { BarData } from '../shared/bar-chart/bar-chart.component';
-import { toDate, wrongDate } from '../util/common-util';
+import { dayjsToString, toDate, wrongDate } from '../util/common-util';
+import * as dayjs from 'dayjs';
 
 const colors: any = {
   red: {
@@ -58,10 +58,13 @@ export const createColors = (): void => {
 
 createColors();
 
+export const getEstimatedEndDate = (job: IJob): string =>
+  dayjsToString(
+    (job.endDate ? job.endDate : dayjs(job.startDate as any as string).add(job.estimation ?? 0, 'day')) as any as dayjs.Dayjs
+  ) as string;
+
 export const getJobLabel = (job: IJob): string =>
-  `${job.products?.map((product: IProduct): string => product.name ?? '').join(', ') ?? ''}
-  ${job.estimation ?? 0} nap
-  (${job.productCount ?? 0} db ${job.consumerName ?? ''})`;
+  `${job.worknumber ?? 0} - ${job.productCount ?? 0} - ${job.consumerName ?? ''} - ${getEstimatedEndDate(job)}`;
 
 export const machine2BarData = (appState: AppState): BarData => {
   const labels: string[] = [];

@@ -42,7 +42,14 @@
         (dayClicked)="dayClicked($event.day)"
       >
       </mwl-calendar-month-view>
-      <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events2" [refresh]="refresh">
+      <mwl-calendar-week-view
+        *ngSwitchCase="CalendarView.Week"
+        [viewDate]="viewDate"
+        [events]="events2"
+        [refresh]="refresh"
+        [dayStartHour]="9"
+        [dayEndHour]="8"
+      >
       </mwl-calendar-week-view>
     </div>
   </p-accordionTab>

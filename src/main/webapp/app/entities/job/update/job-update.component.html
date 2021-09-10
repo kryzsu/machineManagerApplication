@@ -34,6 +34,29 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.worknumber" for="field_worknumber"
+            >Worknumber</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="worknumber"
+            id="field_worknumber"
+            data-cy="worknumber"
+            formControlName="worknumber"
+          />
+          <div *ngIf="editForm.get('worknumber')!.invalid && (editForm.get('worknumber')!.dirty || editForm.get('worknumber')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('worknumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate"
             >Start Date</label
           >

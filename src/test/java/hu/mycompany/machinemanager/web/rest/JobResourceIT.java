@@ -69,6 +69,9 @@ class JobResourceIT {
     private static final String DEFAULT_DRAWING_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_DRAWING_CONTENT_TYPE = "image/png";
 
+    private static final String DEFAULT_WORKNUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_WORKNUMBER = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/jobs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -111,7 +114,8 @@ class JobResourceIT {
             .orderNumber(DEFAULT_ORDER_NUMBER)
             .drawingNumber(DEFAULT_DRAWING_NUMBER)
             .drawing(DEFAULT_DRAWING)
-            .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE);
+            .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE)
+            .worknumber(DEFAULT_WORKNUMBER);
         return job;
     }
 
@@ -131,7 +135,8 @@ class JobResourceIT {
             .orderNumber(UPDATED_ORDER_NUMBER)
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
-            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
+            .worknumber(UPDATED_WORKNUMBER);
         return job;
     }
 
@@ -163,6 +168,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawingNumber()).isEqualTo(DEFAULT_DRAWING_NUMBER);
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
+        assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
     }
 
     @Test
@@ -204,6 +210,24 @@ class JobResourceIT {
 
     @Test
     @Transactional
+    void checkWorknumberIsRequired() throws Exception {
+        int databaseSizeBeforeTest = jobRepository.findAll().size();
+        // set the field null
+        job.setWorknumber(null);
+
+        // Create the Job, which fails.
+        JobDTO jobDTO = jobMapper.toDto(job);
+
+        restJobMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(jobDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Job> jobList = jobRepository.findAll();
+        assertThat(jobList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllJobs() throws Exception {
         // Initialize the database
         jobRepository.saveAndFlush(job);
@@ -222,7 +246,8 @@ class JobResourceIT {
             .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER)))
             .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
             .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))));
+            .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))))
+            .andExpect(jsonPath("$.[*].worknumber").value(hasItem(DEFAULT_WORKNUMBER)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -263,7 +288,8 @@ class JobResourceIT {
             .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER))
             .andExpect(jsonPath("$.drawingNumber").value(DEFAULT_DRAWING_NUMBER))
             .andExpect(jsonPath("$.drawingContentType").value(DEFAULT_DRAWING_CONTENT_TYPE))
-            .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)));
+            .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)))
+            .andExpect(jsonPath("$.worknumber").value(DEFAULT_WORKNUMBER));
     }
 
     @Test
@@ -294,7 +320,8 @@ class JobResourceIT {
             .orderNumber(UPDATED_ORDER_NUMBER)
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
-            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
+            .worknumber(UPDATED_WORKNUMBER);
         JobDTO jobDTO = jobMapper.toDto(updatedJob);
 
         restJobMockMvc
@@ -318,6 +345,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
+        assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);
     }
 
     @Test
@@ -424,6 +452,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
+        assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
     }
 
     @Test
@@ -447,7 +476,8 @@ class JobResourceIT {
             .orderNumber(UPDATED_ORDER_NUMBER)
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
-            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
+            .worknumber(UPDATED_WORKNUMBER);
 
         restJobMockMvc
             .perform(
@@ -470,6 +500,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
+        assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);
     }
 
     @Test

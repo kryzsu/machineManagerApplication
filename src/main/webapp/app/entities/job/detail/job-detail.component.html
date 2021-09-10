@@ -51,6 +51,10 @@
             {{ job.drawingContentType }}, {{ byteSize(job.drawing) }}
           </div>
         </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.worknumber">Worknumber</span></dt>
+        <dd>
+          <span>{{ job.worknumber }}</span>
+        </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.job.product">Product</span></dt>
         <dd>
           <span *ngFor="let product of job.products; let last = last">

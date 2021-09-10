@@ -45,6 +45,7 @@ export class JobUpdateComponent implements OnInit {
     drawingNumber: [],
     drawing: [],
     drawingContentType: [],
+    worknumber: [null, [Validators.required]],
     products: [],
     machine: [],
     customer: [],
@@ -207,6 +208,7 @@ export class JobUpdateComponent implements OnInit {
       products: job.products,
       machine: job.machine,
       customer: job.customer,
+      worknumber: job.worknumber,
     });
 
     this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(
@@ -262,6 +264,7 @@ export class JobUpdateComponent implements OnInit {
       drawingNumber: this.editForm.get(['drawingNumber'])!.value,
       drawingContentType: this.editForm.get(['drawingContentType'])!.value,
       drawing: this.editForm.get(['drawing'])!.value,
+      worknumber: this.editForm.get(['worknumber'])!.value,
       products: this.editForm.get(['products'])!.value,
       machine: this.editForm.get(['machine'])!.value,
       customer: this.editForm.get(['customer'])!.value,

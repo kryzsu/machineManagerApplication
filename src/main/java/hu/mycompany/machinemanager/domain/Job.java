@@ -53,6 +53,10 @@ public class Job implements Serializable {
     @Column(name = "drawing_content_type")
     private String drawingContentType;
 
+    @NotNull
+    @Column(name = "worknumber", nullable = false, unique = true)
+    private String worknumber;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "rel_job__product", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
@@ -198,6 +202,19 @@ public class Job implements Serializable {
         this.drawingContentType = drawingContentType;
     }
 
+    public String getWorknumber() {
+        return this.worknumber;
+    }
+
+    public Job worknumber(String worknumber) {
+        this.worknumber = worknumber;
+        return this;
+    }
+
+    public void setWorknumber(String worknumber) {
+        this.worknumber = worknumber;
+    }
+
     public Set<Product> getProducts() {
         return this.products;
     }
@@ -282,6 +299,7 @@ public class Job implements Serializable {
             ", drawingNumber='" + getDrawingNumber() + "'" +
             ", drawing='" + getDrawing() + "'" +
             ", drawingContentType='" + getDrawingContentType() + "'" +
+            ", worknumber='" + getWorknumber() + "'" +
             "}";
     }
 }

@@ -14,6 +14,7 @@ export interface IJob {
   drawingNumber?: string | null;
   drawingContentType?: string | null;
   drawing?: string | null;
+  worknumber?: string;
   products?: IProduct[] | null;
   machine?: IMachine | null;
   customer?: ICustomer | null;
@@ -32,6 +33,7 @@ export class Job implements IJob {
     public drawingNumber?: string | null,
     public drawingContentType?: string | null,
     public drawing?: string | null,
+    public worknumber?: string,
     public products?: IProduct[] | null,
     public machine?: IMachine | null,
     public customer?: ICustomer | null
