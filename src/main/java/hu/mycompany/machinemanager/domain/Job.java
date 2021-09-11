@@ -64,6 +64,7 @@ public class Job implements Serializable {
     private Set<Product> products = new HashSet<>();
 
     @ManyToOne
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
     private Machine machine;
 
