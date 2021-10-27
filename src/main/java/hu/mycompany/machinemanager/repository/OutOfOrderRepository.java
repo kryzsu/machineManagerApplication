@@ -25,4 +25,6 @@ public interface OutOfOrderRepository extends JpaRepository<OutOfOrder, Long>, J
 
     @Query("select outOfOrder from OutOfOrder outOfOrder left join fetch outOfOrder.machines where outOfOrder.id =:id")
     Optional<OutOfOrder> findOneWithEagerRelationships(@Param("id") Long id);
+
+    List<OutOfOrder> findAllByMachineIdAnd(Long MachineId);
 }

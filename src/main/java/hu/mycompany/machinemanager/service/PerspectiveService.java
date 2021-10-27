@@ -10,6 +10,6 @@ import org.springframework.data.domain.Pageable;
 public interface PerspectiveService {
     Page<MachineDetailed> findAll(Pageable pageable);
     List<MachineDetailed> findAllOpenInInterval(LocalDate startDate, LocalDate endDate);
-    LocalDate getNextDateForMachine(long machineId);
+    LocalDate getNextDateForMachine(long machineId, int estimation);
     List<OutOfOrderDTO> getRelatedOutOfOrder(long machineId);
 }

@@ -145,11 +145,13 @@ export class JobUpdateComponent implements OnInit {
 
   refreshMachineRelatedData(): void {
     const machineId = this.editForm.get('machine')?.value?.id;
+    const estimation = this.editForm.get('estimation')?.value;
     const startDate = this.editForm.get('startDate')?.value;
+
     if (machineId !== undefined) {
       if (R.isNil(startDate)) {
         this.perspectiveService
-          .getNextDateForMachine(machineId)
+          .getNextDateForMachine(machineId, estimation)
           .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
           .subscribe(newDate => {
             this.editForm.patchValue({ startDate: dayjs(newDate) });

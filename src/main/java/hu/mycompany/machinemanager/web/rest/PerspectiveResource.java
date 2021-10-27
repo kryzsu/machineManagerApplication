@@ -37,9 +37,9 @@ public class PerspectiveResource {
     }
 
     @GetMapping("/get-next-start-date-4-machine")
-    public LocalDate getNextDateForMachine(@RequestParam long machineId) {
+    public LocalDate getNextDateForMachine(@RequestParam long machineId, @RequestParam int estimation) {
         log.debug("REST request to get the getNextDateForMachine");
-        return perspectiveService.getNextDateForMachine(machineId);
+        return perspectiveService.getNextDateForMachine(machineId, estimation);
     }
 
     @GetMapping("/get-related-out-of-order")

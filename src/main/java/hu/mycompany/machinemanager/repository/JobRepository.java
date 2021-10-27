@@ -1,6 +1,8 @@
 package hu.mycompany.machinemanager.repository;
 
 import hu.mycompany.machinemanager.domain.Job;
+import hu.mycompany.machinemanager.domain.Machine;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +25,14 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("select job from Job job left join fetch job.products where job.id =:id")
     Optional<Job> findOneWithEagerRelationships(@Param("id") Long id);
+
+    @Query(
+        "SELECT job FROM Job job join fetch job.machine " +
+        "WHERE job.machine.id =:machineId " +
+        "AND job.endDate is NULL " +
+        "AND job.startDate > :date"
+    )
+    List<Job> findForMachineFutureOpenJobs(@Param("machineId") Long machineId, @Param("date") Date date);
+
+    List<Job> findByMachineIdAndStartDateGreaterThanEqual(Long machineId, LocalDate date);
 }

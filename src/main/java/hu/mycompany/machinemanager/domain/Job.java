@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -16,6 +19,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "job")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;

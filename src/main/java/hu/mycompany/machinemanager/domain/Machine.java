@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -15,6 +17,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "machine")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@NoArgsConstructor
+@Builder
 public class Machine implements Serializable {
 
     private static final long serialVersionUID = 1L;
