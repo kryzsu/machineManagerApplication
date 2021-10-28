@@ -16,7 +16,7 @@ public class Interval {
     public Interval(LocalDate start, LocalDate end) {
         this.start = start;
         this.end = end;
-        days = Duration.between(start.atStartOfDay(), end.atStartOfDay()).toDays();
+        days = Duration.between(start.atStartOfDay(), end.atStartOfDay()).toDays() + 1;
     }
 
     /**

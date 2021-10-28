@@ -18,7 +18,8 @@
         "title": "Üzemszünet"
       },
       "id": "ID",
-      "date": "Dátum",
+      "start": "Kezdet",
+      "end": "Vég",
       "description": "Leírás",
       "machine": "Munkagép"
     }

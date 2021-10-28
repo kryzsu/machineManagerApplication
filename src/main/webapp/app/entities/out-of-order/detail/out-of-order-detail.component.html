@@ -16,9 +16,13 @@
         <dd>
           <span>{{ outOfOrder.id }}</span>
         </dd>
-        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.date">Date</span></dt>
+        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.start">Start</span></dt>
         <dd>
-          <span>{{ outOfOrder.date | formatMediumDate }}</span>
+          <span>{{ outOfOrder.start | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.end">End</span></dt>
+        <dd>
+          <span>{{ outOfOrder.end | formatMediumDate }}</span>
         </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.outOfOrder.description">Description</span></dt>
         <dd>

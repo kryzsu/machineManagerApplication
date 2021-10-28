@@ -79,13 +79,15 @@ export class OutOfOrderService {
 
   protected convertDateFromClient(outOfOrder: IOutOfOrder): IOutOfOrder {
     return Object.assign({}, outOfOrder, {
-      date: outOfOrder.date?.isValid() ? outOfOrder.date.format(DATE_FORMAT) : undefined,
+      start: outOfOrder.start?.isValid() ? outOfOrder.start.format(DATE_FORMAT) : undefined,
+      end: outOfOrder.end?.isValid() ? outOfOrder.end.format(DATE_FORMAT) : undefined,
     });
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.date = res.body.date ? dayjs(res.body.date) : undefined;
+      res.body.start = res.body.start ? dayjs(res.body.start) : undefined;
+      res.body.end = res.body.end ? dayjs(res.body.end) : undefined;
     }
     return res;
   }
@@ -93,7 +95,8 @@ export class OutOfOrderService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((outOfOrder: IOutOfOrder) => {
-        outOfOrder.date = outOfOrder.date ? dayjs(outOfOrder.date) : undefined;
+        outOfOrder.start = outOfOrder.start ? dayjs(outOfOrder.start) : undefined;
+        outOfOrder.end = outOfOrder.end ? dayjs(outOfOrder.end) : undefined;
       });
     }
     return res;

@@ -21,7 +21,8 @@ export class OutOfOrderUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    date: [null, [Validators.required]],
+    start: [null, [Validators.required]],
+    end: [null, [Validators.required]],
     description: [null, [Validators.required, Validators.minLength(5)]],
     machines: [],
   });
@@ -92,7 +93,8 @@ export class OutOfOrderUpdateComponent implements OnInit {
   protected updateForm(outOfOrder: IOutOfOrder): void {
     this.editForm.patchValue({
       id: outOfOrder.id,
-      date: outOfOrder.date,
+      start: outOfOrder.start,
+      end: outOfOrder.end,
       description: outOfOrder.description,
       machines: outOfOrder.machines,
     });
@@ -119,7 +121,8 @@ export class OutOfOrderUpdateComponent implements OnInit {
     return {
       ...new OutOfOrder(),
       id: this.editForm.get(['id'])!.value,
-      date: this.editForm.get(['date'])!.value,
+      start: this.editForm.get(['start'])!.value,
+      end: this.editForm.get(['end'])!.value,
       description: this.editForm.get(['description'])!.value,
       machines: this.editForm.get(['machines'])!.value,
     };

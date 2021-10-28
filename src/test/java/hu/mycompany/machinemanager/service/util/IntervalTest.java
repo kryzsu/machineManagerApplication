@@ -22,7 +22,7 @@ class IntervalTest {
         Interval interval = new Interval(now.toLocalDate(), later.toLocalDate());
 
         //THEN
-        assertThat(interval.getDays(), equalTo(days));
+        assertThat(interval.getDays(), equalTo(days + 1));
     }
 
     @Test

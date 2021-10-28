@@ -18,7 +18,8 @@
         "title": "Out Of Order"
       },
       "id": "ID",
-      "date": "Date",
+      "start": "Start",
+      "end": "End",
       "description": "Description",
       "machine": "Machine"
     }

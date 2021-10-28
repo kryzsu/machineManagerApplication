@@ -2,6 +2,7 @@ package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
+import hu.mycompany.machinemanager.domain.OutOfOrder;
 import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
@@ -83,13 +84,20 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     @Override
     public LocalDate getNextDateForMachine(long machineId, int estimation) {
-        List<Interval> futureOccupiedIntervalList = jobRepository
+        Stream<Interval> futureOccupiedIntervalStream = jobRepository
             .findByMachineIdAndStartDateGreaterThanEqual(machineId, LocalDate.now())
             .stream()
-            .map(job -> new Interval(job.getStartDate(), util.getEndDateOrCalculate(job)))
-            .collect(Collectors.toList());
+            .map(job -> new Interval(job.getStartDate(), util.getEndDateOrCalculate(job)));
 
-        // TODO: outoforder for given machine
+        List<Interval> futureOccupiedIntervalList = Stream
+            .concat(
+                outOfOrderRepository
+                    .findAllByMachineIdAndStartGreaterThanEqual(machineId, LocalDate.now())
+                    .stream()
+                    .map(out -> new Interval(out.getStart(), out.getEnd())),
+                futureOccupiedIntervalStream
+            )
+            .collect(Collectors.toList());
 
         LocalDate tomorrow = LocalDateTime.now().plusDays(1).toLocalDate();
 
@@ -109,6 +117,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             .orElse(new Machine())
             .getOutOfOrders()
             .stream()
+            .sorted((ooo1, ooo2) -> ooo1.getStart().compareTo(ooo2.getStart()))
             .map(outOfOrderMapper::toDto)
             .collect(Collectors.toList());
     }

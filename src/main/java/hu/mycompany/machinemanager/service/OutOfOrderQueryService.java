@@ -86,8 +86,11 @@ public class OutOfOrderQueryService extends QueryService<OutOfOrder> {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), OutOfOrder_.id));
             }
-            if (criteria.getDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getDate(), OutOfOrder_.date));
+            if (criteria.getStart() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getStart(), OutOfOrder_.start));
+            }
+            if (criteria.getEnd() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getEnd(), OutOfOrder_.end));
             }
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), OutOfOrder_.description));
