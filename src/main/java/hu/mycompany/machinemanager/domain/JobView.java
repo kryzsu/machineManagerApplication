@@ -2,30 +2,21 @@ package hu.mycompany.machinemanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Job.
  */
 @Entity
-@Table(name = "job")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Job implements Serializable {
+@Table(name = "v_job")
+public class JobView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,10 +32,10 @@ public class Job implements Serializable {
     private Integer productCount;
 
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Date startDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private Date endDate;
 
     @Column(name = "fact")
     private Integer fact;
@@ -55,41 +46,12 @@ public class Job implements Serializable {
     @Column(name = "drawing_number")
     private String drawingNumber;
 
-    @Column(name = "priority")
-    private Long priority;
-
     @Lob
     @Column(name = "drawing")
     private byte[] drawing;
 
     @Column(name = "drawing_content_type")
     private String drawingContentType;
-
-    @NotNull
-    @Column(name = "worknumber", nullable = false, unique = true)
-    private String worknumber;
-
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public Long getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Long priority) {
-        this.priority = priority;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -98,7 +60,6 @@ public class Job implements Serializable {
     private Set<Product> products = new HashSet<>();
 
     @ManyToOne
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
     private Machine machine;
 
@@ -115,7 +76,7 @@ public class Job implements Serializable {
         this.id = id;
     }
 
-    public Job id(Long id) {
+    public JobView id(Long id) {
         this.id = id;
         return this;
     }
@@ -124,7 +85,7 @@ public class Job implements Serializable {
         return this.estimation;
     }
 
-    public Job estimation(Integer estimation) {
+    public JobView estimation(Integer estimation) {
         this.estimation = estimation;
         return this;
     }
@@ -137,7 +98,7 @@ public class Job implements Serializable {
         return this.productCount;
     }
 
-    public Job productCount(Integer productCount) {
+    public JobView productCount(Integer productCount) {
         this.productCount = productCount;
         return this;
     }
@@ -146,29 +107,29 @@ public class Job implements Serializable {
         this.productCount = productCount;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return this.startDate;
     }
 
-    public Job startDate(LocalDate startDate) {
+    public JobView startDate(Date startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public Date getEndDate() {
         return this.endDate;
     }
 
-    public Job endDate(LocalDate endDate) {
+    public JobView endDate(Date endDate) {
         this.endDate = endDate;
         return this;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -176,7 +137,7 @@ public class Job implements Serializable {
         return this.fact;
     }
 
-    public Job fact(Integer fact) {
+    public JobView fact(Integer fact) {
         this.fact = fact;
         return this;
     }
@@ -189,7 +150,7 @@ public class Job implements Serializable {
         return this.orderNumber;
     }
 
-    public Job orderNumber(String orderNumber) {
+    public JobView orderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
         return this;
     }
@@ -202,7 +163,7 @@ public class Job implements Serializable {
         return this.drawingNumber;
     }
 
-    public Job drawingNumber(String drawingNumber) {
+    public JobView drawingNumber(String drawingNumber) {
         this.drawingNumber = drawingNumber;
         return this;
     }
@@ -215,7 +176,7 @@ public class Job implements Serializable {
         return this.drawing;
     }
 
-    public Job drawing(byte[] drawing) {
+    public JobView drawing(byte[] drawing) {
         this.drawing = drawing;
         return this;
     }
@@ -228,7 +189,7 @@ public class Job implements Serializable {
         return this.drawingContentType;
     }
 
-    public Job drawingContentType(String drawingContentType) {
+    public JobView drawingContentType(String drawingContentType) {
         this.drawingContentType = drawingContentType;
         return this;
     }
@@ -237,35 +198,16 @@ public class Job implements Serializable {
         this.drawingContentType = drawingContentType;
     }
 
-    public String getWorknumber() {
-        return this.worknumber;
-    }
-
-    public Job worknumber(String worknumber) {
-        this.worknumber = worknumber;
-        return this;
-    }
-
-    public void setWorknumber(String worknumber) {
-        this.worknumber = worknumber;
-    }
-
     public Set<Product> getProducts() {
         return this.products;
     }
 
-    public Job products(Set<Product> products) {
+    public JobView products(Set<Product> products) {
         this.setProducts(products);
         return this;
     }
 
-    public Job addProduct(Product product) {
-        this.products.add(product);
-        product.getJobs().add(this);
-        return this;
-    }
-
-    public Job removeProduct(Product product) {
+    public JobView removeProduct(Product product) {
         this.products.remove(product);
         product.getJobs().remove(this);
         return this;
@@ -279,7 +221,7 @@ public class Job implements Serializable {
         return this.machine;
     }
 
-    public Job machine(Machine machine) {
+    public JobView machine(Machine machine) {
         this.setMachine(machine);
         return this;
     }
@@ -292,7 +234,7 @@ public class Job implements Serializable {
         return this.customer;
     }
 
-    public Job customer(Customer customer) {
+    public JobView customer(Customer customer) {
         this.setCustomer(customer);
         return this;
     }
@@ -308,10 +250,10 @@ public class Job implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Job)) {
+        if (!(o instanceof JobView)) {
             return false;
         }
-        return id != null && id.equals(((Job) o).id);
+        return id != null && id.equals(((JobView) o).id);
     }
 
     @Override
@@ -334,7 +276,6 @@ public class Job implements Serializable {
             ", drawingNumber='" + getDrawingNumber() + "'" +
             ", drawing='" + getDrawing() + "'" +
             ", drawingContentType='" + getDrawingContentType() + "'" +
-            ", worknumber='" + getWorknumber() + "'" +
             "}";
     }
 }

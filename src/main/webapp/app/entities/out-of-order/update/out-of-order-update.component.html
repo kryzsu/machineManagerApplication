@@ -18,24 +18,48 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.outOfOrder.date" for="field_date">Date</label>
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.outOfOrder.start" for="field_date">Start</label>
           <div class="input-group">
             <input
-              id="field_date"
-              data-cy="date"
+              id="field_start"
+              data-cy="start"
               type="text"
               class="form-control"
-              name="date"
+              name="start"
               ngbDatepicker
-              #dateDp="ngbDatepicker"
-              formControlName="date"
+              #startDp="ngbDatepicker"
+              formControlName="start"
             />
             <span class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="dateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+              <button type="button" class="btn btn-secondary" (click)="startDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
             </span>
           </div>
-          <div *ngIf="editForm.get('date')!.invalid && (editForm.get('date')!.dirty || editForm.get('date')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('date')?.errors?.required" jhiTranslate="entity.validation.required">
+          <div *ngIf="editForm.get('start')!.invalid && (editForm.get('start')!.dirty || editForm.get('start')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('start')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.outOfOrder.end" for="field_date">End</label>
+          <div class="input-group">
+            <input
+              id="field_end"
+              data-cy="end"
+              type="text"
+              class="form-control"
+              name="end"
+              ngbDatepicker
+              #endDp="ngbDatepicker"
+              formControlName="end"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="endDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </span>
+          </div>
+          <div *ngIf="editForm.get('end')!.invalid && (editForm.get('end')!.dirty || editForm.get('end')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('end')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
             </small>
           </div>

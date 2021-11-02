@@ -33,8 +33,11 @@
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
           <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="date">
-            <span jhiTranslate="machineManagerApplicationApp.outOfOrder.date">Date</span> <fa-icon icon="sort"></fa-icon>
+          <th scope="col" jhiSortBy="start">
+            <span jhiTranslate="machineManagerApplicationApp.outOfOrder.start">Start</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="end">
+            <span jhiTranslate="machineManagerApplicationApp.outOfOrder.end">End</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="description">
             <span jhiTranslate="machineManagerApplicationApp.outOfOrder.description">Description</span> <fa-icon icon="sort"></fa-icon>
@@ -47,7 +50,8 @@
           <td>
             <a [routerLink]="['/out-of-order', outOfOrder.id, 'view']">{{ outOfOrder.id }}</a>
           </td>
-          <td>{{ outOfOrder.date | formatMediumDate }}</td>
+          <td>{{ outOfOrder.start | formatMediumDate }}</td>
+          <td>{{ outOfOrder.end | formatMediumDate }}</td>
           <td>{{ outOfOrder.description }}</td>
           <td class="text-right">
             <div class="btn-group">

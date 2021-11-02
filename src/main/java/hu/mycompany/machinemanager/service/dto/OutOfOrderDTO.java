@@ -15,7 +15,10 @@ public class OutOfOrderDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private LocalDate date;
+    private LocalDate start;
+
+    @NotNull
+    private LocalDate end;
 
     @NotNull
     @Size(min = 5)
@@ -31,12 +34,20 @@ public class OutOfOrderDTO implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getStart() {
+        return start;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setStart(LocalDate start) {
+        this.start = start;
+    }
+
+    public LocalDate getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDate end) {
+        this.end = end;
     }
 
     public String getDescription() {
@@ -81,7 +92,8 @@ public class OutOfOrderDTO implements Serializable {
     public String toString() {
         return "OutOfOrderDTO{" +
             "id=" + getId() +
-            ", date='" + getDate() + "'" +
+            ", start='" + start + "'" +
+            ", end='" + end + "'" +
             ", description='" + getDescription() + "'" +
             ", machines=" + getMachines() +
             "}";

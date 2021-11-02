@@ -84,7 +84,7 @@ class OutOfOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OutOfOrder createEntity(EntityManager em) {
-        OutOfOrder outOfOrder = new OutOfOrder().date(DEFAULT_DATE).description(DEFAULT_DESCRIPTION);
+        OutOfOrder outOfOrder = new OutOfOrder().start(DEFAULT_DATE).end(DEFAULT_DATE).description(DEFAULT_DESCRIPTION);
         return outOfOrder;
     }
 
@@ -95,7 +95,7 @@ class OutOfOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OutOfOrder createUpdatedEntity(EntityManager em) {
-        OutOfOrder outOfOrder = new OutOfOrder().date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        OutOfOrder outOfOrder = new OutOfOrder().start(DEFAULT_DATE).end(DEFAULT_DATE).description(UPDATED_DESCRIPTION);
         return outOfOrder;
     }
 
@@ -118,7 +118,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeCreate + 1);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getDate()).isEqualTo(DEFAULT_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(DEFAULT_DATE);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(DEFAULT_DATE);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
@@ -146,7 +147,7 @@ class OutOfOrderResourceIT {
     void checkDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = outOfOrderRepository.findAll().size();
         // set the field null
-        outOfOrder.setDate(null);
+        outOfOrder.setStart(null);
 
         // Create the OutOfOrder, which fails.
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
@@ -504,7 +505,7 @@ class OutOfOrderResourceIT {
         OutOfOrder updatedOutOfOrder = outOfOrderRepository.findById(outOfOrder.getId()).get();
         // Disconnect from session so that the updates on updatedOutOfOrder are not directly saved in db
         em.detach(updatedOutOfOrder);
-        updatedOutOfOrder.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        updatedOutOfOrder.start(UPDATED_DATE).end(DEFAULT_DATE).description(UPDATED_DESCRIPTION);
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(updatedOutOfOrder);
 
         restOutOfOrderMockMvc
@@ -519,7 +520,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(UPDATED_DATE);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -600,7 +602,7 @@ class OutOfOrderResourceIT {
         OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
         partialUpdatedOutOfOrder.setId(outOfOrder.getId());
 
-        partialUpdatedOutOfOrder.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        partialUpdatedOutOfOrder.start(UPDATED_DATE).end(UPDATED_DATE).description(UPDATED_DESCRIPTION);
 
         restOutOfOrderMockMvc
             .perform(
@@ -614,7 +616,7 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -630,7 +632,7 @@ class OutOfOrderResourceIT {
         OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
         partialUpdatedOutOfOrder.setId(outOfOrder.getId());
 
-        partialUpdatedOutOfOrder.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        partialUpdatedOutOfOrder.start(UPDATED_DATE).description(UPDATED_DESCRIPTION);
 
         restOutOfOrderMockMvc
             .perform(
@@ -644,7 +646,7 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getDate()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 

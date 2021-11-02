@@ -4,6 +4,7 @@ import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.web.rest.errors.BadRequestAlertException;
+import hu.mycompany.machinemanager.web.rest.validator.JobValidator;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -17,8 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -43,9 +44,17 @@ public class JobResource {
 
     private final JobRepository jobRepository;
 
-    public JobResource(JobService jobService, JobRepository jobRepository) {
+    private final JobValidator jobValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(this.jobValidator);
+    }
+
+    public JobResource(JobService jobService, JobRepository jobRepository, JobValidator jobValidator) {
         this.jobService = jobService;
         this.jobRepository = jobRepository;
+        this.jobValidator = jobValidator;
     }
 
     /**

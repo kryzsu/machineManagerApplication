@@ -26,9 +26,10 @@ export class PerspectiveService {
     return this.http.get<IMachine[]>(`${this.resourceUrl}/get-detailed-machine-list`, { params: options, observe: 'response' });
   }
 
-  getNextDateForMachine(machineId: string): Observable<HttpResponse<string>> {
+  getNextDateForMachine(machineId: string, estimation: number): Observable<HttpResponse<string>> {
     const options = createRequestOption({
       machineId,
+      estimation,
     });
 
     return this.http.get<string>(`${this.resourceUrl}/get-next-start-date-4-machine`, { params: options, observe: 'response' });

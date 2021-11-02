@@ -18,8 +18,8 @@ import { IMachine } from 'app/entities/machine/machine.model';
 import { MachineService } from 'app/entities/machine/service/machine.service';
 import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
-import { sortByNameCaseInsensitive } from '../../../util/common-util';
 import { PerspectiveService } from '../../../perspective/perspective.service';
+import { dateFitInterval, sortByNameCaseInsensitive, Interval } from '../../../util/common-util';
 import { OutOfOrder } from '../../out-of-order/out-of-order.model';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -51,7 +51,7 @@ export class JobUpdateComponent implements OnInit {
     customer: [],
   });
 
-  disabledDayList: NgbDate[] = [];
+  disabledIntervalList: Interval[] = [];
 
   constructor(
     protected dataUtils: DataUtils,
@@ -140,17 +140,19 @@ export class JobUpdateComponent implements OnInit {
     return option;
   }
 
-  onMachineChange(p: any | undefined): void {
+  onMachineChange(): void {
     this.refreshMachineRelatedData();
   }
 
   refreshMachineRelatedData(): void {
     const machineId = this.editForm.get('machine')?.value?.id;
+    const estimation = this.editForm.get('estimation')?.value;
     const startDate = this.editForm.get('startDate')?.value;
+
     if (machineId !== undefined) {
       if (R.isNil(startDate)) {
         this.perspectiveService
-          .getNextDateForMachine(machineId)
+          .getNextDateForMachine(machineId, estimation)
           .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
           .subscribe(newDate => {
             this.editForm.patchValue({ startDate: dayjs(newDate) });
@@ -161,9 +163,13 @@ export class JobUpdateComponent implements OnInit {
         .getRelatedOutOfOrder(machineId)
         .pipe(map((response: HttpResponse<OutOfOrder[]>) => response.body ?? []))
         .subscribe((data: OutOfOrder[]) => {
-          this.disabledDayList = data.map((item: OutOfOrder) => {
-            const date = dayjs(item.date);
-            return new NgbDate(date.year(), date.month() + 1, date.date());
+          this.disabledIntervalList = data.map((item: OutOfOrder) => {
+            const startDayjs = dayjs(item.start);
+            const start: NgbDate = new NgbDate(startDayjs.year(), startDayjs.month() + 1, startDayjs.date());
+            const endDayjs = dayjs(item.end);
+            const end = new NgbDate(endDayjs.year(), endDayjs.month() + 1, endDayjs.date());
+
+            return { start, end };
           });
         });
     }
@@ -171,7 +177,8 @@ export class JobUpdateComponent implements OnInit {
 
   isDisabled = (date: NgbDate): boolean => {
     const da = dayjs(`${date.year}-${date.month}-${date.day}`);
-    return da.day() === 0 || this.disabledDayList.some((d: NgbDate) => d.equals(date));
+    const rv = da.day() === 0 || this.disabledIntervalList.some((interval: Interval) => dateFitInterval(interval, date));
+    return rv;
   };
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IJob>>): void {

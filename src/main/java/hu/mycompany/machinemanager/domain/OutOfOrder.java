@@ -25,8 +25,12 @@ public class OutOfOrder implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
+    @Column(name = "start", nullable = false)
+    private LocalDate start;
+
+    @NotNull
+    @Column(name = "end", nullable = false)
+    private LocalDate end;
 
     @NotNull
     @Size(min = 5)
@@ -57,17 +61,30 @@ public class OutOfOrder implements Serializable {
         return this;
     }
 
-    public LocalDate getDate() {
-        return this.date;
-    }
-
-    public OutOfOrder date(LocalDate date) {
-        this.date = date;
+    public OutOfOrder start(LocalDate start) {
+        this.start = start;
         return this;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public OutOfOrder end(LocalDate end) {
+        this.end = end;
+        return this;
+    }
+
+    public LocalDate getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDate start) {
+        this.start = start;
+    }
+
+    public LocalDate getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDate end) {
+        this.end = end;
     }
 
     public String getDescription() {
@@ -128,12 +145,15 @@ public class OutOfOrder implements Serializable {
     }
 
     // prettier-ignore
+
     @Override
     public String toString() {
         return "OutOfOrder{" +
-            "id=" + getId() +
-            ", date='" + getDate() + "'" +
-            ", description='" + getDescription() + "'" +
-            "}";
+            "id=" + id +
+            ", start=" + start +
+            ", end=" + end +
+            ", description='" + description + '\'' +
+            ", machines=" + machines +
+            '}';
     }
 }

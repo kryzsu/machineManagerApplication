@@ -1,18 +1,28 @@
 package hu.mycompany.machinemanager.service.impl;
 
+import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
+import hu.mycompany.machinemanager.domain.OutOfOrder;
+import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
+import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.*;
+import hu.mycompany.machinemanager.service.util.Interval;
 import hu.mycompany.machinemanager.service.util.Util;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.persistence.criteria.CriteriaBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,6 +37,9 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     private final Logger log = LoggerFactory.getLogger(PerspectiveServiceImpl.class);
     private final MachineRepository machineRepository;
+    private final JobRepository jobRepository;
+    private final OutOfOrderRepository outOfOrderRepository;
+
     private final MachineDetailedMapper machineDetailedMapper;
     private final Util util;
     private final OutOfOrderMapper outOfOrderMapper;
@@ -35,12 +48,16 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         MachineRepository machineRepository,
         MachineDetailedMapper machineDetailedMapper,
         Util util,
-        OutOfOrderMapper outOfOrderMapper
+        OutOfOrderMapper outOfOrderMapper,
+        JobRepository jobRepository,
+        OutOfOrderRepository outOfOrderRepository
     ) {
         this.machineRepository = machineRepository;
         this.machineDetailedMapper = machineDetailedMapper;
         this.util = util;
         this.outOfOrderMapper = outOfOrderMapper;
+        this.jobRepository = jobRepository;
+        this.outOfOrderRepository = outOfOrderRepository;
     }
 
     @Override
@@ -66,18 +83,29 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     }
 
     @Override
-    public LocalDate getNextDateForMachine(long machineId) {
-        Optional<Machine> machineOpt = machineRepository.findById(machineId);
+    public LocalDate getNextDateForMachine(long machineId, int estimation) {
+        Stream<Interval> futureOccupiedIntervalStream = jobRepository
+            .findByMachineIdAndStartDateGreaterThanEqual(machineId, LocalDate.now())
+            .stream()
+            .map(job -> new Interval(job.getStartDate(), util.getEndDateOrCalculate(job)));
 
-        LocalDate defaultDate = LocalDate.now();
-        if (machineOpt.isPresent()) {
-            return Stream
-                .concat(machineOpt.get().getJobs().stream().map(util::getNextAvailableStartDate), Stream.of(defaultDate))
-                .max((a, b) -> a.compareTo(b))
-                .get();
-        } else {
-            return defaultDate;
-        }
+        List<Interval> futureOccupiedIntervalList = Stream
+            .concat(
+                outOfOrderRepository
+                    .findAllByMachineIdAndStartGreaterThanEqual(machineId, LocalDate.now())
+                    .stream()
+                    .map(out -> new Interval(out.getStart(), out.getEnd())),
+                futureOccupiedIntervalStream
+            )
+            .collect(Collectors.toList());
+
+        LocalDate tomorrow = LocalDateTime.now().plusDays(1).toLocalDate();
+
+        List<Interval> freeIntervalList = util.getFreeIntervalList(futureOccupiedIntervalList, tomorrow);
+
+        Interval firstInterval = util.findFirstSlot(freeIntervalList, estimation);
+
+        return firstInterval.getStart();
     }
 
     @Override
@@ -89,6 +117,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             .orElse(new Machine())
             .getOutOfOrders()
             .stream()
+            .sorted((ooo1, ooo2) -> ooo1.getStart().compareTo(ooo2.getStart()))
             .map(outOfOrderMapper::toDto)
             .collect(Collectors.toList());
     }

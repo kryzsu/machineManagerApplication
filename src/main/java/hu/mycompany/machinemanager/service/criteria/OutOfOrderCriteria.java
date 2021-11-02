@@ -3,11 +3,7 @@ package hu.mycompany.machinemanager.service.criteria;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LocalDateFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
@@ -27,7 +23,9 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private LocalDateFilter date;
+    private LocalDateFilter start;
+
+    private LocalDateFilter end;
 
     private StringFilter description;
 
@@ -37,7 +35,8 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
 
     public OutOfOrderCriteria(OutOfOrderCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
-        this.date = other.date == null ? null : other.date.copy();
+        this.start = other.start == null ? null : other.start.copy();
+        this.end = other.end == null ? null : other.end.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.machineId = other.machineId == null ? null : other.machineId.copy();
     }
@@ -62,19 +61,34 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public LocalDateFilter getDate() {
-        return date;
+    public LocalDateFilter getStart() {
+        return start;
     }
 
-    public LocalDateFilter date() {
-        if (date == null) {
-            date = new LocalDateFilter();
+    public LocalDateFilter start() {
+        if (start == null) {
+            start = new LocalDateFilter();
         }
-        return date;
+        return start;
     }
 
-    public void setDate(LocalDateFilter date) {
-        this.date = date;
+    public void setStart(LocalDateFilter start) {
+        this.start = start;
+    }
+
+    public LocalDateFilter getEnd() {
+        return end;
+    }
+
+    public LocalDateFilter end() {
+        if (end == null) {
+            end = new LocalDateFilter();
+        }
+        return end;
+    }
+
+    public void setEnd(LocalDateFilter end) {
+        this.end = end;
     }
 
     public StringFilter getDescription() {
@@ -118,7 +132,8 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
         final OutOfOrderCriteria that = (OutOfOrderCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(date, that.date) &&
+            Objects.equals(start, that.start) &&
+            Objects.equals(end, that.end) &&
             Objects.equals(description, that.description) &&
             Objects.equals(machineId, that.machineId)
         );
@@ -126,7 +141,7 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, description, machineId);
+        return Objects.hash(id, start, end, description, machineId);
     }
 
     // prettier-ignore
@@ -134,7 +149,8 @@ public class OutOfOrderCriteria implements Serializable, Criteria {
     public String toString() {
         return "OutOfOrderCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
-            (date != null ? "date=" + date + ", " : "") +
+            (start != null ? "start=" + start + ", " : "") +
+            (end != null ? "end=" + end + ", " : "") +
             (description != null ? "description=" + description + ", " : "") +
             (machineId != null ? "machineId=" + machineId + ", " : "") +
             "}";
