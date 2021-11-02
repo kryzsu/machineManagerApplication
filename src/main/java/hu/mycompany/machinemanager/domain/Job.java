@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -12,6 +13,8 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Job.
@@ -52,12 +55,37 @@ public class Job implements Serializable {
     @Column(name = "drawing_number")
     private String drawingNumber;
 
+    @Column(name = "priority")
+    private Long priority;
+
     @Lob
     @Column(name = "drawing")
     private byte[] drawing;
 
     @Column(name = "drawing_content_type")
     private String drawingContentType;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
+    }
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

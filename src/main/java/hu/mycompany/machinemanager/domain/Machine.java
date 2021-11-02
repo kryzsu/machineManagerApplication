@@ -2,6 +2,7 @@ package hu.mycompany.machinemanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -10,6 +11,8 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Machine.
@@ -34,6 +37,20 @@ public class Machine implements Serializable {
     @NotNull
     @Column(name = "description", nullable = false)
     private String description;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
+    }
 
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
