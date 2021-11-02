@@ -55,4 +55,8 @@ public interface JobService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId);
+
+    Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId);
 }

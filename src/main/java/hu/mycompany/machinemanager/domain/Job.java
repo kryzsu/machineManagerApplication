@@ -58,6 +58,9 @@ public class Job implements Serializable {
     @Column(name = "priority")
     private Long priority;
 
+    @Column(name = "manual_order")
+    private Long manualOrder;
+
     @Lob
     @Column(name = "drawing")
     private byte[] drawing;
@@ -83,8 +86,26 @@ public class Job implements Serializable {
         return priority;
     }
 
+    public Job priority(Long priority) {
+        this.priority = priority;
+        return this;
+    }
+
     public void setPriority(Long priority) {
         this.priority = priority;
+    }
+
+    public Long getManualOrder() {
+        return manualOrder;
+    }
+
+    public Job manualOrder(Long manualOrder) {
+        this.manualOrder = manualOrder;
+        return this;
+    }
+
+    public void setManualOrder(Long manualOrder) {
+        this.manualOrder = manualOrder;
     }
 
     public LocalDateTime getUpdateDateTime() {

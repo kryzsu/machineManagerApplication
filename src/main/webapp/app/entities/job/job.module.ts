@@ -5,10 +5,11 @@ import { JobDetailComponent } from './detail/job-detail.component';
 import { JobUpdateComponent } from './update/job-update.component';
 import { JobDeleteDialogComponent } from './delete/job-delete-dialog.component';
 import { JobRoutingModule } from './route/job-routing.module';
+import { JobInProgressComponent } from './in-progress-list/job-in-progress.component';
 
 @NgModule({
   imports: [SharedModule, JobRoutingModule],
-  declarations: [JobComponent, JobDetailComponent, JobUpdateComponent, JobDeleteDialogComponent],
+  declarations: [JobComponent, JobDetailComponent, JobUpdateComponent, JobDeleteDialogComponent, JobInProgressComponent],
   entryComponents: [JobDeleteDialogComponent],
 })
 export class JobModule {}

@@ -6,6 +6,8 @@ import { JobComponent } from '../list/job.component';
 import { JobDetailComponent } from '../detail/job-detail.component';
 import { JobUpdateComponent } from '../update/job-update.component';
 import { JobRoutingResolveService } from './job-routing-resolve.service';
+import { JobInProgressComponent } from '../in-progress-list/job-in-progress.component';
+import { JobRoutingResolveInProgressService } from './job-routing-resolve-in-progress.service';
 
 const jobRoute: Routes = [
   {
@@ -21,6 +23,14 @@ const jobRoute: Routes = [
     component: JobDetailComponent,
     resolve: {
       job: JobRoutingResolveService,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'in-progress/:machine-id',
+    component: JobInProgressComponent,
+    resolve: {
+      jobList: JobRoutingResolveInProgressService,
     },
     canActivate: [UserRouteAccessService],
   },

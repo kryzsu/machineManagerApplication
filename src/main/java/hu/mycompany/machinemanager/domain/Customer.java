@@ -113,9 +113,6 @@ public class Customer implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Customer{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            "}";
+        return String.format("Customer{id=%d, name='%s'}", getId(), getName());
     }
 }

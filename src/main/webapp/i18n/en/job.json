@@ -8,6 +8,13 @@
         "createOrEditLabel": "Create or edit a Job",
         "notFound": "No Jobs found"
       },
+      "in-progress": {
+        "title": "Jobs in progress",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Job",
+        "createOrEditLabel": "Create or edit a Job",
+        "notFound": "No Jobs found"
+      },
       "created": "A new Job is created with identifier {{ param }}",
       "updated": "A Job is updated with identifier {{ param }}",
       "deleted": "A Job is deleted with identifier {{ param }}",
@@ -19,6 +26,7 @@
       },
       "id": "ID",
       "estimation": "Estimation",
+      "priority": "Priority",
       "productCount": "Product Count",
       "startDate": "Start Date",
       "endDate": "End Date",

@@ -6,6 +6,8 @@ import { ICustomer } from 'app/entities/customer/customer.model';
 export interface IJob {
   id?: number;
   estimation?: number | null;
+  priority?: number;
+  manualOrder?: number;
   productCount?: number;
   startDate?: dayjs.Dayjs | null;
   endDate?: dayjs.Dayjs | null;
@@ -19,6 +21,8 @@ export interface IJob {
   machine?: IMachine | null;
   customer?: ICustomer | null;
   consumerName?: string | null;
+  createDateTime?: dayjs.Dayjs | null;
+  updateDateTime?: dayjs.Dayjs | null;
 }
 
 export class Job implements IJob {

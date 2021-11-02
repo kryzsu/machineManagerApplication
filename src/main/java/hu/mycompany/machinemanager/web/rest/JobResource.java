@@ -196,4 +196,22 @@ public class JobResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @GetMapping("/jobs/started")
+    public ResponseEntity<List<JobDTO>> getAllOpenJobs(Pageable pageable, @RequestParam Long machineId) {
+        log.debug("REST request to get a page of getAllOpenJobs");
+        Page<JobDTO> page;
+        page = jobService.findAllOpenJobsForMachine(pageable, machineId);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/jobs/in-progress")
+    public ResponseEntity<List<JobDTO>> getAllInProgressJobs(Pageable pageable, @RequestParam Long machineId) {
+        log.debug("REST request to get a page of getAllNotFinishedJobs");
+        Page<JobDTO> page;
+        page = jobService.findAllInProgressJobsForMachine(pageable, machineId);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
 }

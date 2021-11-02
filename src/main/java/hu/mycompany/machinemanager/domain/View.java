@@ -109,9 +109,6 @@ public class View implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "View{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            "}";
+        return String.format("View{id=%d, name='%s'}", getId(), getName());
     }
 }

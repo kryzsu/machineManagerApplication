@@ -33,6 +33,8 @@ export class JobUpdateComponent implements OnInit {
   productsSharedCollection: IProduct[] = [];
   machinesSharedCollection: IMachine[] = [];
   customersSharedCollection: ICustomer[] = [];
+  createDateTime?: dayjs.Dayjs | null;
+  updateDateTime?: dayjs.Dayjs | null;
 
   editForm = this.fb.group({
     id: [],
@@ -111,7 +113,7 @@ export class JobUpdateComponent implements OnInit {
     this.isSaving = true;
     const job = this.createFromForm();
     if (job.id !== undefined) {
-      this.subscribeToSaveResponse(this.jobService.update(job));
+      this.subscribeToSaveResponse(this.jobService.partialUpdate(job));
     } else {
       this.subscribeToSaveResponse(this.jobService.create(job));
     }
@@ -201,6 +203,9 @@ export class JobUpdateComponent implements OnInit {
   }
 
   protected updateForm(job: IJob): void {
+    this.createDateTime = job.createDateTime;
+    this.updateDateTime = job.updateDateTime;
+
     this.editForm.patchValue({
       id: job.id,
       estimation: job.estimation,

@@ -6,6 +6,10 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <property name="now" value="sysdate" dbms="oracle"/>
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+
     <!--
         Added the entity Job.
     -->
@@ -16,6 +20,18 @@
             </column>
             <column name="estimation" type="integer">
                 <constraints nullable="true" />
+            </column>
+            <column name="priority" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="manual_order" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="CREATE_DATE_TIME" type="date" defaultValueDate="${now}">
+                <constraints nullable="false" />
+            </column>
+            <column name="UPDATE_DATE_TIME" type="date" defaultValueDate="${now}">
+                <constraints nullable="false" />
             </column>
             <column name="product_count" type="integer">
                 <constraints nullable="false" />

@@ -69,7 +69,9 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     @Override
     public List<MachineDetailed> findAllOpenInInterval(LocalDate startDate, LocalDate endDate) {
         Predicate<JobWithoutDrawing> isBetweenAndOpen = job ->
-            job.getStartDate().isAfter(startDate) && job.getStartDate().isBefore(endDate) && job.getEndDate() == null;
+            (job.getStartDate().isAfter(startDate) || job.getStartDate().isEqual(startDate)) &&
+            (job.getStartDate().isBefore(endDate) || job.getEndDate().isEqual(endDate)) &&
+            job.getEndDate() == null;
 
         Function<MachineDetailed, MachineDetailed> mapMachine = machine ->
             MachineDetailed.createUsingJobWithoutDrawing(
@@ -110,14 +112,9 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     @Override
     public List<OutOfOrderDTO> getRelatedOutOfOrder(long machineId) {
-        OutOfOrderDTO[] rv = {};
-        // TODO Auto-generated method stub
-        return machineRepository
-            .findById(machineId)
-            .orElse(new Machine())
-            .getOutOfOrders()
+        return outOfOrderRepository
+            .findAllByMachineIdAndStartGreaterThanEqual(machineId, LocalDate.now())
             .stream()
-            .sorted((ooo1, ooo2) -> ooo1.getStart().compareTo(ooo2.getStart()))
             .map(outOfOrderMapper::toDto)
             .collect(Collectors.toList());
     }

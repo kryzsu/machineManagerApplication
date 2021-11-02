@@ -222,10 +222,6 @@ public class Machine implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Machine{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            "}";
+        return String.format("Machine{id=%d, name='%s', description='%s'}", getId(), getName(), getDescription());
     }
 }

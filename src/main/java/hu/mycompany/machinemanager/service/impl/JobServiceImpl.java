@@ -79,4 +79,18 @@ public class JobServiceImpl implements JobService {
         log.debug("Request to delete Job : {}", id);
         jobRepository.deleteById(id);
     }
+
+    @Override
+    public Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId) {
+        return jobRepository
+            .findByMachineIdAndStartDateIsNotNullOrderByPriorityDescCreateDateTimeDesc(machineId, pageable)
+            .map(jobMapper::toDto);
+    }
+
+    @Override
+    public Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId) {
+        return jobRepository
+            .findByMachineIdAndEndDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId, pageable)
+            .map(jobMapper::toDto);
+    }
 }

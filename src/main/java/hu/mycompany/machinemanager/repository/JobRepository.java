@@ -1,7 +1,6 @@
 package hu.mycompany.machinemanager.repository;
 
 import hu.mycompany.machinemanager.domain.Job;
-import hu.mycompany.machinemanager.domain.Machine;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -35,4 +34,10 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findForMachineFutureOpenJobs(@Param("machineId") Long machineId, @Param("date") Date date);
 
     List<Job> findByMachineIdAndStartDateGreaterThanEqual(Long machineId, LocalDate date);
+
+    List<Job> findByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(Long machineId);
+
+    Page<Job> findByMachineIdAndStartDateIsNotNullOrderByPriorityDescCreateDateTimeDesc(Long machineId, Pageable pageable);
+
+    Page<Job> findByMachineIdAndEndDateIsNullOrderByPriorityDescCreateDateTimeDesc(Long machineId, Pageable pageable);
 }

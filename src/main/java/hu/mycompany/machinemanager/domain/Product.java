@@ -146,10 +146,6 @@ public class Product implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Product{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", comment='" + getComment() + "'" +
-            "}";
+        return String.format("Product{id=%d, name='%s', comment='%s'}", getId(), getName(), getComment());
     }
 }

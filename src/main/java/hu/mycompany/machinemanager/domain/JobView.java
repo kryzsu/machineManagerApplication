@@ -3,7 +3,6 @@ package hu.mycompany.machinemanager.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -265,17 +264,9 @@ public class JobView implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Job{" +
-            "id=" + getId() +
-            ", estimation=" + getEstimation() +
-            ", productCount=" + getProductCount() +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            ", fact=" + getFact() +
-            ", orderNumber='" + getOrderNumber() + "'" +
-            ", drawingNumber='" + getDrawingNumber() + "'" +
-            ", drawing='" + getDrawing() + "'" +
-            ", drawingContentType='" + getDrawingContentType() + "'" +
-            "}";
+        return String.format("Job{id=%d, estimation=%d, productCount=%d, startDate='%s', endDate='%s', fact=%d, " +
+            "orderNumber='%s', drawingNumber='%s', drawing='%s', drawingContentType='%s'}", getId(), getEstimation(),
+            getProductCount(), getStartDate(), getEndDate(), getFact(), getOrderNumber(), getDrawingNumber(),
+            getDrawing(), getDrawingContentType());
     }
 }

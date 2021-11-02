@@ -29,7 +29,7 @@ public interface OutOfOrderRepository extends JpaRepository<OutOfOrder, Long>, J
 
     @Query(
         "select outOfOrder from OutOfOrder outOfOrder join fetch outOfOrder.machines machine" +
-        " where machine.id =:id and outOfOrder.start > :date"
+        " where machine.id =:id and outOfOrder.start > :date order by start"
     )
     List<OutOfOrder> findAllByMachineIdAndStartGreaterThanEqual(@Param("id") Long MachineId, @Param("date") LocalDate date);
 }

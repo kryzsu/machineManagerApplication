@@ -53,6 +53,13 @@ export class JobService {
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
+  inProgress(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http
+      .get<IJob[]>(`${this.resourceUrl}/in-progress`, { params: options, observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
@@ -78,6 +85,8 @@ export class JobService {
     return Object.assign({}, job, {
       startDate: job.startDate?.isValid() ? job.startDate.format(DATE_FORMAT) : undefined,
       endDate: job.endDate?.isValid() ? job.endDate.format(DATE_FORMAT) : undefined,
+      createDateTime: job.createDateTime?.isValid() ? job.createDateTime.format(DATE_FORMAT) : undefined,
+      updateDateTime: job.updateDateTime?.isValid() ? job.updateDateTime.format(DATE_FORMAT) : undefined,
     });
   }
 

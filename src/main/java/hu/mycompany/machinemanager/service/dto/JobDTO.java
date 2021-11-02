@@ -1,6 +1,7 @@
 package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -31,6 +32,10 @@ public class JobDTO implements Serializable {
     private String orderNumber;
 
     private String drawingNumber;
+
+    private Long priority;
+
+    private Long manualOrder;
 
     @Lob
     private byte[] drawing;
@@ -158,6 +163,22 @@ public class JobDTO implements Serializable {
         this.customer = customer;
     }
 
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public Long getManualOrder() {
+        return manualOrder;
+    }
+
+    public void setManualOrder(Long manualOrder) {
+        this.manualOrder = manualOrder;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -182,20 +203,11 @@ public class JobDTO implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "JobDTO{" +
-            "id=" + getId() +
-            ", estimation=" + getEstimation() +
-            ", productCount=" + getProductCount() +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            ", fact=" + getFact() +
-            ", orderNumber='" + getOrderNumber() + "'" +
-            ", drawingNumber='" + getDrawingNumber() + "'" +
-            ", drawing='" + getDrawing() + "'" +
-            ", worknumber='" + getWorknumber() + "'" +
-            ", products=" + getProducts() +
-            ", machine=" + getMachine() +
-            ", customer=" + getCustomer() +
-            "}";
+        return MessageFormat.format("JobDTO'{'id={0}, estimation={1}, priority={2}, manualOrder={3}, " +
+            "productCount={4}, startDate=''{5}'', endDate=''{6}'', fact={7}, orderNumber=''{8}'', drawingNumber=''{9}''" +
+            ", drawing=''{10}'', worknumber=''{11}'', products={12}, machine={13}, customer={14}'}'",
+            getId(), getEstimation(), priority, manualOrder, getProductCount(), getStartDate(), getEndDate(),
+            getFact(), getOrderNumber(), getDrawingNumber(), getDrawing(), getWorknumber(), getProducts(),
+            getMachine(), getCustomer());
     }
 }

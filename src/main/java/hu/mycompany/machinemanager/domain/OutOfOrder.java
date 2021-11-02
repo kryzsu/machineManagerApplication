@@ -148,12 +148,7 @@ public class OutOfOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "OutOfOrder{" +
-            "id=" + id +
-            ", start=" + start +
-            ", end=" + end +
-            ", description='" + description + '\'' +
-            ", machines=" + machines +
-            '}';
+        return String.format("OutOfOrder{id=%d, start=%s, end=%s, description='%s', machines=%s}",
+            id, start, end, description, machines);
     }
 }

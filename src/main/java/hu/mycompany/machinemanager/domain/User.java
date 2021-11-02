@@ -217,15 +217,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "User{" +
-            "login='" + login + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
-            ", activated='" + activated + '\'' +
-            ", langKey='" + langKey + '\'' +
-            ", activationKey='" + activationKey + '\'' +
-            "}";
+        return String.format("User{login='%s', firstName='%s', lastName='%s', email='%s', imageUrl='%s', " +
+            "activated='%s', langKey='%s', activationKey='%s'}", login, firstName, lastName, email, imageUrl,
+            activated, langKey, activationKey);
     }
 }
