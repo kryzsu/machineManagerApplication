@@ -35,6 +35,7 @@ public class JobServiceImpl implements JobService {
     public JobDTO save(JobDTO jobDTO) {
         log.debug("Request to save Job : {}", jobDTO);
         Job job = jobMapper.toEntity(jobDTO);
+        log.debug("Request to save Job entity : {}", job);
         job = jobRepository.save(job);
         return jobMapper.toDto(job);
     }

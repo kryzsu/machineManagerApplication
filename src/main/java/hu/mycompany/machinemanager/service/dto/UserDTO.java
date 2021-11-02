@@ -40,9 +40,6 @@ public class UserDTO {
     // prettier-ignore
     @Override
     public String toString() {
-        return "UserDTO{" +
-            "id='" + id + '\'' +
-            ", login='" + login + '\'' +
-            "}";
+        return String.format("UserDTO{id='%d', login='%s'}", id, login);
     }
 }

@@ -3,6 +3,8 @@ package hu.mycompany.machinemanager.service.dto;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -22,10 +24,12 @@ public class JobDTO implements Serializable {
     @NotNull
     private Integer productCount;
 
-    @NotNull
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    @NotNull
+    private LocalDateTime createDateTime;
 
     private Integer fact;
 
@@ -179,6 +183,14 @@ public class JobDTO implements Serializable {
         this.manualOrder = manualOrder;
     }
 
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -203,11 +215,23 @@ public class JobDTO implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return MessageFormat.format("JobDTO'{'id={0}, estimation={1}, priority={2}, manualOrder={3}, " +
-            "productCount={4}, startDate=''{5}'', endDate=''{6}'', fact={7}, orderNumber=''{8}'', drawingNumber=''{9}''" +
-            ", drawing=''{10}'', worknumber=''{11}'', products={12}, machine={13}, customer={14}'}'",
-            getId(), getEstimation(), priority, manualOrder, getProductCount(), getStartDate(), getEndDate(),
-            getFact(), getOrderNumber(), getDrawingNumber(), getDrawing(), getWorknumber(), getProducts(),
-            getMachine(), getCustomer());
+        return "JobDTO{" +
+            "id=" + id +
+            ", estimation=" + estimation +
+            ", productCount=" + productCount +
+            ", startDate=" + startDate +
+            ", endDate=" + endDate +
+            ", createDateTime=" + createDateTime +
+            ", fact=" + fact +
+            ", orderNumber='" + orderNumber + '\'' +
+            ", drawingNumber='" + drawingNumber + '\'' +
+            ", priority=" + priority +
+            ", manualOrder=" + manualOrder +
+            ", drawingContentType='" + drawingContentType + '\'' +
+            ", worknumber='" + worknumber + '\'' +
+            ", products=" + products +
+            ", machine=" + machine +
+            ", customer=" + customer +
+            '}';
     }
 }

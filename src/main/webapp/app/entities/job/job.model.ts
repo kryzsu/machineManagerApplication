@@ -22,7 +22,6 @@ export interface IJob {
   customer?: ICustomer | null;
   consumerName?: string | null;
   createDateTime?: dayjs.Dayjs | null;
-  updateDateTime?: dayjs.Dayjs | null;
 }
 
 export class Job implements IJob {

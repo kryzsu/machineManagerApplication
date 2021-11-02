@@ -82,6 +82,10 @@ public class Job implements Serializable {
         return createDateTime;
     }
 
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
     public Long getPriority() {
         return priority;
     }
@@ -356,6 +360,7 @@ public class Job implements Serializable {
             ", drawing='" + getDrawing() + "'" +
             ", drawingContentType='" + getDrawingContentType() + "'" +
             ", worknumber='" + getWorknumber() + "'" +
+            ", createDateTime='" + createDateTime + "'" +
             "}";
     }
 }
