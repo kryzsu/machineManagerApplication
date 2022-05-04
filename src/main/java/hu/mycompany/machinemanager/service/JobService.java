@@ -1,5 +1,6 @@
 package hu.mycompany.machinemanager.service;
 
+import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -59,5 +60,9 @@ public interface JobService {
     Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId);
 
     Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId);
-    Optional<JobDTO> findNextJobForMachine(Long machineId);
+    Optional<JobDTO> getHighestPriorityJobForMachine(Long machineId);
+    Optional<JobDTO> getLowestPriorityJobForMachine(Long machineId);
+    void startHighestPriorityJobInMachine(Long machineId);
+    void stopRunningJobInMachine(Long machineId);
+    Optional<Job> getRunningJobInMachine(Long machineId);
 }

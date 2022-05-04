@@ -82,7 +82,7 @@ public class JobResource {
 
     private void extendJobDtoWithPriorityIfNecessary(JobDTO jobDTO) {
         if (jobDTO.getPriority() == null && jobDTO.getMachine() != null) {
-            Optional<JobDTO> nextJobForMachine = jobService.findNextJobForMachine(jobDTO.getMachine().getId());
+            Optional<JobDTO> nextJobForMachine = jobService.getHighestPriorityJobForMachine(jobDTO.getMachine().getId());
             if (nextJobForMachine.isPresent()) {
                 log.debug("Extending Job Dto With Priority", jobDTO);
                 Long priority = nextJobForMachine.get().getPriority() == null ? 0 : nextJobForMachine.get().getPriority();

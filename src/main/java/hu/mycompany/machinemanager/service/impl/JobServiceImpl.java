@@ -2,9 +2,13 @@ package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.repository.JobRepository;
+import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
 import hu.mycompany.machinemanager.service.JobService;
+import hu.mycompany.machinemanager.service.NoRunningJobException;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
+
+import java.time.LocalDate;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +100,39 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Optional<JobDTO> findNextJobForMachine(Long machineId) {
+    public Optional<JobDTO> getHighestPriorityJobForMachine(Long machineId) {
         return jobRepository.findFirstByMachineIdOrderByPriorityDesc(machineId).map(jobMapper::toDto);
+    }
+
+    @Override
+    public Optional<JobDTO> getLowestPriorityJobForMachine(Long machineId) {
+        return jobRepository.findFirstByMachineIdOrderByPriority(machineId).map(jobMapper::toDto);
+    }
+
+    @Override
+    public void startHighestPriorityJobInMachine(Long machineId) {
+        Optional<Job> runningJob = getRunningJobInMachine(machineId);
+        if (!runningJob.isPresent()) {
+            throw new AnotherJobIsAlreadyRunningException(machineId);
+        }
+
+        Optional<Job> highestPriorityJobForMachine = jobRepository.findFirstByMachineIdOrderByPriorityDesc(machineId);
+        if (highestPriorityJobForMachine.isPresent()) {
+            Job job = highestPriorityJobForMachine.get();
+            job.setStartDate(LocalDate.now());
+            jobRepository.save(job);
+        }
+    }
+
+    @Override
+    public void stopRunningJobInMachine(Long machineId) {
+        Job job = getRunningJobInMachine(machineId).orElseThrow(() -> new NoRunningJobException(machineId));
+        job.setEndDate(LocalDate.now());
+    }
+
+    @Override
+    public Optional<Job> getRunningJobInMachine(Long machineId) {
+        Optional<Job> job = jobRepository.findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(machineId);
+        return job;
     }
 }
