@@ -63,10 +63,6 @@
             <column name="customer_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="update_date_time" type="datetime"/>
-            <column name="create_date_time" type="datetime"/>
-            <column name="priority" type="bigint"/>
-
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>

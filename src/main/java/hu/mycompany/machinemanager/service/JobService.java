@@ -59,4 +59,5 @@ public interface JobService {
     Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId);
 
     Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId);
+    Optional<JobDTO> findNextJobForMachine(Long machineId);
 }

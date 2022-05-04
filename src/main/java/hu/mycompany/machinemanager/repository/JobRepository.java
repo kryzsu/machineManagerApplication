@@ -40,4 +40,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> findByMachineIdAndStartDateIsNotNullOrderByPriorityDescCreateDateTimeDesc(Long machineId, Pageable pageable);
 
     Page<Job> findByMachineIdAndEndDateIsNullOrderByPriorityDescCreateDateTimeDesc(Long machineId, Pageable pageable);
+
+    Optional<Job> findFirstByMachineIdOrderByPriorityDesc(@Param("id") Long id);
 }

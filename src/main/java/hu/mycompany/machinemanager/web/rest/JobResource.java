@@ -67,6 +67,9 @@ public class JobResource {
     @PostMapping("/jobs")
     public ResponseEntity<JobDTO> createJob(@Valid @RequestBody JobDTO jobDTO) throws URISyntaxException {
         log.debug("REST request to save Job : {}", jobDTO);
+
+        extendJobDtoWithPriorityIfNecessary(jobDTO);
+
         if (jobDTO.getId() != null) {
             throw new BadRequestAlertException("A new job cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -75,6 +78,20 @@ public class JobResource {
             .created(new URI("/api/jobs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    private void extendJobDtoWithPriorityIfNecessary(JobDTO jobDTO) {
+        if (jobDTO.getPriority() == null && jobDTO.getMachine() != null) {
+            Optional<JobDTO> nextJobForMachine = jobService.findNextJobForMachine(jobDTO.getMachine().getId());
+            if (nextJobForMachine.isPresent()) {
+                log.debug("Extending Job Dto With Priority", jobDTO);
+                Long priority = nextJobForMachine.get().getPriority() == null ? 0 : nextJobForMachine.get().getPriority();
+                Long nextPriority = priority + 1;
+                log.debug("Priority is ", nextPriority);
+
+                jobDTO.setPriority(nextPriority);
+            }
+        }
     }
 
     /**

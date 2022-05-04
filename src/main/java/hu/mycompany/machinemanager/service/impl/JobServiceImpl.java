@@ -94,4 +94,9 @@ public class JobServiceImpl implements JobService {
             .findByMachineIdAndEndDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId, pageable)
             .map(jobMapper::toDto);
     }
+
+    @Override
+    public Optional<JobDTO> findNextJobForMachine(Long machineId) {
+        return jobRepository.findFirstByMachineIdOrderByPriorityDesc(machineId).map(jobMapper::toDto);
+    }
 }
