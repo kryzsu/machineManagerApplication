@@ -7,7 +7,6 @@ import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.NoRunningJobException;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import org.slf4j.Logger;
