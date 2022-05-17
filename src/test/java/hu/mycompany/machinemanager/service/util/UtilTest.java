@@ -96,30 +96,4 @@ class UtilTest {
         assertThat(freeIntervalList.get(1).getStart(), equalTo(secondIntervalEnd.plusDays(1)));
         assertThat(freeIntervalList.get(1).getEnd(), equalTo(LocalDate.MAX));
     }
-
-    @Test
-    void getFreeIntervalList_with3IntervalsTest() {
-        // GIVEN
-        List<Interval> futureOccupiedIntervalList = new ArrayList<>();
-        Interval first = Interval.of("2021-10-28 -> 2021-10-30");
-        futureOccupiedIntervalList.add(first);
-        Interval second = Interval.of("2021-11-11 -> 2021-11-15");
-        futureOccupiedIntervalList.add(second);
-        Interval third = Interval.of("2021-10-31 -> 2021-11-05");
-        futureOccupiedIntervalList.add(third);
-        LocalDate intervalStart = LocalDate.parse("2021-10-28");
-
-        // WHEN
-        List<Interval> freeIntervalList = new Util().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
-
-        // THEN
-        assertThat(freeIntervalList.get(0).getStart(), equalTo(first.getEnd().plusDays(1)));
-        assertThat(freeIntervalList.get(0).getEnd(), equalTo(third.getStart().minusDays(1)));
-
-        assertThat(freeIntervalList.get(1).getStart(), equalTo(third.getEnd().plusDays(1)));
-        assertThat(freeIntervalList.get(1).getEnd(), equalTo(second.getStart().minusDays(1)));
-
-        assertThat(freeIntervalList.get(2).getStart(), equalTo(second.getEnd().plusDays(1)));
-        assertThat(freeIntervalList.get(2).getEnd(), equalTo(LocalDate.MAX));
-    }
 }

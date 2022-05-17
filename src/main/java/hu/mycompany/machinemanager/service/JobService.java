@@ -1,7 +1,9 @@
 package hu.mycompany.machinemanager.service;
 
 import hu.mycompany.machinemanager.domain.Job;
+import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,4 +67,6 @@ public interface JobService {
     void startHighestPriorityJobInMachine(Long machineId);
     void stopRunningJobInMachine(Long machineId);
     Optional<Job> getRunningJobInMachine(Long machineId);
+
+    void updatePriorities(List<IdWithPriorityDTO> idWithPriorityDTOList);
 }

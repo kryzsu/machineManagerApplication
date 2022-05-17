@@ -24,6 +24,11 @@ export interface IJob {
   createDateTime?: dayjs.Dayjs | null;
 }
 
+export interface IIdWithPriority {
+  id?: number;
+  priority?: number;
+}
+
 export class Job implements IJob {
   constructor(
     public id?: number,

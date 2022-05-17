@@ -5,9 +5,11 @@ import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
 import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.NoRunningJobException;
+import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,5 +135,17 @@ public class JobServiceImpl implements JobService {
     public Optional<Job> getRunningJobInMachine(Long machineId) {
         Optional<Job> job = jobRepository.findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(machineId);
         return job;
+    }
+
+    @Override
+    public void updatePriorities(List<IdWithPriorityDTO> idWithPriorityDTOList) {
+        idWithPriorityDTOList
+            .stream()
+            .forEach(
+                idWithPriorityDTO -> {
+                    Job job = jobRepository.findById(idWithPriorityDTO.getId()).get().priority(idWithPriorityDTO.getPriority());
+                    jobRepository.save(job);
+                }
+            );
     }
 }

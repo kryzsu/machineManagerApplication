@@ -8,6 +8,7 @@ import { dayjsToString } from '../util/common-util';
 import { FilterInterval } from './component/interval-filter/filter-interval';
 import { createRequestOption } from '../core/request/request-util';
 import { OutOfOrder } from '../entities/out-of-order/out-of-order.model';
+import { IIdWithPriority } from '../entities/job/job.model';
 
 export type EntityArrayResponseType = HttpResponse<IMachine[]>;
 
@@ -38,5 +39,9 @@ export class PerspectiveService {
     });
 
     return this.http.get<OutOfOrder[]>(`${this.resourceUrl}/get-related-out-of-order`, { params: options, observe: 'response' });
+  }
+
+  savePriorities(idWithPrioritiesList: IIdWithPriority[]): Observable<HttpResponse<any>> {
+    return this.http.post<IIdWithPriority[]>(`${this.resourceUrl}/save-priorities`, idWithPrioritiesList, { observe: 'response' });
   }
 }

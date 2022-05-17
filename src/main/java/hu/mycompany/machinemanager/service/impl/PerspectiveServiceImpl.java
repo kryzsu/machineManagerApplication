@@ -73,7 +73,12 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                 machine.getId(),
                 machine.getName(),
                 machine.getDescription(),
-                machine.getJobs().stream().filter(isOpen).collect(Collectors.toCollection(LinkedHashSet::new))
+                machine
+                    .getJobs()
+                    .stream()
+                    .filter(isOpen)
+                    .sorted(Collections.reverseOrder())
+                    .collect(Collectors.toCollection(LinkedHashSet::new))
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());

@@ -1,6 +1,8 @@
 package hu.mycompany.machinemanager.web.rest;
 
+import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.PerspectiveService;
+import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
 import java.time.LocalDate;
@@ -20,13 +22,16 @@ import org.springframework.web.bind.annotation.*;
 public class PerspectiveResource {
 
     private final PerspectiveService perspectiveService;
+    private final JobService jobService;
+
     private final Logger log = LoggerFactory.getLogger(PerspectiveResource.class);
 
     @Autowired
     CacheManager cacheManager;
 
-    public PerspectiveResource(PerspectiveService perspectiveService) {
+    public PerspectiveResource(PerspectiveService perspectiveService, JobService jobService) {
         this.perspectiveService = perspectiveService;
+        this.jobService = jobService;
     }
 
     /**
@@ -51,5 +56,11 @@ public class PerspectiveResource {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
         log.debug("REST request to get the getRelatedOutOfOrder");
         return perspectiveService.getRelatedOutOfOrder(machineId);
+    }
+
+    @PostMapping("/save-priorities")
+    public void savePriorities(@RequestBody List<IdWithPriorityDTO> idWithPriorityDtoList) {
+        log.debug("REST request call the savePriorities", idWithPriorityDtoList);
+        this.jobService.updatePriorities(idWithPriorityDtoList);
     }
 }

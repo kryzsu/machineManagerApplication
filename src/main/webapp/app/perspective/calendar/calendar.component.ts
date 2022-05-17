@@ -7,7 +7,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import * as d3 from 'd3';
 
 import { machine2BarData, machineArray2Events } from '../converter-utils';
-import { IJob } from 'app/entities/job/job.model';
+import { IIdWithPriority, IJob } from 'app/entities/job/job.model';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../redux/selectors';
 import * as Actions from '../../redux/actions';
@@ -19,6 +19,7 @@ import { EntityArrayResponseType, PerspectiveService } from '../perspective.serv
 import { sortByNameCaseInsensitive } from '../../util/common-util';
 import { defaultInterval, FilterInterval } from 'app/perspective/component/interval-filter/filter-interval';
 import { Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-calendar',
@@ -161,6 +162,12 @@ export class CalendarComponent implements OnInit {
 
   onRefresh(): void {
     this.doRefresh();
+  }
+
+  savePriorities(idWithPrioritiesList: IIdWithPriority[]): void {
+    this.perspectiveService.savePriorities(idWithPrioritiesList).subscribe(() => {
+      console.warn('savePriorities');
+    });
   }
 
   private createSvg(): void {

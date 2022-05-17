@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { getRelatedProduct, IJob, Job } from '../../../entities/job/job.model';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { getRelatedProduct, IIdWithPriority, IJob, Job } from '../../../entities/job/job.model';
 import { IMachine, Machine } from '../../../entities/machine/machine.model';
 import { selectMachineList } from '../../../redux/selectors';
 import { filter, map } from 'rxjs/operators';
 import { machine2Treenode } from '../../converter-utils';
 import { TreeNode } from 'primeng/api';
 import { Store } from '@ngrx/store';
+import { FilterInterval } from '../interval-filter/filter-interval';
 
 @Component({
   selector: 'jhi-machine-details',
@@ -17,6 +18,8 @@ export class MachineDetailsComponent implements OnInit {
   machines: IMachine[];
   selectedMachine?: IMachine;
   changed = false;
+
+  @Output() savePriorities = new EventEmitter<IIdWithPriority[]>();
 
   constructor(private store: Store) {
     this.jobs = [];
@@ -55,11 +58,17 @@ export class MachineDetailsComponent implements OnInit {
 
   reorder(): void {
     let priority = this.jobs.length;
-    this.jobs.forEach(job => (job.priority = priority--));
+    this.jobs.forEach((job: IJob) => (job.priority = priority--));
     this.changed = true;
   }
 
   onSave(): void {
     console.warn(this.selectedMachine);
+    this.savePriorities.emit(
+      this.jobs.map((job: IJob) => ({
+        id: job.id,
+        priority: job.priority,
+      }))
+    );
   }
 }
