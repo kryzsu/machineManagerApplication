@@ -1,0 +1,15 @@
+<p-dropdown [options]="machines" [(ngModel)]="selectedMachine" optionLabel="name" (onChange)="machineChanged()"></p-dropdown><br />
+Machine details:<br />
+{{ selectedMachine?.description }}<br />
+{{ selectedMachine?.jobs?.length }} jobs
+<p-orderList [value]="jobs" [dragdrop]="true" (onReorder)="reorder()">
+  <ng-template let-job pTemplate="item">
+    <div>
+      <div style="font-size: 14px; float: right; margin: 15px 5px 0 0">
+        {{ job.productCount }} count {{ getJobProduct(job) }} estimation:{{ job.estimation }}, customer:{{ job.consumerName }}, priority:
+        {{ job.priority }}
+      </div>
+    </div>
+  </ng-template>
+</p-orderList>
+<p-button label="Save" (onClick)="onSave()" [disabled]="!changed"></p-button>

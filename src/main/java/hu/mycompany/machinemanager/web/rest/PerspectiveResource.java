@@ -33,13 +33,10 @@ public class PerspectiveResource {
      * GET getDetailedMachineList
      */
     @GetMapping("/get-detailed-machine-list")
-    public ResponseEntity<List<MachineDetailed>> getDetailedMachineList(
-        @RequestParam LocalDate startDate,
-        @RequestParam LocalDate endDate
-    ) {
+    public ResponseEntity<List<MachineDetailed>> getDetailedMachineList() {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
         log.debug("REST request to get the getDetailedMachineList");
-        return ResponseEntity.ok().body(perspectiveService.findAllOpenInInterval(startDate, endDate));
+        return ResponseEntity.ok().body(perspectiveService.findAllOpen());
     }
 
     @GetMapping("/get-next-start-date-4-machine")

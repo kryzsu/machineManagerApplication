@@ -14,9 +14,7 @@ import hu.mycompany.machinemanager.service.util.Util;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -67,18 +65,15 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     }
 
     @Override
-    public List<MachineDetailed> findAllOpenInInterval(LocalDate startDate, LocalDate endDate) {
-        Predicate<JobWithoutDrawing> isBetweenAndOpen = job ->
-            (job.getStartDate().isAfter(startDate) || job.getStartDate().isEqual(startDate)) &&
-            (job.getStartDate().isBefore(endDate) || job.getEndDate().isEqual(endDate)) &&
-            job.getEndDate() == null;
+    public List<MachineDetailed> findAllOpen() {
+        Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
 
         Function<MachineDetailed, MachineDetailed> mapMachine = machine ->
             MachineDetailed.createUsingJobWithoutDrawing(
                 machine.getId(),
                 machine.getName(),
                 machine.getDescription(),
-                machine.getJobs().stream().filter(isBetweenAndOpen).collect(Collectors.toSet())
+                machine.getJobs().stream().filter(isOpen).collect(Collectors.toCollection(LinkedHashSet::new))
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());

@@ -17,11 +17,8 @@ export class PerspectiveService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  getDetailedMachineList(interval: FilterInterval): Observable<EntityArrayResponseType> {
-    const options = createRequestOption({
-      startDate: dayjsToString(interval.startDate),
-      endDate: dayjsToString(interval.endDate),
-    });
+  getDetailedMachineList(): Observable<EntityArrayResponseType> {
+    const options = createRequestOption({});
 
     return this.http.get<IMachine[]>(`${this.resourceUrl}/get-detailed-machine-list`, { params: options, observe: 'response' });
   }

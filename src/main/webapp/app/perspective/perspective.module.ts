@@ -13,7 +13,11 @@ import { perspectiveState } from './perspective.route';
 import { PerpsTimelineComponent } from './component/perps-timeline/perps-timeline.component';
 import { PerpsTreeComponent } from './component/perps-tree/perps-tree.component';
 import { AccordionModule } from 'primeng/accordion';
+import { OrderListModule } from 'primeng/orderlist';
+import { DropdownModule } from 'primeng/dropdown';
 import { IntervalFilterComponent } from './component/interval-filter/interval-filter.component';
+import { MachineDetailsComponent } from './component/machine-details/machine-details.component';
+import { ButtonModule } from 'primeng/button';
 @NgModule({
   imports: [
     SharedModule,
@@ -27,7 +31,10 @@ import { IntervalFilterComponent } from './component/interval-filter/interval-fi
     TreeModule,
     AccordionModule,
     ContextMenuModule,
+    OrderListModule,
+    DropdownModule,
+    ButtonModule,
   ],
-  declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent],
+  declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent, MachineDetailsComponent],
 })
 export class PerspectiveModule {}

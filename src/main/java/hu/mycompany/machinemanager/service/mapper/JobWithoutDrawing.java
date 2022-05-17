@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JobWithoutDrawing {
+public class JobWithoutDrawing implements Comparable {
 
     private Long id;
     private Integer estimation;
@@ -20,6 +20,8 @@ public class JobWithoutDrawing {
     private String worknumber;
     private Set<Product> products = new HashSet<>();
 
+    private Long priority;
+
     public static JobWithoutDrawing fromJob(Job job) {
         return new JobWithoutDrawing(
             job.getId(),
@@ -32,7 +34,8 @@ public class JobWithoutDrawing {
             job.getDrawingNumber(),
             job.getProducts(),
             (job.getCustomer() == null) ? null : job.getCustomer().getName(),
-            job.getWorknumber()
+            job.getWorknumber(),
+            (job.getPriority() == null) ? 0 : job.getPriority()
         );
     }
 
@@ -47,7 +50,8 @@ public class JobWithoutDrawing {
         String drawingNumber,
         Set<Product> products,
         String consumerName,
-        String worknumber
+        String worknumber,
+        long priority
     ) {
         this.id = id;
         this.estimation = estimation;
@@ -60,6 +64,7 @@ public class JobWithoutDrawing {
         this.products = products;
         this.consumerName = consumerName;
         this.worknumber = worknumber;
+        this.priority = priority;
     }
 
     public Long getId() {
@@ -148,5 +153,18 @@ public class JobWithoutDrawing {
 
     public void setWorknumber(String worknumber) {
         this.worknumber = worknumber;
+    }
+
+    public long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(long priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.priority.compareTo(((JobWithoutDrawing) o).priority);
     }
 }

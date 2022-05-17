@@ -46,3 +46,7 @@ export class Job implements IJob {
 export function getJobIdentifier(job: IJob): number | undefined {
   return job.id;
 }
+
+export function getRelatedProduct(job: IJob): string {
+  return job.products?.[0]?.name ? job.products[0].name : '';
+}

@@ -112,8 +112,6 @@ export class JobUpdateComponent implements OnInit {
     this.isSaving = true;
     const job = this.createFromForm();
     job.createDateTime = this.createDateTime;
-    // eslint-disable-next-line no-debugger
-    debugger;
 
     if (job.id !== undefined) {
       this.subscribeToSaveResponse(this.jobService.update(job));

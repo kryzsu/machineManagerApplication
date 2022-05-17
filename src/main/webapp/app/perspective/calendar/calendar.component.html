@@ -1,5 +1,7 @@
-<jhi-interval-filter [isLoading]="isLoading" (refresh)="onRefresh($event)"></jhi-interval-filter>
 <p-accordion [multiple]="true">
+  <p-accordionTab header="gép részletek, jobok">
+    <jhi-machine-details></jhi-machine-details>
+  </p-accordionTab>
   <p-accordionTab header="gépek, jobok fa nézetben">
     <jhi-perps-tree></jhi-perps-tree>
   </p-accordionTab>

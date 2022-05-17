@@ -137,13 +137,13 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.doRefresh(defaultInterval);
+    this.doRefresh();
     this.createSvg();
   }
 
-  doRefresh(interval: FilterInterval): void {
+  doRefresh(): void {
     this.perspectiveService
-      .getDetailedMachineList(interval)
+      .getDetailedMachineList()
       .pipe(map((response: EntityArrayResponseType) => response.body ?? []))
       .subscribe((machineList: IMachine[]) => {
         machineList = sortByNameCaseInsensitive(machineList);
@@ -159,8 +159,8 @@ export class CalendarComponent implements OnInit {
     this.activeDayIsOpen = false;
   }
 
-  onRefresh(interval: FilterInterval): void {
-    this.doRefresh(interval);
+  onRefresh(): void {
+    this.doRefresh();
   }
 
   private createSvg(): void {
