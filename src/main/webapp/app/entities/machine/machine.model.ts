@@ -2,6 +2,13 @@ import { IOutOfOrder } from 'app/entities/out-of-order/out-of-order.model';
 import { IJob } from 'app/entities/job/job.model';
 import { IView } from 'app/entities/view/view.model';
 
+export interface IMachineDay {
+  date?: string;
+  occupied?: boolean;
+  comment?: string;
+  jobId?: number;
+}
+
 export interface IMachine {
   id?: number;
   name?: string;

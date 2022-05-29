@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import { IMachine } from 'app/entities/machine/machine.model';
+import {IMachine, IMachineDay} from 'app/entities/machine/machine.model';
 import { dayjsToString } from '../util/common-util';
 import { FilterInterval } from './component/interval-filter/filter-interval';
 import { createRequestOption } from '../core/request/request-util';
@@ -43,5 +43,14 @@ export class PerspectiveService {
 
   savePriorities(idWithPrioritiesList: IIdWithPriority[]): Observable<HttpResponse<any>> {
     return this.http.post<IIdWithPriority[]>(`${this.resourceUrl}/save-priorities`, idWithPrioritiesList, { observe: 'response' });
+  }
+
+  getNextDays(machineId: number): Observable<HttpResponse<IMachineDay[]>> {
+    const options = createRequestOption({
+      machineId,
+      days: 14
+    });
+
+    return this.http.get<IMachineDay[]>(`${this.resourceUrl}/get-job-next-days`, { params: options, observe: 'response' });
   }
 }

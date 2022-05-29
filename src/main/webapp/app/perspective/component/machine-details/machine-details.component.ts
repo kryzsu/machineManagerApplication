@@ -1,12 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { getRelatedProduct, IIdWithPriority, IJob, Job } from '../../../entities/job/job.model';
-import { IMachine, Machine } from '../../../entities/machine/machine.model';
+import {IMachine, IMachineDay, Machine} from '../../../entities/machine/machine.model';
 import { selectMachineList } from '../../../redux/selectors';
 import { filter, map } from 'rxjs/operators';
-import { machine2Treenode } from '../../converter-utils';
-import { TreeNode } from 'primeng/api';
 import { Store } from '@ngrx/store';
-import { FilterInterval } from '../interval-filter/filter-interval';
 
 @Component({
   selector: 'jhi-machine-details',
@@ -18,8 +15,10 @@ export class MachineDetailsComponent implements OnInit {
   machines: IMachine[];
   selectedMachine?: IMachine;
   changed = false;
+  machineDays : IMachineDay[] = [];
 
   @Output() savePriorities = new EventEmitter<IIdWithPriority[]>();
+  @Output() getMachineDays = new EventEmitter();
 
   constructor(private store: Store) {
     this.jobs = [];
@@ -39,17 +38,32 @@ export class MachineDetailsComponent implements OnInit {
           this.machineChanged();
         }
       });
+
+    store
+      .select(selectMachineList)
+      .pipe(
+        filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+        map(appState => appState.machineDays)
+      )
+      .subscribe((machineDays: IMachineDay[]) => {
+        this.machineDays = machineDays;
+      });
   }
 
   machineChanged(): void {
     if (this.selectedMachine?.jobs != null) {
       this.jobs = this.selectedMachine.jobs.map(job => ({ ...job }));
     }
+
+    if (this.selectedMachine?.id != null) {
+      this.getMachineDays.emit(this.selectedMachine.id);
+    }
   }
 
   ngOnInit(): void {
     this.jobs = [];
     this.machines = [];
+    this.machineDays = [];
   }
 
   getJobProduct(job: IJob): string {

@@ -13,3 +13,11 @@ Machine details:<br />
   </ng-template>
 </p-orderList>
 <p-button label="Save" (onClick)="onSave()" [disabled]="!changed"></p-button>
+
+<p-card header="{{machineDay.date}}" *ngFor="let machineDay of machineDays"
+        [ngStyle]="{'background':machineDay.occupied ? 'green' : 'red' }"
+        [style]="{'width': '25rem', 'margin-bottom': '1em'}"
+
+        styleClass="p-card-shadow">
+  "{{machineDay.comment}}" {{machineDay.jobId}}, occupied: {{machineDay.occupied}}
+</p-card>

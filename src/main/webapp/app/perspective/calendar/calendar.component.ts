@@ -14,12 +14,13 @@ import * as Actions from '../../redux/actions';
 import { AppState } from '../../redux/app.state';
 import { filter, map } from 'rxjs/operators';
 import { BarData } from '../../shared/bar-chart/bar-chart.component';
-import { IMachine } from '../../entities/machine/machine.model';
+import {IMachine, IMachineDay} from '../../entities/machine/machine.model';
 import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
 import { sortByNameCaseInsensitive } from '../../util/common-util';
 import { defaultInterval, FilterInterval } from 'app/perspective/component/interval-filter/filter-interval';
 import { Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
+import {getMachineDays} from "../../redux/actions";
 
 @Component({
   selector: 'jhi-calendar',
@@ -170,6 +171,18 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  refreshMachineDays(machineId: number): void {
+    this.perspectiveService
+      .getNextDays(machineId)
+      .pipe(
+        map( response => response.body),
+      )
+      .subscribe((machineDayList: IMachineDay[] | null) => {
+        const machineDays: IMachineDay[] = machineDayList != null ? machineDayList : [];
+        this.store.dispatch(getMachineDays({ machineDays }));
+      });
+  }
+
   private createSvg(): void {
     this.svg = d3
       .select('figure#bar')
@@ -213,4 +226,5 @@ export class CalendarComponent implements OnInit {
       .attr('height', (d: any) => this.height - y(d.Stars))
       .attr('fill', '#d04a35');
   }
+
 }

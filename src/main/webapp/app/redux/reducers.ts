@@ -42,5 +42,10 @@ export const reducers = createReducer(
   on(Actions.editJobEnd, (state: AppState, { jobId }) => ({
     ...state,
     selectedJob: undefined,
-  }))
+  })),
+  on(Actions.getMachineDays, (state: AppState, { machineDays }) => ({
+    ...state,
+    machineDays,
+  })
+  )
 );
