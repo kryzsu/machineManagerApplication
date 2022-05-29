@@ -45,4 +45,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Optional<Job> findFirstByMachineIdOrderByPriority(@Param("id") Long id);
     Optional<Job> findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(@Param("machineId") Long machineId);
 
+    Optional<Job> findByMachineIdAndStartDateIsNotNullAndEndDateIsNull(Long machineId);
 }

@@ -1,17 +1,15 @@
 package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
-import hu.mycompany.machinemanager.domain.Machine;
-import hu.mycompany.machinemanager.domain.OutOfOrder;
 import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
 import hu.mycompany.machinemanager.service.PerspectiveService;
+import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.*;
 import hu.mycompany.machinemanager.service.util.Interval;
 import hu.mycompany.machinemanager.service.util.Util;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -19,8 +17,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.persistence.criteria.CriteriaBuilder;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,6 +37,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final MachineDetailedMapper machineDetailedMapper;
     private final Util util;
     private final OutOfOrderMapper outOfOrderMapper;
+    Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
+    Predicate<JobWithoutDrawing> isNotStarted = job -> job.getEndDate() == null && job.getStartDate() == null;
 
     public PerspectiveServiceImpl(
         MachineRepository machineRepository,
@@ -66,8 +64,6 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     @Override
     public List<MachineDetailed> findAllOpen() {
-        Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
-
         Function<MachineDetailed, MachineDetailed> mapMachine = machine ->
             MachineDetailed.createUsingJobWithoutDrawing(
                 machine.getId(),
@@ -76,12 +72,30 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                 machine
                     .getJobs()
                     .stream()
-                    .filter(isOpen)
+                    .filter(this.isOpen)
                     .sorted(Collections.reverseOrder())
                     .collect(Collectors.toCollection(LinkedHashSet::new))
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());
+    }
+
+    private List<MachineDayDTO> getRunningJobDays(long machineId) {
+        Optional<Job> runningJob = jobRepository.findByMachineIdAndStartDateIsNotNullAndEndDateIsNull(machineId);
+        return runningJob
+            .map(
+                job ->
+                    LocalDate
+                        .now()
+                        .datesUntil(job.getStartDate().plusDays(job.getEstimation()))
+                        .map(date -> new MachineDayDTO(date, true, job.getWorknumber(), job.getId()))
+            )
+            .orElse(Stream.empty())
+            .collect(Collectors.toList());
+    }
+
+    private List<Job> getRelatedFurtherJobs(long machineId) {
+        return jobRepository.findByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId);
     }
 
     @Override
@@ -116,6 +130,61 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             .findAllByMachineIdAndStartGreaterThanEqual(machineId, LocalDate.now())
             .stream()
             .map(outOfOrderMapper::toDto)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MachineDayDTO> getJobNextDays(long machineId, long days) {
+        List<OutOfOrderDTO> outOfOrderDTOList = getRelatedOutOfOrder(machineId);
+        List<MachineDayDTO> outUfOrderDays = getOutUfOrderDays(outOfOrderDTOList);
+        List<MachineDayDTO> free = getDaysByInterval(LocalDate.now(), LocalDate.now().plusDays(days));
+        List<MachineDayDTO> runningJobDays = getRunningJobDays(machineId);
+        free.removeAll(outUfOrderDays);
+        free.removeAll(runningJobDays);
+        List<MachineDayDTO> jobMachineDayList = getRelatedFurtherJobs(machineId)
+            .stream()
+            .flatMap(
+                job ->
+                    Stream
+                        .generate(() -> new MachineDayDTO(LocalDate.EPOCH, true, job.getWorknumber(), job.getId()))
+                        .limit(job.getEstimation())
+            )
+            .collect(Collectors.toList());
+
+        List<MachineDayDTO> all = new ArrayList<>();
+        for (int i = 0; i < free.size(); i++) {
+            MachineDayDTO jobMachineDay = null;
+            MachineDayDTO freeMachineDay = null;
+            if (jobMachineDayList.size() > 0) {
+                jobMachineDay = jobMachineDayList.remove(0);
+                freeMachineDay = free.remove(0);
+            } else {
+                break;
+            }
+
+            all.add(new MachineDayDTO(freeMachineDay.getDate(), true, jobMachineDay.getComment(), jobMachineDay.getJobId()));
+        }
+        all.addAll(free);
+        all.addAll(outUfOrderDays);
+        all.addAll(runningJobDays);
+        all = all.stream().sorted().collect(Collectors.toList());
+        return all;
+    }
+
+    private List<MachineDayDTO> getDaysByInterval(LocalDate from, LocalDate to) {
+        return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null)).collect(Collectors.toList());
+    }
+
+    private List<MachineDayDTO> getOutUfOrderDays(List<OutOfOrderDTO> outOfOrderDTOList) {
+        return outOfOrderDTOList
+            .stream()
+            .flatMap(
+                outOfOrder ->
+                    outOfOrder
+                        .getStart()
+                        .datesUntil(outOfOrder.getEnd())
+                        .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null))
+            )
             .collect(Collectors.toList());
     }
 }

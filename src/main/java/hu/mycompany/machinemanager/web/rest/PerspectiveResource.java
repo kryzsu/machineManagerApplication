@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.web.rest;
 import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
+import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
 import java.time.LocalDate;
@@ -62,5 +63,12 @@ public class PerspectiveResource {
     public void savePriorities(@RequestBody List<IdWithPriorityDTO> idWithPriorityDtoList) {
         log.debug("REST request call the savePriorities", idWithPriorityDtoList);
         this.jobService.updatePriorities(idWithPriorityDtoList);
+    }
+
+    @GetMapping("/get-job-next-days")
+    public List<MachineDayDTO> getJobNextDays(@RequestParam long machineId, @RequestParam long days) {
+        cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+        log.debug("REST request to get the RequestParam");
+        return perspectiveService.getJobNextDays(machineId, days);
     }
 }
