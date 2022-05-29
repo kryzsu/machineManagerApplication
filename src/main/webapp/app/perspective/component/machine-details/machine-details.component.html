@@ -19,5 +19,6 @@ Machine details:<br />
         [style]="{'width': '25rem', 'margin-bottom': '1em'}"
 
         styleClass="p-card-shadow">
-  "{{machineDay.comment}}" {{machineDay.jobId}}, occupied: {{machineDay.occupied}}
+  <p-tag severity="{{getSeverity(machineDay)}}" value="{{machineDay.comment}}"></p-tag>
+  {{machineDay.jobId}}
 </p-card>

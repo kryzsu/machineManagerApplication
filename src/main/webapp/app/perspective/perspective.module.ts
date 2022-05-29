@@ -19,6 +19,7 @@ import { IntervalFilterComponent } from './component/interval-filter/interval-fi
 import { MachineDetailsComponent } from './component/machine-details/machine-details.component';
 import { ButtonModule } from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   imports: [
     SharedModule,
@@ -35,7 +36,8 @@ import {CardModule} from 'primeng/card';
     OrderListModule,
     DropdownModule,
     ButtonModule,
-    CardModule
+    CardModule,
+    TagModule
   ],
   declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent, MachineDetailsComponent],
 })

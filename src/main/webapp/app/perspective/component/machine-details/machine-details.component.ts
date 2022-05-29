@@ -70,6 +70,10 @@ export class MachineDetailsComponent implements OnInit {
     return getRelatedProduct(job);
   }
 
+  getSeverity(machineDay: IMachineDay): string {
+    return machineDay.occupied ? "danger" : "success";
+  }
+
   reorder(): void {
     let priority = this.jobs.length;
     this.jobs.forEach((job: IJob) => (job.priority = priority--));
