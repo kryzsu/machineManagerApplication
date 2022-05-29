@@ -113,7 +113,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public void startHighestPriorityJobInMachine(Long machineId) {
         Optional<Job> runningJob = getRunningJobInMachine(machineId);
-        if (!runningJob.isPresent()) {
+        if (runningJob.isEmpty()) {
             throw new AnotherJobIsAlreadyRunningException(machineId);
         }
 
@@ -133,14 +133,12 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Optional<Job> getRunningJobInMachine(Long machineId) {
-        Optional<Job> job = jobRepository.findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(machineId);
-        return job;
+        return jobRepository.findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(machineId);
     }
 
     @Override
     public void updatePriorities(List<IdWithPriorityDTO> idWithPriorityDTOList) {
         idWithPriorityDTOList
-            .stream()
             .forEach(
                 idWithPriorityDTO -> {
                     Job job = jobRepository.findById(idWithPriorityDTO.getId()).get().priority(idWithPriorityDTO.getPriority());

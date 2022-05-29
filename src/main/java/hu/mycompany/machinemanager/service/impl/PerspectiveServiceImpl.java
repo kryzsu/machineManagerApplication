@@ -34,22 +34,18 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final JobRepository jobRepository;
     private final OutOfOrderRepository outOfOrderRepository;
 
-    private final MachineDetailedMapper machineDetailedMapper;
     private final Util util;
     private final OutOfOrderMapper outOfOrderMapper;
     Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
-    Predicate<JobWithoutDrawing> isNotStarted = job -> job.getEndDate() == null && job.getStartDate() == null;
 
     public PerspectiveServiceImpl(
         MachineRepository machineRepository,
-        MachineDetailedMapper machineDetailedMapper,
         Util util,
         OutOfOrderMapper outOfOrderMapper,
         JobRepository jobRepository,
         OutOfOrderRepository outOfOrderRepository
     ) {
         this.machineRepository = machineRepository;
-        this.machineDetailedMapper = machineDetailedMapper;
         this.util = util;
         this.outOfOrderMapper = outOfOrderMapper;
         this.jobRepository = jobRepository;
@@ -136,7 +132,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     @Override
     public List<MachineDayDTO> getJobNextDays(long machineId, long days) {
         List<OutOfOrderDTO> outOfOrderDTOList = getRelatedOutOfOrder(machineId);
-        List<MachineDayDTO> outUfOrderDays = getOutUfOrderDays(outOfOrderDTOList);
+        List<MachineDayDTO> outUfOrderDays = getOutUfOrderDays(outOfOrderDTOList, LocalDate.now(), LocalDate.now().plusDays(days));
         List<MachineDayDTO> free = getDaysByInterval(LocalDate.now(), LocalDate.now().plusDays(days));
         List<MachineDayDTO> runningJobDays = getRunningJobDays(machineId);
         free.removeAll(outUfOrderDays);
@@ -153,8 +149,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
         List<MachineDayDTO> all = new ArrayList<>();
         for (int i = 0; i < free.size(); i++) {
-            MachineDayDTO jobMachineDay = null;
-            MachineDayDTO freeMachineDay = null;
+            MachineDayDTO jobMachineDay;
+            MachineDayDTO freeMachineDay;
             if (jobMachineDayList.size() > 0) {
                 jobMachineDay = jobMachineDayList.remove(0);
                 freeMachineDay = free.remove(0);
@@ -175,7 +171,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null)).collect(Collectors.toList());
     }
 
-    private List<MachineDayDTO> getOutUfOrderDays(List<OutOfOrderDTO> outOfOrderDTOList) {
+    private List<MachineDayDTO> getOutUfOrderDays(List<OutOfOrderDTO> outOfOrderDTOList, LocalDate now, LocalDate endDate) {
         return outOfOrderDTOList
             .stream()
             .flatMap(
@@ -183,6 +179,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                     outOfOrder
                         .getStart()
                         .datesUntil(outOfOrder.getEnd())
+                        .filter( date ->
+                            (date.isEqual(now) || date.isAfter(now)) && (date.isEqual(endDate) || date.isBefore(endDate)))
                         .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null))
             )
             .collect(Collectors.toList());

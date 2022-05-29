@@ -74,6 +74,7 @@ export class CalendarComponent implements OnInit {
   private margin = 50;
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
+  private oldmachineId = 0;
 
   constructor(store: Store, perspectiveService: PerspectiveService, protected router: Router) {
     this.store = store;
@@ -172,6 +173,10 @@ export class CalendarComponent implements OnInit {
   }
 
   refreshMachineDays(machineId: number): void {
+    if (this.oldmachineId === machineId) {
+      return;
+    }
+
     this.perspectiveService
       .getNextDays(machineId)
       .pipe(
@@ -181,6 +186,7 @@ export class CalendarComponent implements OnInit {
         const machineDays: IMachineDay[] = machineDayList != null ? machineDayList : [];
         this.store.dispatch(getMachineDays({ machineDays }));
       });
+    this.oldmachineId = machineId;
   }
 
   private createSvg(): void {
