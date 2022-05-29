@@ -17,9 +17,7 @@ import { BarData } from '../../shared/bar-chart/bar-chart.component';
 import {IMachine, IMachineDay} from '../../entities/machine/machine.model';
 import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
 import { sortByNameCaseInsensitive } from '../../util/common-util';
-import { defaultInterval, FilterInterval } from 'app/perspective/component/interval-filter/filter-interval';
 import { Router } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
 import {getMachineDays} from "../../redux/actions";
 
 @Component({
@@ -189,6 +187,14 @@ export class CalendarComponent implements OnInit {
     this.oldmachineId = machineId;
   }
 
+  onStartNextJob($event: number): void {
+    this.perspectiveService.startNextJob($event).subscribe();
+  }
+
+  onStopRunningJob($event: number): void {
+    this.perspectiveService.stopRunningJob($event).subscribe();
+  }
+
   private createSvg(): void {
     this.svg = d3
       .select('figure#bar')
@@ -232,5 +238,6 @@ export class CalendarComponent implements OnInit {
       .attr('height', (d: any) => this.height - y(d.Stars))
       .attr('fill', '#d04a35');
   }
+
 
 }

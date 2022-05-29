@@ -71,4 +71,18 @@ public class PerspectiveResource {
         log.debug("REST request to get the RequestParam");
         return perspectiveService.getJobNextDays(machineId, days);
     }
+
+    @PostMapping("/start-next-job")
+    public void startNextJob(@RequestBody long machineId) {
+        cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+        log.debug("REST request to get the RequestParam");
+        perspectiveService.startNextJob(machineId);
+    }
+
+    @PostMapping("/stop-running-job")
+    public void stopRunningJob(@RequestBody long machineId) {
+        cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+        log.debug("REST request to get the RequestParam");
+        perspectiveService.stopRunningJob(machineId);
+    }
 }

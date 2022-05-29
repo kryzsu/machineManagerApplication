@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import {IMachine, IMachineDay} from 'app/entities/machine/machine.model';
-import { dayjsToString } from '../util/common-util';
-import { FilterInterval } from './component/interval-filter/filter-interval';
 import { createRequestOption } from '../core/request/request-util';
 import { OutOfOrder } from '../entities/out-of-order/out-of-order.model';
 import { IIdWithPriority } from '../entities/job/job.model';
@@ -52,5 +50,13 @@ export class PerspectiveService {
     });
 
     return this.http.get<IMachineDay[]>(`${this.resourceUrl}/get-job-next-days`, { params: options, observe: 'response' });
+  }
+
+  stopRunningJob(machineId: number): Observable<HttpResponse<any>> {
+    return this.http.post<IMachineDay[]>(`${this.resourceUrl}/stop-running-job`, machineId, { observe: 'response' });
+  }
+
+  startNextJob(machineId: number): Observable<HttpResponse<any>> {
+    return this.http.post<IMachineDay[]>(`${this.resourceUrl}/start-next-job`, machineId, { observe: 'response' });
   }
 }

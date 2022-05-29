@@ -62,6 +62,10 @@ public class Machine implements Serializable {
     @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
+    @OneToOne
+    @JoinColumn(name = "running_job_id", referencedColumnName = "id")
+    private Job runningJob;
+
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "machines" }, allowSetters = true)
@@ -223,5 +227,13 @@ public class Machine implements Serializable {
     @Override
     public String toString() {
         return String.format("Machine{id=%d, name='%s', description='%s'}", getId(), getName(), getDescription());
+    }
+
+    public Job getRunningJob() {
+        return runningJob;
+    }
+
+    public void setRunningJob(Job runningJob) {
+        this.runningJob = runningJob;
     }
 }

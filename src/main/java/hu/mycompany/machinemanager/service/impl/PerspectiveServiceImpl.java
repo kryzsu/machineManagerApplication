@@ -1,9 +1,12 @@
 package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
+import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
+import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
+import hu.mycompany.machinemanager.service.NoRunningJobException;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
@@ -12,6 +15,7 @@ import hu.mycompany.machinemanager.service.util.Interval;
 import hu.mycompany.machinemanager.service.util.Util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -70,7 +74,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                     .stream()
                     .filter(this.isOpen)
                     .sorted(Collections.reverseOrder())
-                    .collect(Collectors.toCollection(LinkedHashSet::new))
+                    .collect(Collectors.toCollection(LinkedHashSet::new)),
+                machine.getRunningJob()
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());
@@ -167,6 +172,52 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         return all;
     }
 
+    @Override
+    public void startNextJob(long machineId) {
+        Optional<Machine> machineById = machineRepository.findById(machineId);
+
+        if (machineById.isPresent()) {
+            Machine machine = machineById.get();
+            if (machine.getRunningJob() != null) {
+                throw new AnotherJobIsAlreadyRunningException(machineId);
+            }
+            Optional<Job> nextJob = jobRepository.findTopByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId);
+
+            if (nextJob.isPresent()) {
+                Job job = nextJob.get();
+                job.startDate(LocalDate.now());
+                machine.setRunningJob(job);
+                jobRepository.save(job);
+                machineRepository.save(machine);
+            } else {
+                throw new NoFurtherJobsForMachine();
+            }
+        } else {
+            throw new NoSuchEntity();
+        }
+    }
+
+    @Override
+    public void stopRunningJob(long machineId) {
+        Optional<Machine> machineById = machineRepository.findById(machineId);
+
+        if (machineById.isPresent()) {
+            Machine machine = machineById.get();
+            Job job = machine.getRunningJob();
+            if (job == null) {
+                throw new NoRunningJobException(machineId);
+            }
+            job.endDate(LocalDate.now());
+            job.fact(Period.between(job.getStartDate(), LocalDate.now()).getDays());
+            jobRepository.save(job);
+            machine.setRunningJob(null);
+            machineRepository.save(machine);
+        } else {
+            throw new NoSuchEntity();
+        }
+    }
+
+
     private List<MachineDayDTO> getDaysByInterval(LocalDate from, LocalDate to) {
         return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null)).collect(Collectors.toList());
     }
@@ -185,4 +236,6 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             )
             .collect(Collectors.toList());
     }
+
+
 }

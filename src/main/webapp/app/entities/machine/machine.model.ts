@@ -16,6 +16,7 @@ export interface IMachine {
   outOfOrders?: IOutOfOrder[] | null;
   jobs?: IJob[] | null;
   views?: IView[] | null;
+  runningJob?: IJob;
 }
 
 export class Machine implements IMachine {

@@ -15,4 +15,9 @@ public interface PerspectiveService {
     List<OutOfOrderDTO> getRelatedOutOfOrder(long machineId);
 
     List<MachineDayDTO> getJobNextDays(long machineId, long days);
+
+    void startNextJob(long machineId);
+
+    void stopRunningJob(long machineId);
+
 }

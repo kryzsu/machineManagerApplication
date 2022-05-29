@@ -36,6 +36,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByMachineIdAndStartDateGreaterThanEqual(Long machineId, LocalDate date);
 
     List<Job> findByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(Long machineId);
+    Optional<Job> findTopByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(Long machineId);
 
     Page<Job> findByMachineIdAndStartDateIsNotNullOrderByPriorityDescCreateDateTimeDesc(Long machineId, Pageable pageable);
 

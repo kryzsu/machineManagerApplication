@@ -124,7 +124,7 @@ public class Job implements Serializable {
 
     @ManyToOne
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views", "runningJob" }, allowSetters = true)
     private Machine machine;
 
     @ManyToOne

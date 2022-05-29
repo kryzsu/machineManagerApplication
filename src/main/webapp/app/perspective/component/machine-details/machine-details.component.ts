@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { getRelatedProduct, IIdWithPriority, IJob, Job } from '../../../entities/job/job.model';
-import {IMachine, IMachineDay, Machine} from '../../../entities/machine/machine.model';
+import { getRelatedProduct, IIdWithPriority, IJob } from '../../../entities/job/job.model';
+import {IMachine, IMachineDay} from '../../../entities/machine/machine.model';
 import { selectMachineList } from '../../../redux/selectors';
 import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -19,6 +19,9 @@ export class MachineDetailsComponent implements OnInit {
 
   @Output() savePriorities = new EventEmitter<IIdWithPriority[]>();
   @Output() getMachineDays = new EventEmitter();
+  @Output() startNextJob = new EventEmitter<number>();
+  @Output() stopRunningJob = new EventEmitter<number>();
+
 
   constructor(private store: Store) {
     this.jobs = [];
@@ -88,5 +91,21 @@ export class MachineDetailsComponent implements OnInit {
         priority: job.priority,
       }))
     );
+  }
+
+  onStartNextJob(): void {
+    if (this.selectedMachine == null) {
+      return;
+    }
+
+    this.startNextJob.emit(this.selectedMachine.id);
+  }
+
+  onStopRunningJob(): void {
+    if (this.selectedMachine == null) {
+      return;
+    }
+
+    this.stopRunningJob.emit(this.selectedMachine.id);
   }
 }
