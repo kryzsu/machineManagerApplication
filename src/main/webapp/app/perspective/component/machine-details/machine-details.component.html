@@ -29,10 +29,9 @@
 </p-orderList>
 <p-button label="Save" (onClick)="onSave()" [disabled]="!changed"></p-button>
 
-<p-card header="{{machineDay.date}}" *ngFor="let machineDay of machineDays"
+<p-card header="{{machineDay.date}}" subheader="{{weekName[machineDay.dayOfWeek?? 0]}}" *ngFor="let machineDay of machineDays"
         [ngStyle]="{'background':machineDay.occupied ? 'green' : 'red' }"
         [style]="{'width': '25rem', 'margin-bottom': '1em'}"
-
         styleClass="p-card-shadow">
   <p-tag severity="{{getSeverity(machineDay)}}" value="{{machineDay.comment}}"></p-tag>
   {{machineDay.jobId}}

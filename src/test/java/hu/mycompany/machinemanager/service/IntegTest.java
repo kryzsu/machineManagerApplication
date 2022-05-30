@@ -7,18 +7,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 class MachineDay implements Comparable {
@@ -26,13 +20,15 @@ class MachineDay implements Comparable {
     private LocalDate date;
     private boolean occupied;
     private String comment;
+    private int dayOfWeek;
 
     private Long jobId;
 
-    public MachineDay(LocalDate date, boolean occupied, String comment, Long jobId) {
+    public MachineDay(LocalDate date, boolean occupied, String comment, int dayOfWeek, Long jobId) {
         this.date = date;
         this.occupied = occupied;
         this.comment = comment;
+        this.dayOfWeek = dayOfWeek;
         this.jobId = jobId;
     }
 
@@ -51,7 +47,13 @@ class MachineDay implements Comparable {
 
     @Override
     public String toString() {
-        return "MachineDay{" + "date=" + date + ", occupied=" + occupied + ", comment='" + comment + '\'' + '}';
+        return "MachineDay{" +
+            "date=" + date +
+            ", occupied=" + occupied +
+            ", comment='" + comment + '\'' +
+            ", dayOfWeek=" + dayOfWeek +
+            ", jobId=" + jobId +
+            '}';
     }
 
     @Override
@@ -74,6 +76,14 @@ class MachineDay implements Comparable {
     public Long getJobId() {
         return jobId;
     }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
 }
 
 /**
@@ -84,6 +94,7 @@ class IntegTest {
 
     @Test
     void date() throws Exception {
+        LocalDate.now().getDayOfWeek().getValue();
         List<LocalDate> normalList = LocalDate.of(2000, 1, 1)
             .datesUntil(LocalDate.of(2000, 1, 14))
             .collect(Collectors.toList());
@@ -127,7 +138,7 @@ class IntegTest {
         try {
             inProgressDays = from
                 .datesUntil(jobInprogress.getStartDate().plusDays(jobInprogress.getEstimation()))
-                .map( date -> new MachineDay(LocalDate.EPOCH, true, jobInprogress.getWorknumber(), jobInprogress.getId()))
+                .map( date -> new MachineDay(LocalDate.EPOCH, true, jobInprogress.getWorknumber(), 0, jobInprogress.getId()))
                 .collect(Collectors.toList());
         } catch ( IllegalArgumentException illegalArgumentException ) {
             System.out.println("nooooo");
@@ -135,13 +146,17 @@ class IntegTest {
 
 
         Stream<OutOfOrder> streamOut = Stream.of(
-            new OutOfOrder().start(LocalDate.of(2000, 1, 2)).end(LocalDate.of(2000, 1, 3)).description("desc"),
-            new OutOfOrder().start(LocalDate.of(2000, 1, 10)).end(LocalDate.of(2000, 1, 12)).description("desc")
+            new OutOfOrder()
+                .start(LocalDate.of(2000, 1, 2))
+                .end(LocalDate.of(2000, 1, 3)).description("desc"),
+            new OutOfOrder()
+                .start(LocalDate.of(2000, 1, 10))
+                .end(LocalDate.of(2000, 1, 12)).description("desc")
         );
 
         List<MachineDay> freeDays = from
             .datesUntil(to)
-            .map(date -> new MachineDay(date, false, "free", null))
+            .map(date -> new MachineDay(date, false, "free", date.getDayOfWeek().getValue(), null))
             .collect(Collectors.toList());
 
         List<MachineDay> occupied = streamOut
@@ -150,7 +165,8 @@ class IntegTest {
                     outOfOrder
                         .getStart()
                         .datesUntil(outOfOrder.getEnd())
-                        .map(date -> new MachineDay(date, true, outOfOrder.getDescription(), null))
+                        .map(date -> new MachineDay(date, true, outOfOrder.getDescription(),
+                            date.getDayOfWeek().getValue(), null))
             )
             .collect(Collectors.toList());
 
@@ -168,7 +184,7 @@ class IntegTest {
             .flatMap(
                 job ->
                     Stream
-                        .generate(() -> new MachineDay(LocalDate.EPOCH, true, job.getWorknumber(), job.getId()))
+                        .generate(() -> new MachineDay(LocalDate.EPOCH, true, job.getWorknumber(), 0, job.getId()))
                         .limit(job.getEstimation())
             )
             .collect(Collectors.toList());
@@ -187,7 +203,8 @@ class IntegTest {
                 break;
             }
 
-            all.add(new MachineDay(freeMachineDay.getDate(), true, jobMachineDay.getComment(), jobMachineDay.getJobId()));
+            all.add(new MachineDay(freeMachineDay.getDate(), true, jobMachineDay.getComment(),
+                freeMachineDay.getDate().getDayOfWeek().getValue(),jobMachineDay.getJobId()));
         }
         all.addAll(freeDays);
         all.addAll(occupied);

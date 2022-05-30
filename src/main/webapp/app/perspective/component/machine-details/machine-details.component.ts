@@ -16,6 +16,7 @@ export class MachineDetailsComponent implements OnInit {
   selectedMachine?: IMachine;
   changed = false;
   machineDays : IMachineDay[] = [];
+  weekName: string[] = ['', 'Hetfo', 'Kedd', 'Szerda', 'Csutortok', 'Pentek', 'Szombat', 'Vasarnap'];
 
   @Output() savePriorities = new EventEmitter<IIdWithPriority[]>();
   @Output() getMachineDays = new EventEmitter();

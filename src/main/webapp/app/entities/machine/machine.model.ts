@@ -7,6 +7,7 @@ export interface IMachineDay {
   occupied?: boolean;
   comment?: string;
   jobId?: number;
+  dayOfWeek?: number;
 }
 
 export interface IMachine {

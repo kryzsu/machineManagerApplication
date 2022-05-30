@@ -89,7 +89,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                     LocalDate
                         .now()
                         .datesUntil(job.getStartDate().plusDays(job.getEstimation()))
-                        .map(date -> new MachineDayDTO(date, true, job.getWorknumber(), job.getId()))
+                        .map(date -> new MachineDayDTO(date, true, job.getWorknumber(), job.getId(),
+                            date.getDayOfWeek().getValue()))
             )
             .orElse(Stream.empty())
             .collect(Collectors.toList());
@@ -147,7 +148,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             .flatMap(
                 job ->
                     Stream
-                        .generate(() -> new MachineDayDTO(LocalDate.EPOCH, true, job.getWorknumber(), job.getId()))
+                        .generate(() -> new MachineDayDTO(LocalDate.EPOCH, true, job.getWorknumber(), job.getId(), 0))
                         .limit(job.getEstimation())
             )
             .collect(Collectors.toList());
@@ -163,7 +164,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                 break;
             }
 
-            all.add(new MachineDayDTO(freeMachineDay.getDate(), true, jobMachineDay.getComment(), jobMachineDay.getJobId()));
+            all.add(new MachineDayDTO(freeMachineDay.getDate(), true, jobMachineDay.getComment(),
+                jobMachineDay.getJobId(), freeMachineDay.getDate().getDayOfWeek().getValue()));
         }
         all.addAll(free);
         all.addAll(outUfOrderDays);
@@ -219,7 +221,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
 
     private List<MachineDayDTO> getDaysByInterval(LocalDate from, LocalDate to) {
-        return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null)).collect(Collectors.toList());
+        return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null,
+            date.getDayOfWeek().getValue())).collect(Collectors.toList());
     }
 
     private List<MachineDayDTO> getOutUfOrderDays(List<OutOfOrderDTO> outOfOrderDTOList, LocalDate now, LocalDate endDate) {
@@ -232,7 +235,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                         .datesUntil(outOfOrder.getEnd())
                         .filter( date ->
                             (date.isEqual(now) || date.isAfter(now)) && (date.isEqual(endDate) || date.isBefore(endDate)))
-                        .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null))
+                        .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null,
+                            date.getDayOfWeek().getValue()))
             )
             .collect(Collectors.toList());
     }

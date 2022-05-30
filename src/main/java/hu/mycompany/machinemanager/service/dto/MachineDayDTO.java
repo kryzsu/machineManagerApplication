@@ -8,14 +8,15 @@ public class MachineDayDTO implements Comparable {
     private LocalDate date;
     private boolean occupied;
     private String comment;
-
     private Long jobId;
+    private int dayOfWeek;
 
-    public MachineDayDTO(LocalDate date, boolean occupied, String comment, Long jobId) {
+    public MachineDayDTO(LocalDate date, boolean occupied, String comment, Long jobId, int dayOfWeek) {
         this.date = date;
         this.occupied = occupied;
         this.comment = comment;
         this.jobId = jobId;
+        this.dayOfWeek = dayOfWeek;
     }
 
     @Override
@@ -33,7 +34,13 @@ public class MachineDayDTO implements Comparable {
 
     @Override
     public String toString() {
-        return "MachineDay{" + "date=" + date + ", occupied=" + occupied + ", comment='" + comment + '\'' + '}';
+        return "MachineDayDTO{" +
+            "date=" + date +
+            ", occupied=" + occupied +
+            ", comment='" + comment + '\'' +
+            ", jobId=" + jobId +
+            ", dayOfWeek=" + dayOfWeek +
+            '}';
     }
 
     @Override
@@ -55,5 +62,13 @@ public class MachineDayDTO implements Comparable {
 
     public Long getJobId() {
         return jobId;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }
