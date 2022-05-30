@@ -108,4 +108,12 @@ export class MachineDetailsComponent implements OnInit {
 
     this.stopRunningJob.emit(this.selectedMachine.id);
   }
+
+  getProductName(selectedMachine?: IMachine): string {
+    if (selectedMachine?.runningJob?.products == null) {
+      return '';
+    }
+
+    return selectedMachine.runningJob.products[0]?.name ?? '';
+  }
 }

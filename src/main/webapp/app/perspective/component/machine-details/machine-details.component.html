@@ -3,9 +3,11 @@
         [style]="{'width': '50rem', 'margin-bottom': '2em'}"
         styleClass="p-card-shadow"
         subheader="{{ selectedMachine?.description }}">
-  Machine details:<br />
-  running job: {{ selectedMachine?.runningJob?.id }}<br />
-  {{ selectedMachine?.jobs?.length }} jobs
+ futo folyamat: <br />
+  id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.consumerName}} <br/>
+  {{selectedMachine?.runningJob?.productCount}} db {{getProductName(selectedMachine)}} <br/>
+  Kezdve: {{selectedMachine?.runningJob?.startDate}}, becsult idotartam: {{selectedMachine?.runningJob?.estimation}}<br />
+  tervezett folyamatok: {{ selectedMachine?.jobs?.length }}
   <ng-template pTemplate="footer">
     <p-button *ngIf="selectedMachine?.runningJob == null" label="Start next job" icon="pi pi-check"
               (onClick)="onStartNextJob()"></p-button>
