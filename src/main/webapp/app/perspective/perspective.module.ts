@@ -20,6 +20,8 @@ import { MachineDetailsComponent } from './component/machine-details/machine-det
 import { ButtonModule } from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import {DataViewModule} from 'primeng/dataview';
+
 @NgModule({
   imports: [
     SharedModule,
@@ -37,7 +39,8 @@ import { TagModule } from 'primeng/tag';
     DropdownModule,
     ButtonModule,
     CardModule,
-    TagModule
+    TagModule,
+    DataViewModule
   ],
   declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent, MachineDetailsComponent],
 })

@@ -232,7 +232,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                 outOfOrder ->
                     outOfOrder
                         .getStart()
-                        .datesUntil(outOfOrder.getEnd())
+                        .datesUntil(outOfOrder.getEnd().plusDays(1))
                         .filter( date ->
                             (date.isEqual(now) || date.isAfter(now)) && (date.isEqual(endDate) || date.isBefore(endDate)))
                         .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null,

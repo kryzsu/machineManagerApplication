@@ -3,11 +3,14 @@
         [style]="{'width': '50rem', 'margin-bottom': '2em'}"
         styleClass="p-card-shadow"
         subheader="{{ selectedMachine?.description }}">
+
+  <div *ngIf="selectedMachine?.runningJob?.id">
  futo folyamat: <br />
   id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.consumerName}} <br/>
   {{selectedMachine?.runningJob?.productCount}} db {{getProductName(selectedMachine)}} <br/>
   Kezdve: {{selectedMachine?.runningJob?.startDate}}, becsult idotartam: {{selectedMachine?.runningJob?.estimation}}<br />
-  tervezett folyamatok: {{ selectedMachine?.jobs?.length }}
+  </div>
+  tervezett folyamatok: {{ selectedMachine?.jobs?.length }} db
   <ng-template pTemplate="footer">
     <p-button *ngIf="selectedMachine?.runningJob == null" label="Start next job" icon="pi pi-check"
               (onClick)="onStartNextJob()"></p-button>
@@ -29,10 +32,31 @@
 </p-orderList>
 <p-button label="Save" (onClick)="onSave()" [disabled]="!changed"></p-button>
 
-<p-card header="{{machineDay.date}}" subheader="{{weekName[machineDay.dayOfWeek?? 0]}}" *ngFor="let machineDay of machineDays"
-        [ngStyle]="{'background':machineDay.occupied ? 'green' : 'red' }"
-        [style]="{'width': '25rem', 'margin-bottom': '1em'}"
-        styleClass="p-card-shadow">
-  <p-tag severity="{{getSeverity(machineDay)}}" value="{{machineDay.comment}}"></p-tag>
-  {{machineDay.jobId}}
-</p-card>
+<p-dataView #dv [value]="machineDays" [paginator]="true" [rows]="7" filterBy="name" layout="grid">
+  <ng-template pTemplate="header">
+    <div class="flex flex-column md:flex-row md:justify-content-between">
+      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    </div>
+  </ng-template>
+  <ng-template let-machineDay pTemplate="listItem">
+    <div>
+      <p-card header="{{machineDay.date}}" subheader="{{weekName[machineDay.dayOfWeek?? 0]}}" *ngFor="let machineDay of machineDays"
+              [ngStyle]="{'background':machineDay.occupied ? 'green' : 'red' }"
+              [style]="{'width': '15rem', 'margin-bottom': '1em'}"
+              styleClass="p-card-shadow">
+        <p-tag severity="{{getSeverity(machineDay)}}" value="{{machineDay.comment}}"></p-tag>
+        {{machineDay.jobId}}
+      </p-card>
+    </div>
+  </ng-template>
+
+  <ng-template let-machineDay pTemplate="gridItem">
+    <div class="col-2 md:col-2">
+      <div class="card">
+        {{machineDay.date}} ({{weekName[machineDay.dayOfWeek?? 0]}})
+        <p-tag severity="{{getSeverity(machineDay)}}"
+               value="{{machineDay.comment}}"></p-tag>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>

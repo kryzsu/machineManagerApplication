@@ -94,12 +94,12 @@ class IntegTest {
 
     @Test
     void date() throws Exception {
-        LocalDate.now().getDayOfWeek().getValue();
+
         List<LocalDate> normalList = LocalDate.of(2000, 1, 1)
-            .datesUntil(LocalDate.of(2000, 1, 14))
+            .datesUntil(LocalDate.of(2000, 1, 2).plusDays(1))
             .collect(Collectors.toList());
 
-        Assert.assertEquals(13, normalList.size());
+        Assert.assertEquals(2, normalList.size());
 
         try {
             List<LocalDate> invalidList = LocalDate.of(2000, 1, 10)
@@ -114,7 +114,6 @@ class IntegTest {
             .datesUntil(LocalDate.of(2000, 1, 1))
             .collect(Collectors.toList());
         Assert.assertEquals(0, noDayz.size());
-
     }
 
     @Test

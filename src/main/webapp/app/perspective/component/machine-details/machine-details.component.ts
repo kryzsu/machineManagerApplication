@@ -33,11 +33,14 @@ export class MachineDetailsComponent implements OnInit {
       .pipe(
         filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
         map(appState => appState.machineList)
-        // map(machine => ({...machine}))
       )
       .subscribe((machineList: IMachine[]) => {
+        if (this.machines === machineList) {
+          return;
+        }
         this.machines = machineList;
         if (machineList.length > 0) {
+          console.warn('selectMachineList');
           this.selectedMachine = machineList[0];
           this.machineChanged();
         }
@@ -60,6 +63,7 @@ export class MachineDetailsComponent implements OnInit {
     }
 
     if (this.selectedMachine?.id != null) {
+      console.warn(this.selectedMachine.id);
       this.getMachineDays.emit(this.selectedMachine.id);
     }
   }
