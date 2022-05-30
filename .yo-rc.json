@@ -37,7 +37,7 @@
     "otherModules": [],
     "blueprints": [],
     "prettierJava": true,
-    "lastLiquibaseTimestamp": 1630053690000,
+    "lastLiquibaseTimestamp": 1653944794000,
     "skipUserManagement": false,
     "withAdminUi": true,
     "clientThemeVariant": "",
@@ -48,7 +48,7 @@
     "pages": [],
     "reactive": false,
     "devServerPort": 4200,
-    "entities": ["Machine", "Job", "Product", "OutOfOrder", "View", "Customer"]
+    "entities": ["Machine", "Job", "Product", "OutOfOrder", "View", "Customer", "Rawmaterial"]
   },
   "git-provider": "GitHub",
   "git-company": "kryzsu",

@@ -34,6 +34,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'machineManagerApplicationApp.customer.home.title' },
         loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule),
       },
+      {
+        path: 'rawmaterial',
+        data: { pageTitle: 'machineManagerApplicationApp.rawmaterial.home.title' },
+        loadChildren: () => import('./rawmaterial/rawmaterial.module').then(m => m.RawmaterialModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

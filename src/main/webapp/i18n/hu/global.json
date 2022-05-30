@@ -13,6 +13,7 @@
         "product": "Termék",
         "view": "Nézet",
         "customer": "Vevők",
+        "rawmaterial": "Rawmaterial",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
