@@ -17,6 +17,11 @@ public class ProductDTO implements Serializable {
 
     private String comment;
 
+    @NotNull
+    private Double weight;
+
+    private RawmaterialDTO rawmaterial;
+
     public Long getId() {
         return id;
     }
@@ -39,6 +44,22 @@ public class ProductDTO implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public RawmaterialDTO getRawmaterial() {
+        return rawmaterial;
+    }
+
+    public void setRawmaterial(RawmaterialDTO rawmaterial) {
+        this.rawmaterial = rawmaterial;
     }
 
     @Override
@@ -69,6 +90,8 @@ public class ProductDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", comment='" + getComment() + "'" +
+            ", weight=" + getWeight() +
+            ", rawmaterial=" + getRawmaterial() +
             "}";
     }
 }

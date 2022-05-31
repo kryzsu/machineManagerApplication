@@ -8,8 +8,11 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Product} and its DTO {@link ProductDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = { RawmaterialMapper.class })
 public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
+    @Mapping(target = "rawmaterial", source = "rawmaterial", qualifiedByName = "name")
+    ProductDTO toDto(Product s);
+
     @Named("nameSet")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")

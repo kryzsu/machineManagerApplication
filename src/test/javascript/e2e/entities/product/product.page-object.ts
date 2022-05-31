@@ -32,6 +32,9 @@ export class ProductUpdatePage {
   idInput = element(by.id('field_id'));
   nameInput = element(by.id('field_name'));
   commentInput = element(by.id('field_comment'));
+  weightInput = element(by.id('field_weight'));
+
+  rawmaterialSelect = element(by.id('field_rawmaterial'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
@@ -59,6 +62,30 @@ export class ProductUpdatePage {
 
   async getCommentInput(): Promise<string> {
     return await this.commentInput.getAttribute('value');
+  }
+
+  async setWeightInput(weight: string): Promise<void> {
+    await this.weightInput.sendKeys(weight);
+  }
+
+  async getWeightInput(): Promise<string> {
+    return await this.weightInput.getAttribute('value');
+  }
+
+  async rawmaterialSelectLastOption(): Promise<void> {
+    await this.rawmaterialSelect.all(by.tagName('option')).last().click();
+  }
+
+  async rawmaterialSelectOption(option: string): Promise<void> {
+    await this.rawmaterialSelect.sendKeys(option);
+  }
+
+  getRawmaterialSelect(): ElementFinder {
+    return this.rawmaterialSelect;
+  }
+
+  async getRawmaterialSelectedOption(): Promise<string> {
+    return await this.rawmaterialSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

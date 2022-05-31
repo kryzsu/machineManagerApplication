@@ -2,25 +2,27 @@
   "machineManagerApplicationApp": {
     "product": {
       "home": {
-        "title": "Termékek",
-        "refreshListLabel": "Lista frissítése",
-        "createLabel": "Egy új Termék létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Terméket",
-        "notFound": "Nincs ilyen Termék"
+        "title": "Products",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új Product létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Productt",
+        "notFound": "No Products found"
       },
-      "created": "Egy új Termék lett létrehozva {{ param }} azonosítóval",
-      "updated": "A Termék módosítva lett {{ param }} azonosítóval",
-      "deleted": "A Termék törölve lett {{ param }} azonosítóval",
+      "created": "Egy új Product lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Product módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Product törölve lett {{ param }} azonosítóval",
       "delete": {
-        "question": "Biztos benne, hogy törölni szeretné az Terméket {{ id }} azonosítóval?"
+        "question": "Biztos benne, hogy törölni szeretné az Productt {{ id }} azonosítóval?"
       },
       "detail": {
-        "title": "Termék"
+        "title": "Product"
       },
       "id": "ID",
-      "name": "Név",
-      "comment": "Megjegyzés",
-      "job": "Feladat"
+      "name": "Name",
+      "comment": "Comment",
+      "weight": "Weight",
+      "job": "Job",
+      "rawmaterial": "Rawmaterial"
     }
   }
 }

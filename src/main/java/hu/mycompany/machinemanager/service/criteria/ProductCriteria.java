@@ -30,7 +30,11 @@ public class ProductCriteria implements Serializable, Criteria {
 
     private StringFilter comment;
 
+    private DoubleFilter weight;
+
     private LongFilter jobId;
+
+    private LongFilter rawmaterialId;
 
     public ProductCriteria() {}
 
@@ -38,7 +42,9 @@ public class ProductCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.comment = other.comment == null ? null : other.comment.copy();
+        this.weight = other.weight == null ? null : other.weight.copy();
         this.jobId = other.jobId == null ? null : other.jobId.copy();
+        this.rawmaterialId = other.rawmaterialId == null ? null : other.rawmaterialId.copy();
     }
 
     @Override
@@ -91,6 +97,21 @@ public class ProductCriteria implements Serializable, Criteria {
         this.comment = comment;
     }
 
+    public DoubleFilter getWeight() {
+        return weight;
+    }
+
+    public DoubleFilter weight() {
+        if (weight == null) {
+            weight = new DoubleFilter();
+        }
+        return weight;
+    }
+
+    public void setWeight(DoubleFilter weight) {
+        this.weight = weight;
+    }
+
     public LongFilter getJobId() {
         return jobId;
     }
@@ -106,6 +127,21 @@ public class ProductCriteria implements Serializable, Criteria {
         this.jobId = jobId;
     }
 
+    public LongFilter getRawmaterialId() {
+        return rawmaterialId;
+    }
+
+    public LongFilter rawmaterialId() {
+        if (rawmaterialId == null) {
+            rawmaterialId = new LongFilter();
+        }
+        return rawmaterialId;
+    }
+
+    public void setRawmaterialId(LongFilter rawmaterialId) {
+        this.rawmaterialId = rawmaterialId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -119,13 +155,15 @@ public class ProductCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(comment, that.comment) &&
-            Objects.equals(jobId, that.jobId)
+            Objects.equals(weight, that.weight) &&
+            Objects.equals(jobId, that.jobId) &&
+            Objects.equals(rawmaterialId, that.rawmaterialId)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, comment, jobId);
+        return Objects.hash(id, name, comment, weight, jobId, rawmaterialId);
     }
 
     // prettier-ignore
@@ -135,7 +173,9 @@ public class ProductCriteria implements Serializable, Criteria {
             (id != null ? "id=" + id + ", " : "") +
             (name != null ? "name=" + name + ", " : "") +
             (comment != null ? "comment=" + comment + ", " : "") +
+            (weight != null ? "weight=" + weight + ", " : "") +
             (jobId != null ? "jobId=" + jobId + ", " : "") +
+            (rawmaterialId != null ? "rawmaterialId=" + rawmaterialId + ", " : "") +
             "}";
     }
 }

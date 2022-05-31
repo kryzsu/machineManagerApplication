@@ -22,6 +22,16 @@
         <dd>
           <span>{{ product.comment }}</span>
         </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.product.weight">Weight</span></dt>
+        <dd>
+          <span>{{ product.weight }}</span>
+        </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.product.rawmaterial">Rawmaterial</span></dt>
+        <dd>
+          <div *ngIf="product.rawmaterial">
+            <a [routerLink]="['/rawmaterial', product.rawmaterial?.id, 'view']">{{ product.rawmaterial?.name }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

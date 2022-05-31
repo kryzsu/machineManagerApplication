@@ -8,6 +8,12 @@
       "relationshipType": "many-to-many",
       "ownerSide": false,
       "otherEntityRelationshipName": "product"
+    },
+    {
+      "relationshipName": "rawmaterial",
+      "otherEntityName": "rawmaterial",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "name"
     }
   ],
   "fields": [
@@ -20,6 +26,11 @@
     {
       "fieldName": "comment",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "weight",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
     }
   ],
   "changelogDate": "20210811163819",

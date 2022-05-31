@@ -2,15 +2,12 @@ package hu.mycompany.machinemanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Product.
@@ -34,24 +31,17 @@ public class Product implements Serializable {
     @Column(name = "comment")
     private String comment;
 
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
+    @NotNull
+    @Column(name = "weight", nullable = false)
+    private Double weight;
 
     @ManyToMany(mappedBy = "products")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
+
+    @ManyToOne
+    private Rawmaterial rawmaterial;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -93,6 +83,19 @@ public class Product implements Serializable {
         this.comment = comment;
     }
 
+    public Double getWeight() {
+        return this.weight;
+    }
+
+    public Product weight(Double weight) {
+        this.weight = weight;
+        return this;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
     public Set<Job> getJobs() {
         return this.jobs;
     }
@@ -124,6 +127,19 @@ public class Product implements Serializable {
         this.jobs = jobs;
     }
 
+    public Rawmaterial getRawmaterial() {
+        return this.rawmaterial;
+    }
+
+    public Product rawmaterial(Rawmaterial rawmaterial) {
+        this.setRawmaterial(rawmaterial);
+        return this;
+    }
+
+    public void setRawmaterial(Rawmaterial rawmaterial) {
+        this.rawmaterial = rawmaterial;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -146,6 +162,11 @@ public class Product implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return String.format("Product{id=%d, name='%s', comment='%s'}", getId(), getName(), getComment());
+        return "Product{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", comment='" + getComment() + "'" +
+            ", weight=" + getWeight() +
+            "}";
     }
 }

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import hu.mycompany.machinemanager.IntegrationTest;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Product;
+import hu.mycompany.machinemanager.domain.Rawmaterial;
 import hu.mycompany.machinemanager.repository.ProductRepository;
 import hu.mycompany.machinemanager.service.criteria.ProductCriteria;
 import hu.mycompany.machinemanager.service.dto.ProductDTO;
@@ -39,6 +40,10 @@ class ProductResourceIT {
     private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
     private static final String UPDATED_COMMENT = "BBBBBBBBBB";
 
+    private static final Double DEFAULT_WEIGHT = 1D;
+    private static final Double UPDATED_WEIGHT = 2D;
+    private static final Double SMALLER_WEIGHT = 1D - 1D;
+
     private static final String ENTITY_API_URL = "/api/products";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -66,7 +71,7 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createEntity(EntityManager em) {
-        Product product = new Product().name(DEFAULT_NAME).comment(DEFAULT_COMMENT);
+        Product product = new Product().name(DEFAULT_NAME).comment(DEFAULT_COMMENT).weight(DEFAULT_WEIGHT);
         return product;
     }
 
@@ -77,7 +82,7 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createUpdatedEntity(EntityManager em) {
-        Product product = new Product().name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        Product product = new Product().name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
         return product;
     }
 
@@ -102,6 +107,7 @@ class ProductResourceIT {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProduct.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testProduct.getWeight()).isEqualTo(DEFAULT_WEIGHT);
     }
 
     @Test
@@ -143,6 +149,24 @@ class ProductResourceIT {
 
     @Test
     @Transactional
+    void checkWeightIsRequired() throws Exception {
+        int databaseSizeBeforeTest = productRepository.findAll().size();
+        // set the field null
+        product.setWeight(null);
+
+        // Create the Product, which fails.
+        ProductDTO productDTO = productMapper.toDto(product);
+
+        restProductMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllProducts() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
@@ -154,7 +178,8 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
+            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
     }
 
     @Test
@@ -170,7 +195,8 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(product.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT));
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
+            .andExpect(jsonPath("$.weight").value(DEFAULT_WEIGHT.doubleValue()));
     }
 
     @Test
@@ -349,6 +375,110 @@ class ProductResourceIT {
 
     @Test
     @Transactional
+    void getAllProductsByWeightIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight equals to DEFAULT_WEIGHT
+        defaultProductShouldBeFound("weight.equals=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight equals to UPDATED_WEIGHT
+        defaultProductShouldNotBeFound("weight.equals=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight not equals to DEFAULT_WEIGHT
+        defaultProductShouldNotBeFound("weight.notEquals=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight not equals to UPDATED_WEIGHT
+        defaultProductShouldBeFound("weight.notEquals=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight in DEFAULT_WEIGHT or UPDATED_WEIGHT
+        defaultProductShouldBeFound("weight.in=" + DEFAULT_WEIGHT + "," + UPDATED_WEIGHT);
+
+        // Get all the productList where weight equals to UPDATED_WEIGHT
+        defaultProductShouldNotBeFound("weight.in=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight is not null
+        defaultProductShouldBeFound("weight.specified=true");
+
+        // Get all the productList where weight is null
+        defaultProductShouldNotBeFound("weight.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight is greater than or equal to DEFAULT_WEIGHT
+        defaultProductShouldBeFound("weight.greaterThanOrEqual=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight is greater than or equal to UPDATED_WEIGHT
+        defaultProductShouldNotBeFound("weight.greaterThanOrEqual=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight is less than or equal to DEFAULT_WEIGHT
+        defaultProductShouldBeFound("weight.lessThanOrEqual=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight is less than or equal to SMALLER_WEIGHT
+        defaultProductShouldNotBeFound("weight.lessThanOrEqual=" + SMALLER_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsLessThanSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight is less than DEFAULT_WEIGHT
+        defaultProductShouldNotBeFound("weight.lessThan=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight is less than UPDATED_WEIGHT
+        defaultProductShouldBeFound("weight.lessThan=" + UPDATED_WEIGHT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByWeightIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where weight is greater than DEFAULT_WEIGHT
+        defaultProductShouldNotBeFound("weight.greaterThan=" + DEFAULT_WEIGHT);
+
+        // Get all the productList where weight is greater than SMALLER_WEIGHT
+        defaultProductShouldBeFound("weight.greaterThan=" + SMALLER_WEIGHT);
+    }
+
+    @Test
+    @Transactional
     void getAllProductsByJobIsEqualToSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
@@ -366,6 +496,25 @@ class ProductResourceIT {
         defaultProductShouldNotBeFound("jobId.equals=" + (jobId + 1));
     }
 
+    @Test
+    @Transactional
+    void getAllProductsByRawmaterialIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+        Rawmaterial rawmaterial = RawmaterialResourceIT.createEntity(em);
+        em.persist(rawmaterial);
+        em.flush();
+        product.setRawmaterial(rawmaterial);
+        productRepository.saveAndFlush(product);
+        Long rawmaterialId = rawmaterial.getId();
+
+        // Get all the productList where rawmaterial equals to rawmaterialId
+        defaultProductShouldBeFound("rawmaterialId.equals=" + rawmaterialId);
+
+        // Get all the productList where rawmaterial equals to (rawmaterialId + 1)
+        defaultProductShouldNotBeFound("rawmaterialId.equals=" + (rawmaterialId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -376,7 +525,8 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
+            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
 
         // Check, that the count call also returns 1
         restProductMockMvc
@@ -424,7 +574,7 @@ class ProductResourceIT {
         Product updatedProduct = productRepository.findById(product.getId()).get();
         // Disconnect from session so that the updates on updatedProduct are not directly saved in db
         em.detach(updatedProduct);
-        updatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        updatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
         ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc
@@ -441,6 +591,7 @@ class ProductResourceIT {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getWeight()).isEqualTo(UPDATED_WEIGHT);
     }
 
     @Test
@@ -534,6 +685,7 @@ class ProductResourceIT {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProduct.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testProduct.getWeight()).isEqualTo(DEFAULT_WEIGHT);
     }
 
     @Test
@@ -548,7 +700,7 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        partialUpdatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
 
         restProductMockMvc
             .perform(
@@ -564,6 +716,7 @@ class ProductResourceIT {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getWeight()).isEqualTo(UPDATED_WEIGHT);
     }
 
     @Test

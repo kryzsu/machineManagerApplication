@@ -39,6 +39,12 @@
           <th scope="col" jhiSortBy="comment">
             <span jhiTranslate="machineManagerApplicationApp.product.comment">Comment</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="weight">
+            <span jhiTranslate="machineManagerApplicationApp.product.weight">Weight</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="rawmaterial.name">
+            <span jhiTranslate="machineManagerApplicationApp.product.rawmaterial">Rawmaterial</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -49,6 +55,12 @@
           </td>
           <td>{{ product.name }}</td>
           <td>{{ product.comment }}</td>
+          <td>{{ product.weight }}</td>
+          <td>
+            <div *ngIf="product.rawmaterial">
+              <a [routerLink]="['/rawmaterial', product.rawmaterial?.id, 'view']">{{ product.rawmaterial?.name }}</a>
+            </div>
+          </td>
           <td class="text-right">
             <div class="btn-group">
               <button

@@ -42,7 +42,12 @@ describe('Product e2e test', () => {
 
     await productComponentsPage.clickOnCreateButton();
 
-    await promise.all([productUpdatePage.setNameInput('name'), productUpdatePage.setCommentInput('comment')]);
+    await promise.all([
+      productUpdatePage.setNameInput('name'),
+      productUpdatePage.setCommentInput('comment'),
+      productUpdatePage.setWeightInput('5'),
+      productUpdatePage.rawmaterialSelectLastOption(),
+    ]);
 
     await productUpdatePage.save();
     expect(await productUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;
