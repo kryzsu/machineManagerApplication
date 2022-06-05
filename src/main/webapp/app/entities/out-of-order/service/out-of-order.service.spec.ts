@@ -26,7 +26,8 @@ describe('Service Tests', () => {
 
       elemDefault = {
         id: 0,
-        date: currentDate,
+        start: currentDate,
+        end: currentDate,
         description: 'AAAAAAA',
       };
     });
@@ -35,7 +36,8 @@ describe('Service Tests', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign(
           {
-            date: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_FORMAT),
+            end: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
@@ -51,14 +53,16 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            date: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_FORMAT),
+            end: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
 
         const expected = Object.assign(
           {
-            date: currentDate,
+            start: currentDate,
+            end: currentDate,
           },
           returnedFromService
         );
@@ -74,7 +78,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 1,
-            date: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_FORMAT),
+            end: currentDate.format(DATE_FORMAT),
             description: 'BBBBBB',
           },
           elemDefault
@@ -82,7 +87,8 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            date: currentDate,
+            start: currentDate,
+            end: currentDate,
           },
           returnedFromService
         );
@@ -101,7 +107,8 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            date: currentDate,
+            start: currentDate,
+            end: currentDate,
           },
           returnedFromService
         );
@@ -117,7 +124,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 1,
-            date: currentDate.format(DATE_FORMAT),
+            start: currentDate.format(DATE_FORMAT),
+            end: currentDate.format(DATE_FORMAT),
             description: 'BBBBBB',
           },
           elemDefault
@@ -125,7 +133,8 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            date: currentDate,
+            start: currentDate,
+            end: currentDate,
           },
           returnedFromService
         );
@@ -175,7 +184,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique OutOfOrder to an array', () => {
-          const outOfOrderArray: IOutOfOrder[] = [{ id: 123 }, { id: 456 }, { id: 32177 }];
+          const outOfOrderArray: IOutOfOrder[] = [{ id: 123 }, { id: 456 }, { id: 56156 }];
           const outOfOrderCollection: IOutOfOrder[] = [{ id: 123 }];
           expectedResult = service.addOutOfOrderToCollectionIfMissing(outOfOrderCollection, ...outOfOrderArray);
           expect(expectedResult).toHaveLength(3);

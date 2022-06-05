@@ -2,14 +2,9 @@ package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.repository.JobRepository;
-import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
 import hu.mycompany.machinemanager.service.JobService;
-import hu.mycompany.machinemanager.service.NoRunningJobException;
-import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +35,6 @@ public class JobServiceImpl implements JobService {
     public JobDTO save(JobDTO jobDTO) {
         log.debug("Request to save Job : {}", jobDTO);
         Job job = jobMapper.toEntity(jobDTO);
-        log.debug("Request to save Job entity : {}", job);
         job = jobRepository.save(job);
         return jobMapper.toDto(job);
     }
@@ -69,81 +63,16 @@ public class JobServiceImpl implements JobService {
         return jobRepository.findAll(pageable).map(jobMapper::toDto);
     }
 
-    public Page<JobDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return jobRepository.findAllWithEagerRelationships(pageable).map(jobMapper::toDto);
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<JobDTO> findOne(Long id) {
         log.debug("Request to get Job : {}", id);
-        return jobRepository.findOneWithEagerRelationships(id).map(jobMapper::toDto);
+        return jobRepository.findById(id).map(jobMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Job : {}", id);
         jobRepository.deleteById(id);
-    }
-
-    @Override
-    public Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId) {
-        return jobRepository
-            .findByMachineIdAndStartDateIsNotNullOrderByPriorityDescCreateDateTimeDesc(machineId, pageable)
-            .map(jobMapper::toDto);
-    }
-
-    @Override
-    public Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId) {
-        return jobRepository
-            .findByMachineIdAndEndDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId, pageable)
-            .map(jobMapper::toDto);
-    }
-
-    @Override
-    public Optional<JobDTO> getHighestPriorityJobForMachine(Long machineId) {
-        return jobRepository.findFirstByMachineIdOrderByPriorityDesc(machineId).map(jobMapper::toDto);
-    }
-
-    @Override
-    public Optional<JobDTO> getLowestPriorityJobForMachine(Long machineId) {
-        return jobRepository.findFirstByMachineIdOrderByPriority(machineId).map(jobMapper::toDto);
-    }
-
-    @Override
-    public void startHighestPriorityJobInMachine(Long machineId) {
-        Optional<Job> runningJob = getRunningJobInMachine(machineId);
-        if (runningJob.isEmpty()) {
-            throw new AnotherJobIsAlreadyRunningException(machineId);
-        }
-
-        Optional<Job> highestPriorityJobForMachine = jobRepository.findFirstByMachineIdOrderByPriorityDesc(machineId);
-        if (highestPriorityJobForMachine.isPresent()) {
-            Job job = highestPriorityJobForMachine.get();
-            job.setStartDate(LocalDate.now());
-            jobRepository.save(job);
-        }
-    }
-
-    @Override
-    public void stopRunningJobInMachine(Long machineId) {
-        Job job = getRunningJobInMachine(machineId).orElseThrow(() -> new NoRunningJobException(machineId));
-        job.setEndDate(LocalDate.now());
-    }
-
-    @Override
-    public Optional<Job> getRunningJobInMachine(Long machineId) {
-        return jobRepository.findFirstByMachineIdAndEndDateIsNullAndStartDateIsNotNullOrderByPriorityDesc(machineId);
-    }
-
-    @Override
-    public void updatePriorities(List<IdWithPriorityDTO> idWithPriorityDTOList) {
-        idWithPriorityDTOList
-            .forEach(
-                idWithPriorityDTO -> {
-                    Job job = jobRepository.findById(idWithPriorityDTO.getId()).get().priority(idWithPriorityDTO.getPriority());
-                    jobRepository.save(job);
-                }
-            );
     }
 }

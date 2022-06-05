@@ -19,7 +19,11 @@
       },
       "id": "ID",
       "name": "Name",
-      "comment": "Comment"
+      "comment": "Comment",
+      "grade": "Grade",
+      "dimension": "Dimension",
+      "coating": "Coating",
+      "supplier": "Supplier"
     }
   }
 }

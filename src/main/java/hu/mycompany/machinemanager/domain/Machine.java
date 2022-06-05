@@ -2,17 +2,12 @@ package hu.mycompany.machinemanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Machine.
@@ -20,8 +15,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "machine")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor
-@Builder
 public class Machine implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,20 +31,6 @@ public class Machine implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
-
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "machines" }, allowSetters = true)
@@ -59,17 +38,18 @@ public class Machine implements Serializable {
 
     @OneToMany(mappedBy = "machine")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
-
-    @OneToOne
-    @JoinColumn(name = "running_job_id", referencedColumnName = "id")
-    private Job runningJob;
 
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "machines" }, allowSetters = true)
     private Set<View> views = new HashSet<>();
+
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Job runningJob;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -204,6 +184,19 @@ public class Machine implements Serializable {
         this.views = views;
     }
 
+    public Job getRunningJob() {
+        return this.runningJob;
+    }
+
+    public Machine runningJob(Job job) {
+        this.setRunningJob(job);
+        return this;
+    }
+
+    public void setRunningJob(Job job) {
+        this.runningJob = job;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -226,14 +219,10 @@ public class Machine implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return String.format("Machine{id=%d, name='%s', description='%s'}", getId(), getName(), getDescription());
-    }
-
-    public Job getRunningJob() {
-        return runningJob;
-    }
-
-    public void setRunningJob(Job runningJob) {
-        this.runningJob = runningJob;
+        return "Machine{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            "}";
     }
 }

@@ -89,11 +89,17 @@ public class ProductQueryService extends QueryService<Product> {
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), Product_.name));
             }
-            if (criteria.getComment() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getComment(), Product_.comment));
+            if (criteria.getDrawingNumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDrawingNumber(), Product_.drawingNumber));
+            }
+            if (criteria.getItemNumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getItemNumber(), Product_.itemNumber));
             }
             if (criteria.getWeight() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getWeight(), Product_.weight));
+            }
+            if (criteria.getComment() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getComment(), Product_.comment));
             }
             if (criteria.getJobId() != null) {
                 specification =

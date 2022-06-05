@@ -39,6 +39,9 @@
           <th scope="col" jhiSortBy="description">
             <span jhiTranslate="machineManagerApplicationApp.machine.description">Description</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="runningJob.orderNumber">
+            <span jhiTranslate="machineManagerApplicationApp.machine.runningJob">Running Job</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -49,18 +52,13 @@
           </td>
           <td>{{ machine.name }}</td>
           <td>{{ machine.description }}</td>
+          <td>
+            <div *ngIf="machine.runningJob">
+              <a [routerLink]="['/job', machine.runningJob?.id, 'view']">{{ machine.runningJob?.orderNumber }}</a>
+            </div>
+          </td>
           <td class="text-right">
             <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/job/in-progress', machine.id]"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Feladatok</span>
-              </button>
-
               <button
                 type="submit"
                 [routerLink]="['/machine', machine.id, 'view']"

@@ -2,7 +2,6 @@ package hu.mycompany.machinemanager.service.mapper;
 
 import hu.mycompany.machinemanager.domain.*;
 import hu.mycompany.machinemanager.service.dto.ProductDTO;
-import java.util.Set;
 import org.mapstruct.*;
 
 /**
@@ -13,9 +12,9 @@ public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
     @Mapping(target = "rawmaterial", source = "rawmaterial", qualifiedByName = "name")
     ProductDTO toDto(Product s);
 
-    @Named("nameSet")
+    @Named("name")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
-    Set<ProductDTO> toDtoNameSet(Set<Product> product);
+    ProductDTO toDtoName(Product product);
 }

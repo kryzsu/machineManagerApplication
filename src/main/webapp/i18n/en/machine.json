@@ -22,7 +22,8 @@
       "description": "Description",
       "outOfOrder": "Out Of Order",
       "job": "Job",
-      "view": "View"
+      "view": "View",
+      "runningJob": "Running Job"
     }
   }
 }

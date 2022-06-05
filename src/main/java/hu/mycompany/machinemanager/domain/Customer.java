@@ -30,7 +30,7 @@ public class Customer implements Serializable {
 
     @OneToMany(mappedBy = "customer")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -113,6 +113,9 @@ public class Customer implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return String.format("Customer{id=%d, name='%s'}", getId(), getName());
+        return "Customer{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            "}";
     }
 }

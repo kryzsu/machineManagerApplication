@@ -32,22 +32,24 @@
     },
     {
       "fieldName": "drawing",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "image"
+      "fieldType": "byte[]"
     },
     {
       "fieldName": "worknumber",
       "fieldType": "String",
       "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "priority",
+      "fieldType": "Long"
     }
   ],
   "relationships": [
     {
       "relationshipName": "product",
       "otherEntityName": "product",
-      "relationshipType": "many-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityField": "name",
-      "ownerSide": true,
       "otherEntityRelationshipName": "job"
     },
     {

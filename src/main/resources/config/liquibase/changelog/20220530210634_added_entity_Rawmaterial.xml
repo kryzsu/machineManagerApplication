@@ -20,6 +20,18 @@
             <column name="comment" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="grade" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="dimension" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="coating" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="supplier" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
@@ -42,6 +54,10 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="comment" type="string"/>
+            <column name="grade" type="string"/>
+            <column name="dimension" type="string"/>
+            <column name="coating" type="string"/>
+            <column name="supplier" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

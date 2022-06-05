@@ -28,16 +28,30 @@ public class Product implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "comment")
-    private String comment;
+    @NotNull
+    @Column(name = "drawing_number", nullable = false)
+    private String drawingNumber;
+
+    @Column(name = "item_number")
+    private String itemNumber;
 
     @NotNull
     @Column(name = "weight", nullable = false)
     private Double weight;
 
-    @ManyToMany(mappedBy = "products")
+    @Column(name = "comment")
+    private String comment;
+
+    @Lob
+    @Column(name = "drawing")
+    private byte[] drawing;
+
+    @Column(name = "drawing_content_type")
+    private String drawingContentType;
+
+    @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
 
     @ManyToOne
@@ -70,17 +84,30 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public String getComment() {
-        return this.comment;
+    public String getDrawingNumber() {
+        return this.drawingNumber;
     }
 
-    public Product comment(String comment) {
-        this.comment = comment;
+    public Product drawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
         return this;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setDrawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+    }
+
+    public String getItemNumber() {
+        return this.itemNumber;
+    }
+
+    public Product itemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
+        return this;
+    }
+
+    public void setItemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
     }
 
     public Double getWeight() {
@@ -96,6 +123,45 @@ public class Product implements Serializable {
         this.weight = weight;
     }
 
+    public String getComment() {
+        return this.comment;
+    }
+
+    public Product comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public byte[] getDrawing() {
+        return this.drawing;
+    }
+
+    public Product drawing(byte[] drawing) {
+        this.drawing = drawing;
+        return this;
+    }
+
+    public void setDrawing(byte[] drawing) {
+        this.drawing = drawing;
+    }
+
+    public String getDrawingContentType() {
+        return this.drawingContentType;
+    }
+
+    public Product drawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+        return this;
+    }
+
+    public void setDrawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+    }
+
     public Set<Job> getJobs() {
         return this.jobs;
     }
@@ -107,22 +173,22 @@ public class Product implements Serializable {
 
     public Product addJob(Job job) {
         this.jobs.add(job);
-        job.getProducts().add(this);
+        job.setProduct(this);
         return this;
     }
 
     public Product removeJob(Job job) {
         this.jobs.remove(job);
-        job.getProducts().remove(this);
+        job.setProduct(null);
         return this;
     }
 
     public void setJobs(Set<Job> jobs) {
         if (this.jobs != null) {
-            this.jobs.forEach(i -> i.removeProduct(this));
+            this.jobs.forEach(i -> i.setProduct(null));
         }
         if (jobs != null) {
-            jobs.forEach(i -> i.addProduct(this));
+            jobs.forEach(i -> i.setProduct(this));
         }
         this.jobs = jobs;
     }
@@ -165,8 +231,12 @@ public class Product implements Serializable {
         return "Product{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", comment='" + getComment() + "'" +
+            ", drawingNumber='" + getDrawingNumber() + "'" +
+            ", itemNumber='" + getItemNumber() + "'" +
             ", weight=" + getWeight() +
+            ", comment='" + getComment() + "'" +
+            ", drawing='" + getDrawing() + "'" +
+            ", drawingContentType='" + getDrawingContentType() + "'" +
             "}";
     }
 }

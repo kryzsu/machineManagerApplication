@@ -27,9 +27,8 @@
     <include file="config/liquibase/changelog/20210811182927_added_entity_constraints_OutOfOrder.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210813081923_added_entity_constraints_View.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210811163819_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201214140442_added_entity_constraints_Machine.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20210910084130_added_worknumber_job.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210905_kry_add_view_job.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202205300084130_added_running_job.xml" relativeToChangelogFile="false" />
 </databaseChangeLog>

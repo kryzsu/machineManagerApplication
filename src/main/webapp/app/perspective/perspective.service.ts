@@ -3,10 +3,11 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import {IMachine, IMachineDay} from 'app/entities/machine/machine.model';
+import {IMachine} from 'app/entities/machine/machine.model';
 import { createRequestOption } from '../core/request/request-util';
 import { OutOfOrder } from '../entities/out-of-order/out-of-order.model';
-import { IIdWithPriority } from '../entities/job/job.model';
+import {IIdWithPriority} from "../entities/idWithPriority";
+import {IMachineDay} from "../entities/machineday";
 
 export type EntityArrayResponseType = HttpResponse<IMachine[]>;
 

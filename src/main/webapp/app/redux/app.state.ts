@@ -1,5 +1,6 @@
 import { IJob } from '../entities/job/job.model';
-import {IMachine, IMachineDay} from '../entities/machine/machine.model';
+import {IMachine} from '../entities/machine/machine.model';
+import {IMachineDay} from "../entities/machineday";
 
 export interface MachineStatistic {
   label: string;

@@ -43,7 +43,8 @@ describe('OutOfOrder e2e test', () => {
     await outOfOrderComponentsPage.clickOnCreateButton();
 
     await promise.all([
-      outOfOrderUpdatePage.setDateInput('2000-12-31'),
+      outOfOrderUpdatePage.setStartInput('2000-12-31'),
+      outOfOrderUpdatePage.setEndInput('2000-12-31'),
       outOfOrderUpdatePage.setDescriptionInput('description'),
       // outOfOrderUpdatePage.machineSelectLastOption(),
     ]);

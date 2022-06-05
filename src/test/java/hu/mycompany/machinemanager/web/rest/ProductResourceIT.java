@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link ProductResource} REST controller.
@@ -37,12 +38,23 @@ class ProductResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
-    private static final String UPDATED_COMMENT = "BBBBBBBBBB";
+    private static final String DEFAULT_DRAWING_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_DRAWING_NUMBER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_ITEM_NUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_ITEM_NUMBER = "BBBBBBBBBB";
 
     private static final Double DEFAULT_WEIGHT = 1D;
     private static final Double UPDATED_WEIGHT = 2D;
     private static final Double SMALLER_WEIGHT = 1D - 1D;
+
+    private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
+    private static final String UPDATED_COMMENT = "BBBBBBBBBB";
+
+    private static final byte[] DEFAULT_DRAWING = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_DRAWING = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_DRAWING_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_DRAWING_CONTENT_TYPE = "image/png";
 
     private static final String ENTITY_API_URL = "/api/products";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -71,7 +83,14 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createEntity(EntityManager em) {
-        Product product = new Product().name(DEFAULT_NAME).comment(DEFAULT_COMMENT).weight(DEFAULT_WEIGHT);
+        Product product = new Product()
+            .name(DEFAULT_NAME)
+            .drawingNumber(DEFAULT_DRAWING_NUMBER)
+            .itemNumber(DEFAULT_ITEM_NUMBER)
+            .weight(DEFAULT_WEIGHT)
+            .comment(DEFAULT_COMMENT)
+            .drawing(DEFAULT_DRAWING)
+            .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE);
         return product;
     }
 
@@ -82,7 +101,14 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createUpdatedEntity(EntityManager em) {
-        Product product = new Product().name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
+        Product product = new Product()
+            .name(UPDATED_NAME)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .itemNumber(UPDATED_ITEM_NUMBER)
+            .weight(UPDATED_WEIGHT)
+            .comment(UPDATED_COMMENT)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
         return product;
     }
 
@@ -106,8 +132,12 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeCreate + 1);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testProduct.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testProduct.getDrawingNumber()).isEqualTo(DEFAULT_DRAWING_NUMBER);
+        assertThat(testProduct.getItemNumber()).isEqualTo(DEFAULT_ITEM_NUMBER);
         assertThat(testProduct.getWeight()).isEqualTo(DEFAULT_WEIGHT);
+        assertThat(testProduct.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testProduct.getDrawing()).isEqualTo(DEFAULT_DRAWING);
+        assertThat(testProduct.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -135,6 +165,24 @@ class ProductResourceIT {
         int databaseSizeBeforeTest = productRepository.findAll().size();
         // set the field null
         product.setName(null);
+
+        // Create the Product, which fails.
+        ProductDTO productDTO = productMapper.toDto(product);
+
+        restProductMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Product> productList = productRepository.findAll();
+        assertThat(productList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkDrawingNumberIsRequired() throws Exception {
+        int databaseSizeBeforeTest = productRepository.findAll().size();
+        // set the field null
+        product.setDrawingNumber(null);
 
         // Create the Product, which fails.
         ProductDTO productDTO = productMapper.toDto(product);
@@ -178,8 +226,12 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
+            .andExpect(jsonPath("$.[*].itemNumber").value(hasItem(DEFAULT_ITEM_NUMBER)))
+            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())))
             .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
-            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
+            .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))));
     }
 
     @Test
@@ -195,8 +247,12 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(product.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.drawingNumber").value(DEFAULT_DRAWING_NUMBER))
+            .andExpect(jsonPath("$.itemNumber").value(DEFAULT_ITEM_NUMBER))
+            .andExpect(jsonPath("$.weight").value(DEFAULT_WEIGHT.doubleValue()))
             .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
-            .andExpect(jsonPath("$.weight").value(DEFAULT_WEIGHT.doubleValue()));
+            .andExpect(jsonPath("$.drawingContentType").value(DEFAULT_DRAWING_CONTENT_TYPE))
+            .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)));
     }
 
     @Test
@@ -297,80 +353,158 @@ class ProductResourceIT {
 
     @Test
     @Transactional
-    void getAllProductsByCommentIsEqualToSomething() throws Exception {
+    void getAllProductsByDrawingNumberIsEqualToSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment equals to DEFAULT_COMMENT
-        defaultProductShouldBeFound("comment.equals=" + DEFAULT_COMMENT);
+        // Get all the productList where drawingNumber equals to DEFAULT_DRAWING_NUMBER
+        defaultProductShouldBeFound("drawingNumber.equals=" + DEFAULT_DRAWING_NUMBER);
 
-        // Get all the productList where comment equals to UPDATED_COMMENT
-        defaultProductShouldNotBeFound("comment.equals=" + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber equals to UPDATED_DRAWING_NUMBER
+        defaultProductShouldNotBeFound("drawingNumber.equals=" + UPDATED_DRAWING_NUMBER);
     }
 
     @Test
     @Transactional
-    void getAllProductsByCommentIsNotEqualToSomething() throws Exception {
+    void getAllProductsByDrawingNumberIsNotEqualToSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment not equals to DEFAULT_COMMENT
-        defaultProductShouldNotBeFound("comment.notEquals=" + DEFAULT_COMMENT);
+        // Get all the productList where drawingNumber not equals to DEFAULT_DRAWING_NUMBER
+        defaultProductShouldNotBeFound("drawingNumber.notEquals=" + DEFAULT_DRAWING_NUMBER);
 
-        // Get all the productList where comment not equals to UPDATED_COMMENT
-        defaultProductShouldBeFound("comment.notEquals=" + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber not equals to UPDATED_DRAWING_NUMBER
+        defaultProductShouldBeFound("drawingNumber.notEquals=" + UPDATED_DRAWING_NUMBER);
     }
 
     @Test
     @Transactional
-    void getAllProductsByCommentIsInShouldWork() throws Exception {
+    void getAllProductsByDrawingNumberIsInShouldWork() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment in DEFAULT_COMMENT or UPDATED_COMMENT
-        defaultProductShouldBeFound("comment.in=" + DEFAULT_COMMENT + "," + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber in DEFAULT_DRAWING_NUMBER or UPDATED_DRAWING_NUMBER
+        defaultProductShouldBeFound("drawingNumber.in=" + DEFAULT_DRAWING_NUMBER + "," + UPDATED_DRAWING_NUMBER);
 
-        // Get all the productList where comment equals to UPDATED_COMMENT
-        defaultProductShouldNotBeFound("comment.in=" + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber equals to UPDATED_DRAWING_NUMBER
+        defaultProductShouldNotBeFound("drawingNumber.in=" + UPDATED_DRAWING_NUMBER);
     }
 
     @Test
     @Transactional
-    void getAllProductsByCommentIsNullOrNotNull() throws Exception {
+    void getAllProductsByDrawingNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment is not null
-        defaultProductShouldBeFound("comment.specified=true");
+        // Get all the productList where drawingNumber is not null
+        defaultProductShouldBeFound("drawingNumber.specified=true");
 
-        // Get all the productList where comment is null
-        defaultProductShouldNotBeFound("comment.specified=false");
+        // Get all the productList where drawingNumber is null
+        defaultProductShouldNotBeFound("drawingNumber.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllProductsByCommentContainsSomething() throws Exception {
+    void getAllProductsByDrawingNumberContainsSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment contains DEFAULT_COMMENT
-        defaultProductShouldBeFound("comment.contains=" + DEFAULT_COMMENT);
+        // Get all the productList where drawingNumber contains DEFAULT_DRAWING_NUMBER
+        defaultProductShouldBeFound("drawingNumber.contains=" + DEFAULT_DRAWING_NUMBER);
 
-        // Get all the productList where comment contains UPDATED_COMMENT
-        defaultProductShouldNotBeFound("comment.contains=" + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber contains UPDATED_DRAWING_NUMBER
+        defaultProductShouldNotBeFound("drawingNumber.contains=" + UPDATED_DRAWING_NUMBER);
     }
 
     @Test
     @Transactional
-    void getAllProductsByCommentNotContainsSomething() throws Exception {
+    void getAllProductsByDrawingNumberNotContainsSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
-        // Get all the productList where comment does not contain DEFAULT_COMMENT
-        defaultProductShouldNotBeFound("comment.doesNotContain=" + DEFAULT_COMMENT);
+        // Get all the productList where drawingNumber does not contain DEFAULT_DRAWING_NUMBER
+        defaultProductShouldNotBeFound("drawingNumber.doesNotContain=" + DEFAULT_DRAWING_NUMBER);
 
-        // Get all the productList where comment does not contain UPDATED_COMMENT
-        defaultProductShouldBeFound("comment.doesNotContain=" + UPDATED_COMMENT);
+        // Get all the productList where drawingNumber does not contain UPDATED_DRAWING_NUMBER
+        defaultProductShouldBeFound("drawingNumber.doesNotContain=" + UPDATED_DRAWING_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber equals to DEFAULT_ITEM_NUMBER
+        defaultProductShouldBeFound("itemNumber.equals=" + DEFAULT_ITEM_NUMBER);
+
+        // Get all the productList where itemNumber equals to UPDATED_ITEM_NUMBER
+        defaultProductShouldNotBeFound("itemNumber.equals=" + UPDATED_ITEM_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber not equals to DEFAULT_ITEM_NUMBER
+        defaultProductShouldNotBeFound("itemNumber.notEquals=" + DEFAULT_ITEM_NUMBER);
+
+        // Get all the productList where itemNumber not equals to UPDATED_ITEM_NUMBER
+        defaultProductShouldBeFound("itemNumber.notEquals=" + UPDATED_ITEM_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber in DEFAULT_ITEM_NUMBER or UPDATED_ITEM_NUMBER
+        defaultProductShouldBeFound("itemNumber.in=" + DEFAULT_ITEM_NUMBER + "," + UPDATED_ITEM_NUMBER);
+
+        // Get all the productList where itemNumber equals to UPDATED_ITEM_NUMBER
+        defaultProductShouldNotBeFound("itemNumber.in=" + UPDATED_ITEM_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber is not null
+        defaultProductShouldBeFound("itemNumber.specified=true");
+
+        // Get all the productList where itemNumber is null
+        defaultProductShouldNotBeFound("itemNumber.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberContainsSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber contains DEFAULT_ITEM_NUMBER
+        defaultProductShouldBeFound("itemNumber.contains=" + DEFAULT_ITEM_NUMBER);
+
+        // Get all the productList where itemNumber contains UPDATED_ITEM_NUMBER
+        defaultProductShouldNotBeFound("itemNumber.contains=" + UPDATED_ITEM_NUMBER);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByItemNumberNotContainsSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where itemNumber does not contain DEFAULT_ITEM_NUMBER
+        defaultProductShouldNotBeFound("itemNumber.doesNotContain=" + DEFAULT_ITEM_NUMBER);
+
+        // Get all the productList where itemNumber does not contain UPDATED_ITEM_NUMBER
+        defaultProductShouldBeFound("itemNumber.doesNotContain=" + UPDATED_ITEM_NUMBER);
     }
 
     @Test
@@ -479,6 +613,84 @@ class ProductResourceIT {
 
     @Test
     @Transactional
+    void getAllProductsByCommentIsEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment equals to DEFAULT_COMMENT
+        defaultProductShouldBeFound("comment.equals=" + DEFAULT_COMMENT);
+
+        // Get all the productList where comment equals to UPDATED_COMMENT
+        defaultProductShouldNotBeFound("comment.equals=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByCommentIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment not equals to DEFAULT_COMMENT
+        defaultProductShouldNotBeFound("comment.notEquals=" + DEFAULT_COMMENT);
+
+        // Get all the productList where comment not equals to UPDATED_COMMENT
+        defaultProductShouldBeFound("comment.notEquals=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByCommentIsInShouldWork() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment in DEFAULT_COMMENT or UPDATED_COMMENT
+        defaultProductShouldBeFound("comment.in=" + DEFAULT_COMMENT + "," + UPDATED_COMMENT);
+
+        // Get all the productList where comment equals to UPDATED_COMMENT
+        defaultProductShouldNotBeFound("comment.in=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByCommentIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment is not null
+        defaultProductShouldBeFound("comment.specified=true");
+
+        // Get all the productList where comment is null
+        defaultProductShouldNotBeFound("comment.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByCommentContainsSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment contains DEFAULT_COMMENT
+        defaultProductShouldBeFound("comment.contains=" + DEFAULT_COMMENT);
+
+        // Get all the productList where comment contains UPDATED_COMMENT
+        defaultProductShouldNotBeFound("comment.contains=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
+    void getAllProductsByCommentNotContainsSomething() throws Exception {
+        // Initialize the database
+        productRepository.saveAndFlush(product);
+
+        // Get all the productList where comment does not contain DEFAULT_COMMENT
+        defaultProductShouldNotBeFound("comment.doesNotContain=" + DEFAULT_COMMENT);
+
+        // Get all the productList where comment does not contain UPDATED_COMMENT
+        defaultProductShouldBeFound("comment.doesNotContain=" + UPDATED_COMMENT);
+    }
+
+    @Test
+    @Transactional
     void getAllProductsByJobIsEqualToSomething() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
@@ -525,8 +737,12 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
+            .andExpect(jsonPath("$.[*].itemNumber").value(hasItem(DEFAULT_ITEM_NUMBER)))
+            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())))
             .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
-            .andExpect(jsonPath("$.[*].weight").value(hasItem(DEFAULT_WEIGHT.doubleValue())));
+            .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))));
 
         // Check, that the count call also returns 1
         restProductMockMvc
@@ -574,7 +790,14 @@ class ProductResourceIT {
         Product updatedProduct = productRepository.findById(product.getId()).get();
         // Disconnect from session so that the updates on updatedProduct are not directly saved in db
         em.detach(updatedProduct);
-        updatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
+        updatedProduct
+            .name(UPDATED_NAME)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .itemNumber(UPDATED_ITEM_NUMBER)
+            .weight(UPDATED_WEIGHT)
+            .comment(UPDATED_COMMENT)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
         ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc
@@ -590,8 +813,12 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testProduct.getItemNumber()).isEqualTo(UPDATED_ITEM_NUMBER);
         assertThat(testProduct.getWeight()).isEqualTo(UPDATED_WEIGHT);
+        assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getDrawing()).isEqualTo(UPDATED_DRAWING);
+        assertThat(testProduct.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -671,6 +898,8 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
+        partialUpdatedProduct.comment(UPDATED_COMMENT).drawing(UPDATED_DRAWING).drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
+
         restProductMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedProduct.getId())
@@ -684,8 +913,12 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testProduct.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testProduct.getDrawingNumber()).isEqualTo(DEFAULT_DRAWING_NUMBER);
+        assertThat(testProduct.getItemNumber()).isEqualTo(DEFAULT_ITEM_NUMBER);
         assertThat(testProduct.getWeight()).isEqualTo(DEFAULT_WEIGHT);
+        assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getDrawing()).isEqualTo(UPDATED_DRAWING);
+        assertThat(testProduct.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
     }
 
     @Test
@@ -700,7 +933,14 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct.name(UPDATED_NAME).comment(UPDATED_COMMENT).weight(UPDATED_WEIGHT);
+        partialUpdatedProduct
+            .name(UPDATED_NAME)
+            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .itemNumber(UPDATED_ITEM_NUMBER)
+            .weight(UPDATED_WEIGHT)
+            .comment(UPDATED_COMMENT)
+            .drawing(UPDATED_DRAWING)
+            .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE);
 
         restProductMockMvc
             .perform(
@@ -715,8 +955,12 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testProduct.getItemNumber()).isEqualTo(UPDATED_ITEM_NUMBER);
         assertThat(testProduct.getWeight()).isEqualTo(UPDATED_WEIGHT);
+        assertThat(testProduct.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testProduct.getDrawing()).isEqualTo(UPDATED_DRAWING);
+        assertThat(testProduct.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
     }
 
     @Test

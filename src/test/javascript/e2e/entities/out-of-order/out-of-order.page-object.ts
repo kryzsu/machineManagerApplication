@@ -30,7 +30,8 @@ export class OutOfOrderUpdatePage {
   cancelButton = element(by.id('cancel-save'));
 
   idInput = element(by.id('field_id'));
-  dateInput = element(by.id('field_date'));
+  startInput = element(by.id('field_start'));
+  endInput = element(by.id('field_end'));
   descriptionInput = element(by.id('field_description'));
 
   machineSelect = element(by.id('field_machine'));
@@ -47,12 +48,20 @@ export class OutOfOrderUpdatePage {
     return await this.idInput.getAttribute('value');
   }
 
-  async setDateInput(date: string): Promise<void> {
-    await this.dateInput.sendKeys(date);
+  async setStartInput(start: string): Promise<void> {
+    await this.startInput.sendKeys(start);
   }
 
-  async getDateInput(): Promise<string> {
-    return await this.dateInput.getAttribute('value');
+  async getStartInput(): Promise<string> {
+    return await this.startInput.getAttribute('value');
+  }
+
+  async setEndInput(end: string): Promise<void> {
+    await this.endInput.sendKeys(end);
+  }
+
+  async getEndInput(): Promise<string> {
+    return await this.endInput.getAttribute('value');
   }
 
   async setDescriptionInput(description: string): Promise<void> {

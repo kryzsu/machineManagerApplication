@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
-import {IMachine, IMachineDay} from '../entities/machine/machine.model';
+import {IMachine} from '../entities/machine/machine.model';
+import {IMachineDay} from "../entities/machineday";
 
 export const createMachineList = createAction('[machine list] created', props<{ machineList: IMachine[] }>());
 export const deleteMachine = createAction('[machine] delete', props<{ machineId: number }>());

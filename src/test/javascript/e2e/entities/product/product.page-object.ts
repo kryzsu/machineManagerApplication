@@ -31,8 +31,11 @@ export class ProductUpdatePage {
 
   idInput = element(by.id('field_id'));
   nameInput = element(by.id('field_name'));
-  commentInput = element(by.id('field_comment'));
+  drawingNumberInput = element(by.id('field_drawingNumber'));
+  itemNumberInput = element(by.id('field_itemNumber'));
   weightInput = element(by.id('field_weight'));
+  commentInput = element(by.id('field_comment'));
+  drawingInput = element(by.id('file_drawing'));
 
   rawmaterialSelect = element(by.id('field_rawmaterial'));
 
@@ -56,12 +59,20 @@ export class ProductUpdatePage {
     return await this.nameInput.getAttribute('value');
   }
 
-  async setCommentInput(comment: string): Promise<void> {
-    await this.commentInput.sendKeys(comment);
+  async setDrawingNumberInput(drawingNumber: string): Promise<void> {
+    await this.drawingNumberInput.sendKeys(drawingNumber);
   }
 
-  async getCommentInput(): Promise<string> {
-    return await this.commentInput.getAttribute('value');
+  async getDrawingNumberInput(): Promise<string> {
+    return await this.drawingNumberInput.getAttribute('value');
+  }
+
+  async setItemNumberInput(itemNumber: string): Promise<void> {
+    await this.itemNumberInput.sendKeys(itemNumber);
+  }
+
+  async getItemNumberInput(): Promise<string> {
+    return await this.itemNumberInput.getAttribute('value');
   }
 
   async setWeightInput(weight: string): Promise<void> {
@@ -70,6 +81,22 @@ export class ProductUpdatePage {
 
   async getWeightInput(): Promise<string> {
     return await this.weightInput.getAttribute('value');
+  }
+
+  async setCommentInput(comment: string): Promise<void> {
+    await this.commentInput.sendKeys(comment);
+  }
+
+  async getCommentInput(): Promise<string> {
+    return await this.commentInput.getAttribute('value');
+  }
+
+  async setDrawingInput(drawing: string): Promise<void> {
+    await this.drawingInput.sendKeys(drawing);
+  }
+
+  async getDrawingInput(): Promise<string> {
+    return await this.drawingInput.getAttribute('value');
   }
 
   async rawmaterialSelectLastOption(): Promise<void> {

@@ -49,6 +49,21 @@
             </small>
           </div>
         </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.machine.runningJob" for="field_runningJob"
+            >Running Job</label
+          >
+          <select class="form-control" id="field_runningJob" data-cy="runningJob" name="runningJob" formControlName="runningJob">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="jobOption.id === editForm.get('runningJob')!.value?.id ? editForm.get('runningJob')!.value : jobOption"
+              *ngFor="let jobOption of runningJobsCollection; trackBy: trackJobById"
+            >
+              {{ jobOption.orderNumber }}
+            </option>
+          </select>
+        </div>
       </div>
 
       <div>

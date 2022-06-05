@@ -17,6 +17,18 @@ public class RawmaterialDTO implements Serializable {
 
     private String comment;
 
+    @NotNull
+    private String grade;
+
+    @NotNull
+    private String dimension;
+
+    @NotNull
+    private String coating;
+
+    @NotNull
+    private String supplier;
+
     public Long getId() {
         return id;
     }
@@ -39,6 +51,38 @@ public class RawmaterialDTO implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(String dimension) {
+        this.dimension = dimension;
+    }
+
+    public String getCoating() {
+        return coating;
+    }
+
+    public void setCoating(String coating) {
+        this.coating = coating;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
     @Override
@@ -69,6 +113,10 @@ public class RawmaterialDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", comment='" + getComment() + "'" +
+            ", grade='" + getGrade() + "'" +
+            ", dimension='" + getDimension() + "'" +
+            ", coating='" + getCoating() + "'" +
+            ", supplier='" + getSupplier() + "'" +
             "}";
     }
 }

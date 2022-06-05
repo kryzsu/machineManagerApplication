@@ -92,8 +92,8 @@ public class OutOfOrderDTO implements Serializable {
     public String toString() {
         return "OutOfOrderDTO{" +
             "id=" + getId() +
-            ", start='" + start + "'" +
-            ", end='" + end + "'" +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
             ", description='" + getDescription() + "'" +
             ", machines=" + getMachines() +
             "}";

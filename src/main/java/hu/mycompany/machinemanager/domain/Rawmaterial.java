@@ -28,6 +28,22 @@ public class Rawmaterial implements Serializable {
     @Column(name = "comment")
     private String comment;
 
+    @NotNull
+    @Column(name = "grade", nullable = false)
+    private String grade;
+
+    @NotNull
+    @Column(name = "dimension", nullable = false)
+    private String dimension;
+
+    @NotNull
+    @Column(name = "coating", nullable = false)
+    private String coating;
+
+    @NotNull
+    @Column(name = "supplier", nullable = false)
+    private String supplier;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -68,6 +84,58 @@ public class Rawmaterial implements Serializable {
         this.comment = comment;
     }
 
+    public String getGrade() {
+        return this.grade;
+    }
+
+    public Rawmaterial grade(String grade) {
+        this.grade = grade;
+        return this;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getDimension() {
+        return this.dimension;
+    }
+
+    public Rawmaterial dimension(String dimension) {
+        this.dimension = dimension;
+        return this;
+    }
+
+    public void setDimension(String dimension) {
+        this.dimension = dimension;
+    }
+
+    public String getCoating() {
+        return this.coating;
+    }
+
+    public Rawmaterial coating(String coating) {
+        this.coating = coating;
+        return this;
+    }
+
+    public void setCoating(String coating) {
+        this.coating = coating;
+    }
+
+    public String getSupplier() {
+        return this.supplier;
+    }
+
+    public Rawmaterial supplier(String supplier) {
+        this.supplier = supplier;
+        return this;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -94,6 +162,10 @@ public class Rawmaterial implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", comment='" + getComment() + "'" +
+            ", grade='" + getGrade() + "'" +
+            ", dimension='" + getDimension() + "'" +
+            ", coating='" + getCoating() + "'" +
+            ", supplier='" + getSupplier() + "'" +
             "}";
     }
 }

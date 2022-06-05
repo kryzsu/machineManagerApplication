@@ -6,7 +6,7 @@
 
   <div *ngIf="selectedMachine?.runningJob?.id">
  futo folyamat: <br />
-  id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.consumerName}} <br/>
+  id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.orderNumber}} <br/>
   {{selectedMachine?.runningJob?.productCount}} db {{getProductName(selectedMachine)}} <br/>
   Kezdve: {{selectedMachine?.runningJob?.startDate}}, becsult idotartam: {{selectedMachine?.runningJob?.estimation}}<br />
   </div>

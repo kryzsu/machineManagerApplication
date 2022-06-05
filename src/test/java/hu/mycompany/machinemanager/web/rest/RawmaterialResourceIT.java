@@ -37,6 +37,18 @@ class RawmaterialResourceIT {
     private static final String DEFAULT_COMMENT = "AAAAAAAAAA";
     private static final String UPDATED_COMMENT = "BBBBBBBBBB";
 
+    private static final String DEFAULT_GRADE = "AAAAAAAAAA";
+    private static final String UPDATED_GRADE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DIMENSION = "AAAAAAAAAA";
+    private static final String UPDATED_DIMENSION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_COATING = "AAAAAAAAAA";
+    private static final String UPDATED_COATING = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SUPPLIER = "AAAAAAAAAA";
+    private static final String UPDATED_SUPPLIER = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/rawmaterials";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -64,7 +76,13 @@ class RawmaterialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Rawmaterial createEntity(EntityManager em) {
-        Rawmaterial rawmaterial = new Rawmaterial().name(DEFAULT_NAME).comment(DEFAULT_COMMENT);
+        Rawmaterial rawmaterial = new Rawmaterial()
+            .name(DEFAULT_NAME)
+            .comment(DEFAULT_COMMENT)
+            .grade(DEFAULT_GRADE)
+            .dimension(DEFAULT_DIMENSION)
+            .coating(DEFAULT_COATING)
+            .supplier(DEFAULT_SUPPLIER);
         return rawmaterial;
     }
 
@@ -75,7 +93,13 @@ class RawmaterialResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Rawmaterial createUpdatedEntity(EntityManager em) {
-        Rawmaterial rawmaterial = new Rawmaterial().name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        Rawmaterial rawmaterial = new Rawmaterial()
+            .name(UPDATED_NAME)
+            .comment(UPDATED_COMMENT)
+            .grade(UPDATED_GRADE)
+            .dimension(UPDATED_DIMENSION)
+            .coating(UPDATED_COATING)
+            .supplier(UPDATED_SUPPLIER);
         return rawmaterial;
     }
 
@@ -102,6 +126,10 @@ class RawmaterialResourceIT {
         Rawmaterial testRawmaterial = rawmaterialList.get(rawmaterialList.size() - 1);
         assertThat(testRawmaterial.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testRawmaterial.getComment()).isEqualTo(DEFAULT_COMMENT);
+        assertThat(testRawmaterial.getGrade()).isEqualTo(DEFAULT_GRADE);
+        assertThat(testRawmaterial.getDimension()).isEqualTo(DEFAULT_DIMENSION);
+        assertThat(testRawmaterial.getCoating()).isEqualTo(DEFAULT_COATING);
+        assertThat(testRawmaterial.getSupplier()).isEqualTo(DEFAULT_SUPPLIER);
     }
 
     @Test
@@ -147,6 +175,86 @@ class RawmaterialResourceIT {
 
     @Test
     @Transactional
+    void checkGradeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = rawmaterialRepository.findAll().size();
+        // set the field null
+        rawmaterial.setGrade(null);
+
+        // Create the Rawmaterial, which fails.
+        RawmaterialDTO rawmaterialDTO = rawmaterialMapper.toDto(rawmaterial);
+
+        restRawmaterialMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rawmaterialDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Rawmaterial> rawmaterialList = rawmaterialRepository.findAll();
+        assertThat(rawmaterialList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkDimensionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = rawmaterialRepository.findAll().size();
+        // set the field null
+        rawmaterial.setDimension(null);
+
+        // Create the Rawmaterial, which fails.
+        RawmaterialDTO rawmaterialDTO = rawmaterialMapper.toDto(rawmaterial);
+
+        restRawmaterialMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rawmaterialDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Rawmaterial> rawmaterialList = rawmaterialRepository.findAll();
+        assertThat(rawmaterialList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCoatingIsRequired() throws Exception {
+        int databaseSizeBeforeTest = rawmaterialRepository.findAll().size();
+        // set the field null
+        rawmaterial.setCoating(null);
+
+        // Create the Rawmaterial, which fails.
+        RawmaterialDTO rawmaterialDTO = rawmaterialMapper.toDto(rawmaterial);
+
+        restRawmaterialMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rawmaterialDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Rawmaterial> rawmaterialList = rawmaterialRepository.findAll();
+        assertThat(rawmaterialList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkSupplierIsRequired() throws Exception {
+        int databaseSizeBeforeTest = rawmaterialRepository.findAll().size();
+        // set the field null
+        rawmaterial.setSupplier(null);
+
+        // Create the Rawmaterial, which fails.
+        RawmaterialDTO rawmaterialDTO = rawmaterialMapper.toDto(rawmaterial);
+
+        restRawmaterialMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(rawmaterialDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Rawmaterial> rawmaterialList = rawmaterialRepository.findAll();
+        assertThat(rawmaterialList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllRawmaterials() throws Exception {
         // Initialize the database
         rawmaterialRepository.saveAndFlush(rawmaterial);
@@ -158,7 +266,11 @@ class RawmaterialResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(rawmaterial.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)));
+            .andExpect(jsonPath("$.[*].comment").value(hasItem(DEFAULT_COMMENT)))
+            .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
+            .andExpect(jsonPath("$.[*].dimension").value(hasItem(DEFAULT_DIMENSION)))
+            .andExpect(jsonPath("$.[*].coating").value(hasItem(DEFAULT_COATING)))
+            .andExpect(jsonPath("$.[*].supplier").value(hasItem(DEFAULT_SUPPLIER)));
     }
 
     @Test
@@ -174,7 +286,11 @@ class RawmaterialResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(rawmaterial.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT));
+            .andExpect(jsonPath("$.comment").value(DEFAULT_COMMENT))
+            .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
+            .andExpect(jsonPath("$.dimension").value(DEFAULT_DIMENSION))
+            .andExpect(jsonPath("$.coating").value(DEFAULT_COATING))
+            .andExpect(jsonPath("$.supplier").value(DEFAULT_SUPPLIER));
     }
 
     @Test
@@ -196,7 +312,13 @@ class RawmaterialResourceIT {
         Rawmaterial updatedRawmaterial = rawmaterialRepository.findById(rawmaterial.getId()).get();
         // Disconnect from session so that the updates on updatedRawmaterial are not directly saved in db
         em.detach(updatedRawmaterial);
-        updatedRawmaterial.name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        updatedRawmaterial
+            .name(UPDATED_NAME)
+            .comment(UPDATED_COMMENT)
+            .grade(UPDATED_GRADE)
+            .dimension(UPDATED_DIMENSION)
+            .coating(UPDATED_COATING)
+            .supplier(UPDATED_SUPPLIER);
         RawmaterialDTO rawmaterialDTO = rawmaterialMapper.toDto(updatedRawmaterial);
 
         restRawmaterialMockMvc
@@ -213,6 +335,10 @@ class RawmaterialResourceIT {
         Rawmaterial testRawmaterial = rawmaterialList.get(rawmaterialList.size() - 1);
         assertThat(testRawmaterial.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testRawmaterial.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testRawmaterial.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testRawmaterial.getDimension()).isEqualTo(UPDATED_DIMENSION);
+        assertThat(testRawmaterial.getCoating()).isEqualTo(UPDATED_COATING);
+        assertThat(testRawmaterial.getSupplier()).isEqualTo(UPDATED_SUPPLIER);
     }
 
     @Test
@@ -292,7 +418,13 @@ class RawmaterialResourceIT {
         Rawmaterial partialUpdatedRawmaterial = new Rawmaterial();
         partialUpdatedRawmaterial.setId(rawmaterial.getId());
 
-        partialUpdatedRawmaterial.name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        partialUpdatedRawmaterial
+            .name(UPDATED_NAME)
+            .comment(UPDATED_COMMENT)
+            .grade(UPDATED_GRADE)
+            .dimension(UPDATED_DIMENSION)
+            .coating(UPDATED_COATING)
+            .supplier(UPDATED_SUPPLIER);
 
         restRawmaterialMockMvc
             .perform(
@@ -308,6 +440,10 @@ class RawmaterialResourceIT {
         Rawmaterial testRawmaterial = rawmaterialList.get(rawmaterialList.size() - 1);
         assertThat(testRawmaterial.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testRawmaterial.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testRawmaterial.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testRawmaterial.getDimension()).isEqualTo(UPDATED_DIMENSION);
+        assertThat(testRawmaterial.getCoating()).isEqualTo(UPDATED_COATING);
+        assertThat(testRawmaterial.getSupplier()).isEqualTo(UPDATED_SUPPLIER);
     }
 
     @Test
@@ -322,7 +458,13 @@ class RawmaterialResourceIT {
         Rawmaterial partialUpdatedRawmaterial = new Rawmaterial();
         partialUpdatedRawmaterial.setId(rawmaterial.getId());
 
-        partialUpdatedRawmaterial.name(UPDATED_NAME).comment(UPDATED_COMMENT);
+        partialUpdatedRawmaterial
+            .name(UPDATED_NAME)
+            .comment(UPDATED_COMMENT)
+            .grade(UPDATED_GRADE)
+            .dimension(UPDATED_DIMENSION)
+            .coating(UPDATED_COATING)
+            .supplier(UPDATED_SUPPLIER);
 
         restRawmaterialMockMvc
             .perform(
@@ -338,6 +480,10 @@ class RawmaterialResourceIT {
         Rawmaterial testRawmaterial = rawmaterialList.get(rawmaterialList.size() - 1);
         assertThat(testRawmaterial.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testRawmaterial.getComment()).isEqualTo(UPDATED_COMMENT);
+        assertThat(testRawmaterial.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testRawmaterial.getDimension()).isEqualTo(UPDATED_DIMENSION);
+        assertThat(testRawmaterial.getCoating()).isEqualTo(UPDATED_COATING);
+        assertThat(testRawmaterial.getSupplier()).isEqualTo(UPDATED_SUPPLIER);
     }
 
     @Test

@@ -2,24 +2,24 @@
   "machineManagerApplicationApp": {
     "customer": {
       "home": {
-        "title": "Vevők",
-        "refreshListLabel": "Lista frissítése",
-        "createLabel": "Egy új Vevő létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Vevőt",
-        "notFound": "Nincs ilyen Vevő"
+        "title": "Customers",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új Customer létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Customert",
+        "notFound": "No Customers found"
       },
-      "created": "Egy új Vevő lett létrehozva {{ param }} azonosítóval",
-      "updated": "A Vevő módosítva lett {{ param }} azonosítóval",
-      "deleted": "A Vevő törölve lett {{ param }} azonosítóval",
+      "created": "Egy új Customer lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Customer módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Customer törölve lett {{ param }} azonosítóval",
       "delete": {
-        "question": "Biztos benne, hogy törölni szeretné az Vevőt {{ id }} azonosítóval?"
+        "question": "Biztos benne, hogy törölni szeretné az Customert {{ id }} azonosítóval?"
       },
       "detail": {
-        "title": "Vevő"
+        "title": "Customer"
       },
       "id": "ID",
-      "name": "név",
-      "job": "Feladat"
+      "name": "Name",
+      "job": "Job"
     }
   }
 }

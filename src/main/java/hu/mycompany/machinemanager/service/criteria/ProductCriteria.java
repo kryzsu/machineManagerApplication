@@ -28,9 +28,13 @@ public class ProductCriteria implements Serializable, Criteria {
 
     private StringFilter name;
 
-    private StringFilter comment;
+    private StringFilter drawingNumber;
+
+    private StringFilter itemNumber;
 
     private DoubleFilter weight;
+
+    private StringFilter comment;
 
     private LongFilter jobId;
 
@@ -41,8 +45,10 @@ public class ProductCriteria implements Serializable, Criteria {
     public ProductCriteria(ProductCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
-        this.comment = other.comment == null ? null : other.comment.copy();
+        this.drawingNumber = other.drawingNumber == null ? null : other.drawingNumber.copy();
+        this.itemNumber = other.itemNumber == null ? null : other.itemNumber.copy();
         this.weight = other.weight == null ? null : other.weight.copy();
+        this.comment = other.comment == null ? null : other.comment.copy();
         this.jobId = other.jobId == null ? null : other.jobId.copy();
         this.rawmaterialId = other.rawmaterialId == null ? null : other.rawmaterialId.copy();
     }
@@ -82,19 +88,34 @@ public class ProductCriteria implements Serializable, Criteria {
         this.name = name;
     }
 
-    public StringFilter getComment() {
-        return comment;
+    public StringFilter getDrawingNumber() {
+        return drawingNumber;
     }
 
-    public StringFilter comment() {
-        if (comment == null) {
-            comment = new StringFilter();
+    public StringFilter drawingNumber() {
+        if (drawingNumber == null) {
+            drawingNumber = new StringFilter();
         }
-        return comment;
+        return drawingNumber;
     }
 
-    public void setComment(StringFilter comment) {
-        this.comment = comment;
+    public void setDrawingNumber(StringFilter drawingNumber) {
+        this.drawingNumber = drawingNumber;
+    }
+
+    public StringFilter getItemNumber() {
+        return itemNumber;
+    }
+
+    public StringFilter itemNumber() {
+        if (itemNumber == null) {
+            itemNumber = new StringFilter();
+        }
+        return itemNumber;
+    }
+
+    public void setItemNumber(StringFilter itemNumber) {
+        this.itemNumber = itemNumber;
     }
 
     public DoubleFilter getWeight() {
@@ -110,6 +131,21 @@ public class ProductCriteria implements Serializable, Criteria {
 
     public void setWeight(DoubleFilter weight) {
         this.weight = weight;
+    }
+
+    public StringFilter getComment() {
+        return comment;
+    }
+
+    public StringFilter comment() {
+        if (comment == null) {
+            comment = new StringFilter();
+        }
+        return comment;
+    }
+
+    public void setComment(StringFilter comment) {
+        this.comment = comment;
     }
 
     public LongFilter getJobId() {
@@ -154,8 +190,10 @@ public class ProductCriteria implements Serializable, Criteria {
         return (
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
-            Objects.equals(comment, that.comment) &&
+            Objects.equals(drawingNumber, that.drawingNumber) &&
+            Objects.equals(itemNumber, that.itemNumber) &&
             Objects.equals(weight, that.weight) &&
+            Objects.equals(comment, that.comment) &&
             Objects.equals(jobId, that.jobId) &&
             Objects.equals(rawmaterialId, that.rawmaterialId)
         );
@@ -163,7 +201,7 @@ public class ProductCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, comment, weight, jobId, rawmaterialId);
+        return Objects.hash(id, name, drawingNumber, itemNumber, weight, comment, jobId, rawmaterialId);
     }
 
     // prettier-ignore
@@ -172,8 +210,10 @@ public class ProductCriteria implements Serializable, Criteria {
         return "ProductCriteria{" +
             (id != null ? "id=" + id + ", " : "") +
             (name != null ? "name=" + name + ", " : "") +
-            (comment != null ? "comment=" + comment + ", " : "") +
+            (drawingNumber != null ? "drawingNumber=" + drawingNumber + ", " : "") +
+            (itemNumber != null ? "itemNumber=" + itemNumber + ", " : "") +
             (weight != null ? "weight=" + weight + ", " : "") +
+            (comment != null ? "comment=" + comment + ", " : "") +
             (jobId != null ? "jobId=" + jobId + ", " : "") +
             (rawmaterialId != null ? "rawmaterialId=" + rawmaterialId + ", " : "") +
             "}";

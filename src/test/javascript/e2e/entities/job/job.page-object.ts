@@ -39,6 +39,7 @@ export class JobUpdatePage {
   drawingNumberInput = element(by.id('field_drawingNumber'));
   drawingInput = element(by.id('file_drawing'));
   worknumberInput = element(by.id('field_worknumber'));
+  priorityInput = element(by.id('field_priority'));
 
   productSelect = element(by.id('field_product'));
   machineSelect = element(by.id('field_machine'));
@@ -126,6 +127,14 @@ export class JobUpdatePage {
 
   async getWorknumberInput(): Promise<string> {
     return await this.worknumberInput.getAttribute('value');
+  }
+
+  async setPriorityInput(priority: string): Promise<void> {
+    await this.priorityInput.sendKeys(priority);
+  }
+
+  async getPriorityInput(): Promise<string> {
+    return await this.priorityInput.getAttribute('value');
   }
 
   async productSelectLastOption(): Promise<void> {

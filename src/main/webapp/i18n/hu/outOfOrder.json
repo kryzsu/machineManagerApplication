@@ -2,26 +2,26 @@
   "machineManagerApplicationApp": {
     "outOfOrder": {
       "home": {
-        "title": "Üzemen kívűl",
-        "refreshListLabel": "List frissítés",
-        "createLabel": "Egy új Üzemszünet létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Üzemszünetet",
-        "notFound": "Nincs ilyen Üzemszünet"
+        "title": "OutOfOrders",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új Out Of Order létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Out Of Ordert",
+        "notFound": "No Out Of Orders found"
       },
-      "created": "Egy új Üzemszünet lett létrehozva {{ param }} azonosítóval",
-      "updated": "Az Üzemszünet módosítva lett {{ param }} azonosítóval",
-      "deleted": "Az Üzemszünet törölve lett {{ param }} azonosítóval",
+      "created": "Egy új Out Of Order lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Out Of Order módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Out Of Order törölve lett {{ param }} azonosítóval",
       "delete": {
-        "question": "Biztos benne, hogy törölni szeretné az Üzemszünetet {{ id }} azonosítóval?"
+        "question": "Biztos benne, hogy törölni szeretné az Out Of Ordert {{ id }} azonosítóval?"
       },
       "detail": {
-        "title": "Üzemszünet"
+        "title": "Out Of Order"
       },
       "id": "ID",
-      "start": "Kezdet",
-      "end": "Vég",
-      "description": "Leírás",
-      "machine": "Munkagép"
+      "start": "Start",
+      "end": "End",
+      "description": "Description",
+      "machine": "Machine"
     }
   }
 }

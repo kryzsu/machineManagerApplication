@@ -1,9 +1,6 @@
 package hu.mycompany.machinemanager.service;
 
-import hu.mycompany.machinemanager.domain.Job;
-import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,14 +34,6 @@ public interface JobService {
     Page<JobDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the jobs with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<JobDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" job.
      *
      * @param id the id of the entity.
@@ -58,15 +47,4 @@ public interface JobService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    Page<JobDTO> findAllOpenJobsForMachine(Pageable pageable, Long machineId);
-
-    Page<JobDTO> findAllInProgressJobsForMachine(Pageable pageable, Long machineId);
-    Optional<JobDTO> getHighestPriorityJobForMachine(Long machineId);
-    Optional<JobDTO> getLowestPriorityJobForMachine(Long machineId);
-    void startHighestPriorityJobInMachine(Long machineId);
-    void stopRunningJobInMachine(Long machineId);
-    Optional<Job> getRunningJobInMachine(Long machineId);
-
-    void updatePriorities(List<IdWithPriorityDTO> idWithPriorityDTOList);
 }

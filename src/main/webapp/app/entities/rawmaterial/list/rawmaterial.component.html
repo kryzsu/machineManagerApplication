@@ -39,6 +39,18 @@
           <th scope="col" jhiSortBy="comment">
             <span jhiTranslate="machineManagerApplicationApp.rawmaterial.comment">Comment</span> <fa-icon icon="sort"></fa-icon>
           </th>
+          <th scope="col" jhiSortBy="grade">
+            <span jhiTranslate="machineManagerApplicationApp.rawmaterial.grade">Grade</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="dimension">
+            <span jhiTranslate="machineManagerApplicationApp.rawmaterial.dimension">Dimension</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="coating">
+            <span jhiTranslate="machineManagerApplicationApp.rawmaterial.coating">Coating</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="supplier">
+            <span jhiTranslate="machineManagerApplicationApp.rawmaterial.supplier">Supplier</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -49,6 +61,10 @@
           </td>
           <td>{{ rawmaterial.name }}</td>
           <td>{{ rawmaterial.comment }}</td>
+          <td>{{ rawmaterial.grade }}</td>
+          <td>{{ rawmaterial.dimension }}</td>
+          <td>{{ rawmaterial.coating }}</td>
+          <td>{{ rawmaterial.supplier }}</td>
           <td class="text-right">
             <div class="btn-group">
               <button

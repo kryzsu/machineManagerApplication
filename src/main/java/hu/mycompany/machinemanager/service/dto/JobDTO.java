@@ -1,13 +1,8 @@
 package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.Lob;
 import javax.validation.constraints.*;
 
@@ -18,7 +13,6 @@ public class JobDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private Integer estimation;
 
     @NotNull
@@ -28,18 +22,11 @@ public class JobDTO implements Serializable {
 
     private LocalDate endDate;
 
-    @NotNull
-    private LocalDateTime createDateTime;
-
     private Integer fact;
 
     private String orderNumber;
 
     private String drawingNumber;
-
-    private Long priority;
-
-    private Long manualOrder;
 
     @Lob
     private byte[] drawing;
@@ -49,7 +36,9 @@ public class JobDTO implements Serializable {
     @NotNull
     private String worknumber;
 
-    private Set<ProductDTO> products = new HashSet<>();
+    private Long priority;
+
+    private ProductDTO product;
 
     private MachineDTO machine;
 
@@ -143,12 +132,20 @@ public class JobDTO implements Serializable {
         this.worknumber = worknumber;
     }
 
-    public Set<ProductDTO> getProducts() {
-        return products;
+    public Long getPriority() {
+        return priority;
     }
 
-    public void setProducts(Set<ProductDTO> products) {
-        this.products = products;
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public ProductDTO getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 
     public MachineDTO getMachine() {
@@ -165,30 +162,6 @@ public class JobDTO implements Serializable {
 
     public void setCustomer(CustomerDTO customer) {
         this.customer = customer;
-    }
-
-    public Long getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Long priority) {
-        this.priority = priority;
-    }
-
-    public Long getManualOrder() {
-        return manualOrder;
-    }
-
-    public void setManualOrder(Long manualOrder) {
-        this.manualOrder = manualOrder;
-    }
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public void setCreateDateTime(LocalDateTime createDateTime) {
-        this.createDateTime = createDateTime;
     }
 
     @Override
@@ -216,22 +189,20 @@ public class JobDTO implements Serializable {
     @Override
     public String toString() {
         return "JobDTO{" +
-            "id=" + id +
-            ", estimation=" + estimation +
-            ", productCount=" + productCount +
-            ", startDate=" + startDate +
-            ", endDate=" + endDate +
-            ", createDateTime=" + createDateTime +
-            ", fact=" + fact +
-            ", orderNumber='" + orderNumber + '\'' +
-            ", drawingNumber='" + drawingNumber + '\'' +
-            ", priority=" + priority +
-            ", manualOrder=" + manualOrder +
-            ", drawingContentType='" + drawingContentType + '\'' +
-            ", worknumber='" + worknumber + '\'' +
-            ", products=" + products +
-            ", machine=" + machine +
-            ", customer=" + customer +
-            '}';
+            "id=" + getId() +
+            ", estimation=" + getEstimation() +
+            ", productCount=" + getProductCount() +
+            ", startDate='" + getStartDate() + "'" +
+            ", endDate='" + getEndDate() + "'" +
+            ", fact=" + getFact() +
+            ", orderNumber='" + getOrderNumber() + "'" +
+            ", drawingNumber='" + getDrawingNumber() + "'" +
+            ", drawing='" + getDrawing() + "'" +
+            ", worknumber='" + getWorknumber() + "'" +
+            ", priority=" + getPriority() +
+            ", product=" + getProduct() +
+            ", machine=" + getMachine() +
+            ", customer=" + getCustomer() +
+            "}";
     }
 }

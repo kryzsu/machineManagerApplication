@@ -45,7 +45,14 @@ describe('Rawmaterial e2e test', () => {
 
     await rawmaterialComponentsPage.clickOnCreateButton();
 
-    await promise.all([rawmaterialUpdatePage.setNameInput('name'), rawmaterialUpdatePage.setCommentInput('comment')]);
+    await promise.all([
+      rawmaterialUpdatePage.setNameInput('name'),
+      rawmaterialUpdatePage.setCommentInput('comment'),
+      rawmaterialUpdatePage.setGradeInput('grade'),
+      rawmaterialUpdatePage.setDimensionInput('dimension'),
+      rawmaterialUpdatePage.setCoatingInput('coating'),
+      rawmaterialUpdatePage.setSupplierInput('supplier'),
+    ]);
 
     await rawmaterialUpdatePage.save();
     expect(await rawmaterialUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;

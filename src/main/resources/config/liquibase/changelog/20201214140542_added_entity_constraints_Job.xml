@@ -8,15 +8,9 @@
     -->
     <changeSet id="20201214140542-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="job_id"
-                                 baseTableName="rel_job__product"
-                                 constraintName="fk_rel_job__product__job_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="job"/>
-
         <addForeignKeyConstraint baseColumnNames="product_id"
-                                 baseTableName="rel_job__product"
-                                 constraintName="fk_rel_job__product__product_id"
+                                 baseTableName="job"
+                                 constraintName="fk_job__product_id"
                                  referencedColumnNames="id"
                                  referencedTableName="product"/>
 

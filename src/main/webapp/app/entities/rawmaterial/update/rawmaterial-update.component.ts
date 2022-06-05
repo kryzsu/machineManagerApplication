@@ -19,6 +19,10 @@ export class RawmaterialUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required, Validators.minLength(3)]],
     comment: [],
+    grade: [null, [Validators.required]],
+    dimension: [null, [Validators.required]],
+    coating: [null, [Validators.required]],
+    supplier: [null, [Validators.required]],
   });
 
   constructor(protected rawmaterialService: RawmaterialService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -67,6 +71,10 @@ export class RawmaterialUpdateComponent implements OnInit {
       id: rawmaterial.id,
       name: rawmaterial.name,
       comment: rawmaterial.comment,
+      grade: rawmaterial.grade,
+      dimension: rawmaterial.dimension,
+      coating: rawmaterial.coating,
+      supplier: rawmaterial.supplier,
     });
   }
 
@@ -76,6 +84,10 @@ export class RawmaterialUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       comment: this.editForm.get(['comment'])!.value,
+      grade: this.editForm.get(['grade'])!.value,
+      dimension: this.editForm.get(['dimension'])!.value,
+      coating: this.editForm.get(['coating'])!.value,
+      supplier: this.editForm.get(['supplier'])!.value,
     };
   }
 }

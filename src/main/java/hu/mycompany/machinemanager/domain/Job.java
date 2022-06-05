@@ -3,18 +3,10 @@ package hu.mycompany.machinemanager.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Job.
@@ -22,9 +14,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "job")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,12 +44,6 @@ public class Job implements Serializable {
     @Column(name = "drawing_number")
     private String drawingNumber;
 
-    @Column(name = "priority")
-    private Long priority;
-
-    @Column(name = "manual_order")
-    private Long manualOrder;
-
     @Lob
     @Column(name = "drawing")
     private byte[] drawing;
@@ -72,58 +55,14 @@ public class Job implements Serializable {
     @Column(name = "worknumber", nullable = false, unique = true)
     private String worknumber;
 
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
-
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public void setCreateDateTime(LocalDateTime createDateTime) {
-        this.createDateTime = createDateTime;
-    }
-
-    public Long getPriority() {
-        return priority;
-    }
-
-    public Job priority(Long priority) {
-        this.priority = priority;
-        return this;
-    }
-
-    public void setPriority(Long priority) {
-        this.priority = priority;
-    }
-
-    public Long getManualOrder() {
-        return manualOrder;
-    }
-
-    public Job manualOrder(Long manualOrder) {
-        this.manualOrder = manualOrder;
-        return this;
-    }
-
-    public void setManualOrder(Long manualOrder) {
-        this.manualOrder = manualOrder;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
-
-    @ManyToMany
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "rel_job__product", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    @JsonIgnoreProperties(value = { "jobs" }, allowSetters = true)
-    private Set<Product> products = new HashSet<>();
+    @Column(name = "priority")
+    private Long priority;
 
     @ManyToOne
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "jobs", "rawmaterial" }, allowSetters = true)
+    private Product product;
+
+    @ManyToOne
     @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views", "runningJob" }, allowSetters = true)
     private Machine machine;
 
@@ -275,29 +214,30 @@ public class Job implements Serializable {
         this.worknumber = worknumber;
     }
 
-    public Set<Product> getProducts() {
-        return this.products;
+    public Long getPriority() {
+        return this.priority;
     }
 
-    public Job products(Set<Product> products) {
-        this.setProducts(products);
+    public Job priority(Long priority) {
+        this.priority = priority;
         return this;
     }
 
-    public Job addProduct(Product product) {
-        this.products.add(product);
-        product.getJobs().add(this);
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public Product getProduct() {
+        return this.product;
+    }
+
+    public Job product(Product product) {
+        this.setProduct(product);
         return this;
     }
 
-    public Job removeProduct(Product product) {
-        this.products.remove(product);
-        product.getJobs().remove(this);
-        return this;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Machine getMachine() {
@@ -360,7 +300,7 @@ public class Job implements Serializable {
             ", drawing='" + getDrawing() + "'" +
             ", drawingContentType='" + getDrawingContentType() + "'" +
             ", worknumber='" + getWorknumber() + "'" +
-            ", createDateTime='" + createDateTime + "'" +
+            ", priority=" + getPriority() +
             "}";
     }
 }

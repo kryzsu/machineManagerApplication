@@ -42,7 +42,7 @@ public class MachineDetailed implements Serializable {
     }
 
     public static MachineDetailed toDetailed(Machine machine) {
-        machine.getJobs().forEach(job -> job.getProducts().size());
+        // TODO: problem source can be
         return new MachineDetailed(machine.getId(), machine.getName(), machine.getDescription(), machine.getJobs(), machine.getRunningJob());
     }
 

@@ -1,11 +1,11 @@
-id;estimation;product_count;start_date;end_date;fact;order_number;drawing_number;drawing;drawing_content_type
-1;64690;52826;2020-12-14;2020-12-14;95887;Fresh Communications;exuding;../fake-data/blob/hipster.png;image/png
-2;75953;13628;2020-12-13;2020-12-14;45650;ubiquitous;Drive optimizing primary;../fake-data/blob/hipster.png;image/png
-3;47774;81983;2020-12-14;2020-12-14;108;Berkshire mission-critical;synthesizing action-items Flat;../fake-data/blob/hipster.png;image/png
-4;63091;88722;2020-12-14;2020-12-14;24658;Incredible;Somoni card;../fake-data/blob/hipster.png;image/png
-5;45399;50469;2020-12-13;2020-12-13;35784;Riel Shirt Tanzania;Mobility invoice;../fake-data/blob/hipster.png;image/png
-6;7769;69068;2020-12-13;2020-12-14;6603;help-desk;mobile Incredible;../fake-data/blob/hipster.png;image/png
-7;72891;6128;2020-12-14;2020-12-14;16606;Optimization;Markets content-based mission-critical;../fake-data/blob/hipster.png;image/png
-8;2090;68072;2020-12-13;2020-12-14;54151;orchestration Turnpike;Cotton;../fake-data/blob/hipster.png;image/png
-9;81619;75952;2020-12-13;2020-12-14;62698;blue;Sleek;../fake-data/blob/hipster.png;image/png
-10;25168;29471;2020-12-13;2020-12-13;59696;Legacy parsing;national strategy Outdoors;../fake-data/blob/hipster.png;image/png
+id;estimation;product_count;start_date;end_date;fact;order_number;drawing_number;drawing;drawing_content_type;worknumber;priority
+1;64690;52826;2020-12-14;2020-12-14;95887;Fresh Communications;exuding;../fake-data/blob/hipster.png;image/png;Metal Burgs Investor;46591
+2;16948;15212;2020-12-14;2020-12-13;4706;Licensed copying Beauty;pink applications;../fake-data/blob/hipster.png;image/png;Plastic Down-sized ADP;24658
+3;9938;8950;2020-12-14;2020-12-14;49758;online contingency Borders;synthesize Keyboard;../fake-data/blob/hipster.png;image/png;Tanzania;50198
+4;96288;74207;2020-12-14;2020-12-13;92773;Handcrafted application;services;../fake-data/blob/hipster.png;image/png;Integration structure Intelligent;92950
+5;50976;98746;2020-12-13;2020-12-13;38368;content-based;violet Balboa;../fake-data/blob/hipster.png;image/png;e-services violet;57310
+6;22187;3921;2020-12-14;2020-12-14;61614;synthesizing New;Togo;../fake-data/blob/hipster.png;image/png;Cyprus;29471
+7;70293;97334;2020-12-13;2020-12-14;89109;fuchsia feed Sri;Steel B2C CSS;../fake-data/blob/hipster.png;image/png;Extension;24066
+8;15728;18576;2020-12-13;2020-12-14;93871;deposit white;e-markets;../fake-data/blob/hipster.png;image/png;up synthesize;3633
+9;96978;86533;2020-12-14;2020-12-14;41113;Internal magenta;recontextualize;../fake-data/blob/hipster.png;image/png;up attitude bricks-and-clicks;60773
+10;69006;9526;2020-12-13;2020-12-13;26602;monetize ivory;Kuna Tunisian extensible;../fake-data/blob/hipster.png;image/png;attitude Loan;46737

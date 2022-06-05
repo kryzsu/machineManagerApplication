@@ -24,6 +24,10 @@ describe('Service Tests', () => {
         id: 0,
         name: 'AAAAAAA',
         comment: 'AAAAAAA',
+        grade: 'AAAAAAA',
+        dimension: 'AAAAAAA',
+        coating: 'AAAAAAA',
+        supplier: 'AAAAAAA',
       };
     });
 
@@ -61,6 +65,10 @@ describe('Service Tests', () => {
             id: 1,
             name: 'BBBBBB',
             comment: 'BBBBBB',
+            grade: 'BBBBBB',
+            dimension: 'BBBBBB',
+            coating: 'BBBBBB',
+            supplier: 'BBBBBB',
           },
           elemDefault
         );
@@ -99,6 +107,10 @@ describe('Service Tests', () => {
             id: 1,
             name: 'BBBBBB',
             comment: 'BBBBBB',
+            grade: 'BBBBBB',
+            dimension: 'BBBBBB',
+            coating: 'BBBBBB',
+            supplier: 'BBBBBB',
           },
           elemDefault
         );
@@ -150,7 +162,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique Rawmaterial to an array', () => {
-          const rawmaterialArray: IRawmaterial[] = [{ id: 123 }, { id: 456 }, { id: 40775 }];
+          const rawmaterialArray: IRawmaterial[] = [{ id: 123 }, { id: 456 }, { id: 39883 }];
           const rawmaterialCollection: IRawmaterial[] = [{ id: 123 }];
           expectedResult = service.addRawmaterialToCollectionIfMissing(rawmaterialCollection, ...rawmaterialArray);
           expect(expectedResult).toHaveLength(3);

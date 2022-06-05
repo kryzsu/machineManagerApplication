@@ -32,6 +32,15 @@
       "relationshipType": "many-to-many",
       "ownerSide": false,
       "otherEntityRelationshipName": "machine"
+    },
+    {
+      "relationshipName": "runningJob",
+      "otherEntityName": "job",
+      "relationshipType": "one-to-one",
+      "otherEntityField": "orderNumber",
+      "ownerSide": true,
+      "id": false,
+      "otherEntityRelationshipName": "runningOn"
     }
   ],
   "changelogDate": "20201214140442",

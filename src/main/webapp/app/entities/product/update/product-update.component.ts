@@ -7,6 +7,9 @@ import { finalize, map } from 'rxjs/operators';
 
 import { IProduct, Product } from '../product.model';
 import { ProductService } from '../service/product.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IRawmaterial } from 'app/entities/rawmaterial/rawmaterial.model';
 import { RawmaterialService } from 'app/entities/rawmaterial/service/rawmaterial.service';
 
@@ -22,12 +25,18 @@ export class ProductUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(5)]],
-    comment: [],
+    drawingNumber: [null, [Validators.required]],
+    itemNumber: [],
     weight: [null, [Validators.required]],
+    comment: [],
+    drawing: [],
+    drawingContentType: [],
     rawmaterial: [],
   });
 
   constructor(
+    protected dataUtils: DataUtils,
+    protected eventManager: EventManager,
     protected productService: ProductService,
     protected rawmaterialService: RawmaterialService,
     protected activatedRoute: ActivatedRoute,
@@ -39,6 +48,23 @@ export class ProductUpdateComponent implements OnInit {
       this.updateForm(product);
 
       this.loadRelationshipsOptions();
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(base64String: string, contentType: string | null | undefined): void {
+    this.dataUtils.openFile(base64String, contentType);
+  }
+
+  setFileData(event: Event, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
+      error: (err: FileLoadError) =>
+        this.eventManager.broadcast(
+          new EventWithContent<AlertError>('machineManagerApplicationApp.error', { ...err, key: 'error.file.' + err.key })
+        ),
     });
   }
 
@@ -83,8 +109,12 @@ export class ProductUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: product.id,
       name: product.name,
-      comment: product.comment,
+      drawingNumber: product.drawingNumber,
+      itemNumber: product.itemNumber,
       weight: product.weight,
+      comment: product.comment,
+      drawing: product.drawing,
+      drawingContentType: product.drawingContentType,
       rawmaterial: product.rawmaterial,
     });
 
@@ -111,8 +141,12 @@ export class ProductUpdateComponent implements OnInit {
       ...new Product(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      comment: this.editForm.get(['comment'])!.value,
+      drawingNumber: this.editForm.get(['drawingNumber'])!.value,
+      itemNumber: this.editForm.get(['itemNumber'])!.value,
       weight: this.editForm.get(['weight'])!.value,
+      comment: this.editForm.get(['comment'])!.value,
+      drawingContentType: this.editForm.get(['drawingContentType'])!.value,
+      drawing: this.editForm.get(['drawing'])!.value,
       rawmaterial: this.editForm.get(['rawmaterial'])!.value,
     };
   }

@@ -1,9 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { getRelatedProduct, IIdWithPriority, IJob } from '../../../entities/job/job.model';
-import {IMachine, IMachineDay} from '../../../entities/machine/machine.model';
+import { IJob } from '../../../entities/job/job.model';
+import {IMachine} from '../../../entities/machine/machine.model';
 import { selectMachineList } from '../../../redux/selectors';
 import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import {IMachineDay} from "../../../entities/machineday";
+import {IIdWithPriority} from "../../../entities/idWithPriority";
+import {getRelatedProduct} from "../../../util/common-util";
 
 @Component({
   selector: 'jhi-machine-details',
@@ -93,7 +96,7 @@ export class MachineDetailsComponent implements OnInit {
     this.savePriorities.emit(
       this.jobs.map((job: IJob) => ({
         id: job.id,
-        priority: job.priority,
+        priority: job.priority ?? 0,
       }))
     );
   }
@@ -115,10 +118,10 @@ export class MachineDetailsComponent implements OnInit {
   }
 
   getProductName(selectedMachine?: IMachine): string {
-    if (selectedMachine?.runningJob?.products == null) {
+    if (selectedMachine?.runningJob?.product == null) {
       return '';
     }
 
-    return selectedMachine.runningJob.products[0]?.name ?? '';
+    return selectedMachine.runningJob.product.name ?? '';
   }
 }

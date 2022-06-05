@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import * as dayjs from 'dayjs';
 
 import { isPresent } from 'app/core/util/operators';
-import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_FORMAT } from 'app/config/input.constants';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IJob, getJobIdentifier } from '../job.model';
@@ -53,13 +53,6 @@ export class JobService {
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
-  inProgress(req?: any): Observable<EntityArrayResponseType> {
-    const options = createRequestOption(req);
-    return this.http
-      .get<IJob[]>(`${this.resourceUrl}/in-progress`, { params: options, observe: 'response' })
-      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-  }
-
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
@@ -85,7 +78,6 @@ export class JobService {
     return Object.assign({}, job, {
       startDate: job.startDate?.isValid() ? job.startDate.format(DATE_FORMAT) : undefined,
       endDate: job.endDate?.isValid() ? job.endDate.format(DATE_FORMAT) : undefined,
-      createDateTime: job.createDateTime?.isValid() ? job.createDateTime.format(DATE_TIME_FORMAT) : undefined,
     });
   }
 
@@ -93,7 +85,6 @@ export class JobService {
     if (res.body) {
       res.body.startDate = res.body.startDate ? dayjs(res.body.startDate) : undefined;
       res.body.endDate = res.body.endDate ? dayjs(res.body.endDate) : undefined;
-      res.body.createDateTime = res.body.createDateTime ? dayjs(res.body.createDateTime) : undefined;
     }
     return res;
   }

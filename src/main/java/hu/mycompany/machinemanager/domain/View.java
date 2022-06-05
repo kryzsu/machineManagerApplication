@@ -32,7 +32,7 @@ public class View implements Serializable {
         joinColumns = @JoinColumn(name = "view_id"),
         inverseJoinColumns = @JoinColumn(name = "machine_id")
     )
-    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views", "runningJob" }, allowSetters = true)
     private Set<Machine> machines = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -109,6 +109,9 @@ public class View implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return String.format("View{id=%d, name='%s'}", getId(), getName());
+        return "View{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            "}";
     }
 }

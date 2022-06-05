@@ -6,10 +6,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <property name="now" value="sysdate" dbms="oracle"/>
-    <property name="now" value="now()" dbms="mysql"/>
-    <property name="now" value="now()" dbms="postgresql"/>
-
     <!--
         Added the entity Product.
     -->
@@ -18,20 +14,26 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="CREATE_DATE_TIME" type="date" defaultValueDate="${now}">
-                <constraints nullable="false" />
-            </column>
-            <column name="UPDATE_DATE_TIME" type="date" defaultValueDate="${now}">
-                <constraints nullable="false" />
-            </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="ux_product__name" />
             </column>
-            <column name="comment" type="varchar(255)">
+            <column name="drawing_number" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="item_number" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="weight" type="double">
                 <constraints nullable="false" />
+            </column>
+            <column name="comment" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="drawing" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="drawing_content_type" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
             <column name="rawmaterial_id" type="bigint">
                 <constraints nullable="true" />
@@ -57,8 +59,12 @@
                   tableName="product">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
-            <column name="comment" type="string"/>
+            <column name="drawing_number" type="string"/>
+            <column name="item_number" type="string"/>
             <column name="weight" type="numeric"/>
+            <column name="comment" type="string"/>
+            <column name="drawing" type="blob"/>
+            <column name="drawing_content_type" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

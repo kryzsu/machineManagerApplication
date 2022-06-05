@@ -2,9 +2,7 @@ package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
-import hu.mycompany.machinemanager.repository.JobRepository;
-import hu.mycompany.machinemanager.repository.MachineRepository;
-import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
+import hu.mycompany.machinemanager.repository.*;
 import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
 import hu.mycompany.machinemanager.service.NoRunningJobException;
 import hu.mycompany.machinemanager.service.PerspectiveService;
@@ -35,8 +33,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     private final Logger log = LoggerFactory.getLogger(PerspectiveServiceImpl.class);
     private final MachineRepository machineRepository;
-    private final JobRepository jobRepository;
-    private final OutOfOrderRepository outOfOrderRepository;
+    private final JobBimRepository jobRepository;
+    private final OutOfOrderBimRepository outOfOrderRepository;
 
     private final Util util;
     private final OutOfOrderMapper outOfOrderMapper;
@@ -46,8 +44,8 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         MachineRepository machineRepository,
         Util util,
         OutOfOrderMapper outOfOrderMapper,
-        JobRepository jobRepository,
-        OutOfOrderRepository outOfOrderRepository
+        JobBimRepository jobRepository,
+        OutOfOrderBimRepository outOfOrderRepository
     ) {
         this.machineRepository = machineRepository;
         this.util = util;
@@ -97,7 +95,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     }
 
     private List<Job> getRelatedFurtherJobs(long machineId) {
-        return jobRepository.findByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId);
+        return jobRepository.findByMachineIdAndStartDateIsNullOrderByPriorityDescIdDesc(machineId);
     }
 
     @Override
@@ -183,7 +181,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
             if (machine.getRunningJob() != null) {
                 throw new AnotherJobIsAlreadyRunningException(machineId);
             }
-            Optional<Job> nextJob = jobRepository.findTopByMachineIdAndStartDateIsNullOrderByPriorityDescCreateDateTimeDesc(machineId);
+            Optional<Job> nextJob = jobRepository.findTopByMachineIdAndStartDateIsNullOrderByPriorityDescIdDesc(machineId);
 
             if (nextJob.isPresent()) {
                 Job job = nextJob.get();

@@ -64,7 +64,7 @@ export const getEstimatedEndDate = (job: IJob): string =>
   ) as string;
 
 export const getJobLabel = (job: IJob): string =>
-  `${job.worknumber ?? 0} - ${job.productCount ?? 0} - ${job.consumerName ?? ''} - ${getEstimatedEndDate(job)}`;
+  `${job.worknumber ?? 0} - ${job.productCount ?? 0} - ${job.orderNumber ?? ''} - ${getEstimatedEndDate(job)}`;
 
 export const machine2BarData = (appState: AppState): BarData => {
   const labels: string[] = [];
