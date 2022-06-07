@@ -36,9 +36,6 @@
           <th scope="col" jhiSortBy="name">
             <span jhiTranslate="machineManagerApplicationApp.product.name">Name</span> <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="drawingNumber">
-            <span jhiTranslate="machineManagerApplicationApp.product.drawingNumber">Drawing Number</span> <fa-icon icon="sort"></fa-icon>
-          </th>
           <th scope="col" jhiSortBy="itemNumber">
             <span jhiTranslate="machineManagerApplicationApp.product.itemNumber">Item Number</span> <fa-icon icon="sort"></fa-icon>
           </th>
@@ -67,7 +64,6 @@
           <td>{{ product.itemNumber }}</td>
           <td>{{ product.weight }} kg</td>
           <td>{{ product.comment }}</td>
-          <td>{{ product.drawing }}</td>
           <td>
             <div *ngIf="product.rawmaterial">
               <a [routerLink]="['/rawmaterial', product.rawmaterial?.id, 'view']">{{ product.rawmaterial?.name }}</a>
