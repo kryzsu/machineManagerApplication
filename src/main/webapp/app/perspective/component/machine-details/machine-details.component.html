@@ -6,7 +6,7 @@
 
   <div *ngIf="selectedMachine?.runningJob?.id">
  futo folyamat: <br />
-  id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.orderNumber}} <br/>
+  id: {{ selectedMachine?.runningJob?.id }}, rendeles szam: {{selectedMachine?.runningJob?.orderNumber}} <br/>
   {{selectedMachine?.runningJob?.productCount}} db {{getProductName(selectedMachine)}} <br/>
   Kezdve: {{selectedMachine?.runningJob?.startDate}}, becsult idotartam: {{selectedMachine?.runningJob?.estimation}}<br />
   </div>
@@ -24,8 +24,8 @@
   <ng-template let-job pTemplate="item">
     <div>
       <div style="font-size: 14px; float: right; margin: 15px 5px 0 0">
-        {{ job.productCount }} count {{ getJobProduct(job) }} estimation:{{ job.estimation }}, customer:{{ job.consumerName }}, priority:
-        {{ job.priority }}
+        {{ job.productCount }} db {{ getJobProduct(job) }} becsles:{{ job.estimation }}, vevo:{{ job.consumerName }}, prio:
+        {{ job.priority }} ({{selectedMachine?.runningJob?.orderNumber}})
       </div>
     </div>
   </ng-template>
