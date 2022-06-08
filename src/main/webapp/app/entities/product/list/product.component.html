@@ -60,10 +60,10 @@
             <a [routerLink]="['/product', product.id, 'view']">{{ product.id }}</a>
           </td>
           <td>{{ product.name }}</td>
-          <td>{{ product.drawingNumber }}</td>
           <td>{{ product.itemNumber }}</td>
           <td>{{ product.weight }} kg</td>
           <td>{{ product.comment }}</td>
+          <td>{{ product.drawingNumber }}</td>
           <td>
             <div *ngIf="product.rawmaterial">
               <a [routerLink]="['/rawmaterial', product.rawmaterial?.id, 'view']">{{ product.rawmaterial?.name }}</a>
