@@ -3,10 +3,11 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-import {IMachine, IMachineDay} from 'app/entities/machine/machine.model';
+import { IMachine, IMachineDay } from 'app/entities/machine/machine.model';
 import { createRequestOption } from '../core/request/request-util';
 import { OutOfOrder } from '../entities/out-of-order/out-of-order.model';
 import { IIdWithPriority } from '../entities/job/job.model';
+import { map } from 'rxjs/operators';
 
 export type EntityArrayResponseType = HttpResponse<IMachine[]>;
 
@@ -46,7 +47,7 @@ export class PerspectiveService {
   getNextDays(machineId: number): Observable<HttpResponse<IMachineDay[]>> {
     const options = createRequestOption({
       machineId,
-      days: 14
+      days: 14,
     });
 
     return this.http.get<IMachineDay[]>(`${this.resourceUrl}/get-job-next-days`, { params: options, observe: 'response' });
@@ -58,5 +59,12 @@ export class PerspectiveService {
 
   startNextJob(machineId: number): Observable<HttpResponse<any>> {
     return this.http.post<IMachineDay[]>(`${this.resourceUrl}/start-next-job`, machineId, { observe: 'response' });
+  }
+
+  getExcel(jobId: number): Observable<ArrayBuffer | null> {
+    const params = createRequestOption({ jobId });
+    return this.http
+      .get<ArrayBuffer>(`${this.resourceUrl}/get-job-excel`, { params, observe: 'response', responseType: 'ArrayBuffer' as 'json' })
+      .pipe(map((response: HttpResponse<ArrayBuffer>) => response.body));
   }
 }

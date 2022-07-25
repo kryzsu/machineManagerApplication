@@ -6,6 +6,7 @@ import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
 import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
+import hu.mycompany.machinemanager.service.ExcelExporter;
 import hu.mycompany.machinemanager.service.NoRunningJobException;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
@@ -13,6 +14,7 @@ import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.*;
 import hu.mycompany.machinemanager.service.util.Interval;
 import hu.mycompany.machinemanager.service.util.Util;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -42,18 +44,22 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final OutOfOrderMapper outOfOrderMapper;
     Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
 
+    private final ExcelExporter excelExporter;
+
     public PerspectiveServiceImpl(
         MachineRepository machineRepository,
         Util util,
         OutOfOrderMapper outOfOrderMapper,
         JobRepository jobRepository,
-        OutOfOrderRepository outOfOrderRepository
+        OutOfOrderRepository outOfOrderRepository,
+        ExcelExporter excelExporter
     ) {
         this.machineRepository = machineRepository;
         this.util = util;
         this.outOfOrderMapper = outOfOrderMapper;
         this.jobRepository = jobRepository;
         this.outOfOrderRepository = outOfOrderRepository;
+        this.excelExporter = excelExporter;
     }
 
     @Override
@@ -89,8 +95,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                     LocalDate
                         .now()
                         .datesUntil(job.getStartDate().plusDays(job.getEstimation()))
-                        .map(date -> new MachineDayDTO(date, true, job.getWorknumber(), job.getId(),
-                            date.getDayOfWeek().getValue()))
+                        .map(date -> new MachineDayDTO(date, true, job.getWorknumber(), job.getId(), date.getDayOfWeek().getValue()))
             )
             .orElse(Stream.empty())
             .collect(Collectors.toList());
@@ -164,8 +169,15 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                 break;
             }
 
-            all.add(new MachineDayDTO(freeMachineDay.getDate(), true, jobMachineDay.getComment(),
-                jobMachineDay.getJobId(), freeMachineDay.getDate().getDayOfWeek().getValue()));
+            all.add(
+                new MachineDayDTO(
+                    freeMachineDay.getDate(),
+                    true,
+                    jobMachineDay.getComment(),
+                    jobMachineDay.getJobId(),
+                    freeMachineDay.getDate().getDayOfWeek().getValue()
+                )
+            );
         }
         all.addAll(free);
         all.addAll(outUfOrderDays);
@@ -219,10 +231,17 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         }
     }
 
+    @Override
+    public byte[] getJobExcel(long jobId) throws IOException {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        return excelExporter.writeJobData(jobOptional.get()).toByteArray();
+    }
 
     private List<MachineDayDTO> getDaysByInterval(LocalDate from, LocalDate to) {
-        return from.datesUntil(to).map(date -> new MachineDayDTO(date, false, "free", null,
-            date.getDayOfWeek().getValue())).collect(Collectors.toList());
+        return from
+            .datesUntil(to)
+            .map(date -> new MachineDayDTO(date, false, "free", null, date.getDayOfWeek().getValue()))
+            .collect(Collectors.toList());
     }
 
     private List<MachineDayDTO> getOutUfOrderDays(List<OutOfOrderDTO> outOfOrderDTOList, LocalDate now, LocalDate endDate) {
@@ -233,13 +252,9 @@ public class PerspectiveServiceImpl implements PerspectiveService {
                     outOfOrder
                         .getStart()
                         .datesUntil(outOfOrder.getEnd().plusDays(1))
-                        .filter( date ->
-                            (date.isEqual(now) || date.isAfter(now)) && (date.isEqual(endDate) || date.isBefore(endDate)))
-                        .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null,
-                            date.getDayOfWeek().getValue()))
+                        .filter(date -> (date.isEqual(now) || date.isAfter(now)) && (date.isEqual(endDate) || date.isBefore(endDate)))
+                        .map(date -> new MachineDayDTO(date, true, outOfOrder.getDescription(), null, date.getDayOfWeek().getValue()))
             )
             .collect(Collectors.toList());
     }
-
-
 }

@@ -10,6 +10,7 @@ import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants
 import { JobService } from '../service/job.service';
 import { JobDeleteDialogComponent } from '../delete/job-delete-dialog.component';
 import { DataUtils } from 'app/core/util/data-util.service';
+import { PerspectiveService } from '../../../perspective/perspective.service';
 
 @Component({
   selector: 'jhi-job',
@@ -30,7 +31,8 @@ export class JobComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
     protected dataUtils: DataUtils,
     protected router: Router,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    protected perspectiveService: PerspectiveService
   ) {}
 
   loadPage(page?: number, dontNavigate?: boolean): void {
@@ -79,6 +81,18 @@ export class JobComponent implements OnInit {
       if (reason === 'deleted') {
         this.loadPage();
       }
+    });
+  }
+
+  exportExcel(job: IJob): void {
+    this.perspectiveService.getExcel(job.id ?? 0).subscribe((data: ArrayBuffer | null) => {
+      if (data == null) {
+        return;
+      }
+
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
     });
   }
 

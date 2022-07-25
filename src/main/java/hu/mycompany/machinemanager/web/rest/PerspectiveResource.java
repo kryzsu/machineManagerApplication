@@ -6,12 +6,14 @@ import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,5 +86,10 @@ public class PerspectiveResource {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
         log.debug("REST request to get the RequestParam");
         perspectiveService.stopRunningJob(machineId);
+    }
+
+    @GetMapping(value = "/get-job-excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public byte[] getJobExcel(@RequestParam long jobId) throws IOException {
+        return perspectiveService.getJobExcel(jobId);
     }
 }

@@ -18,9 +18,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { IntervalFilterComponent } from './component/interval-filter/interval-filter.component';
 import { MachineDetailsComponent } from './component/machine-details/machine-details.component';
 import { ButtonModule } from 'primeng/button';
-import {CardModule} from 'primeng/card';
+import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import {DataViewModule} from 'primeng/dataview';
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   imports: [
@@ -40,7 +40,7 @@ import {DataViewModule} from 'primeng/dataview';
     ButtonModule,
     CardModule,
     TagModule,
-    DataViewModule
+    DataViewModule,
   ],
   declarations: [CalendarComponent, PerpsTimelineComponent, PerpsTreeComponent, IntervalFilterComponent, MachineDetailsComponent],
 })
