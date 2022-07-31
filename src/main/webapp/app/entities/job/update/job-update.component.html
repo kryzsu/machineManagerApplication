@@ -28,93 +28,6 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
-          <select
-            class="form-control"
-            id="field_machine"
-            data-cy="machine"
-            name="machine"
-            formControlName="machine"
-            (ngModelChange)="onMachineChange()"
-          >
-            <option [ngValue]="null"></option>
-            <option
-              [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
-              *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
-            >
-              {{ machineOption.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.worknumber" for="field_worknumber"
-            >Worknumber</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="worknumber"
-            id="field_worknumber"
-            data-cy="worknumber"
-            formControlName="worknumber"
-          />
-          <div *ngIf="editForm.get('worknumber')!.invalid && (editForm.get('worknumber')!.dirty || editForm.get('worknumber')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('worknumber')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate"
-            >Start Date</label
-          >
-          <div class="input-group">
-            <input
-              id="field_startDate"
-              data-cy="startDate"
-              type="text"
-              class="form-control"
-              name="startDate"
-              ngbDatepicker
-              #startDateDp="ngbDatepicker"
-              formControlName="startDate"
-              [markDisabled]="isDisabled"
-            />
-            <span class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
-                <fa-icon icon="calendar-alt"></fa-icon>
-              </button>
-            </span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.endDate" for="field_endDate">End Date</label>
-          <div class="input-group">
-            <input
-              id="field_endDate"
-              data-cy="endDate"
-              type="text"
-              class="form-control"
-              name="endDate"
-              ngbDatepicker
-              #endDateDp="ngbDatepicker"
-              formControlName="endDate"
-              [markDisabled]="isDisabled"
-            />
-            <span class="input-group-append">
-              <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
-            </span>
-          </div>
-        </div>
-
-        <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.productCount" for="field_productCount"
             >Product Count</label
           >
@@ -147,15 +60,45 @@
         </div>
 
         <div class="form-group">
-          <label jhiTranslate="machineManagerApplicationApp.job.product" for="field_products">Product</label>
-          <select class="form-control" id="field_products" data-cy="product" multiple name="products" formControlName="products">
-            <option
-              [ngValue]="getSelectedProduct(productOption, editForm.get('products')!.value)"
-              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
-            >
-              {{ productOption.name }}
-            </option>
-          </select>
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.startDate" for="field_startDate"
+            >Start Date</label
+          >
+          <div class="input-group">
+            <input
+              id="field_startDate"
+              data-cy="startDate"
+              type="text"
+              class="form-control"
+              name="startDate"
+              ngbDatepicker
+              #startDateDp="ngbDatepicker"
+              formControlName="startDate"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="startDateDp.toggle()">
+                <fa-icon icon="calendar-alt"></fa-icon>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.endDate" for="field_endDate">End Date</label>
+          <div class="input-group">
+            <input
+              id="field_endDate"
+              data-cy="endDate"
+              type="text"
+              class="form-control"
+              name="endDate"
+              ngbDatepicker
+              #endDateDp="ngbDatepicker"
+              formControlName="endDate"
+            />
+            <span class="input-group-append">
+              <button type="button" class="btn btn-secondary" (click)="endDateDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+            </span>
+          </div>
         </div>
 
         <div class="form-group">
@@ -194,17 +137,11 @@
         <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.drawing" for="field_drawing">Drawing</label>
           <div>
-            <img
-              [src]="'data:' + editForm.get('drawingContentType')!.value + ';base64,' + editForm.get('drawing')!.value"
-              style="max-height: 100px"
-              *ngIf="editForm.get('drawing')!.value"
-              alt="job image"
-            />
             <div *ngIf="editForm.get('drawing')!.value" class="form-text text-danger clearfix">
               <span class="pull-left">{{ editForm.get('drawingContentType')!.value }}, {{ byteSize(editForm.get('drawing')!.value) }}</span>
               <button
                 type="button"
-                (click)="clearInputImage('drawing', 'drawingContentType', 'file_drawing')"
+                (click)="editForm.patchValue({ drawing: null }); editForm.patchValue({ drawingContentType: null })"
                 class="btn btn-secondary btn-xs pull-right"
               >
                 <fa-icon icon="times"></fa-icon>
@@ -214,9 +151,8 @@
               type="file"
               id="file_drawing"
               data-cy="drawing"
-              (change)="setFileData($event, 'drawing', true)"
-              accept="image/*"
-              jhiTranslate="entity.action.addimage"
+              (change)="setFileData($event, 'drawing', false)"
+              jhiTranslate="entity.action.addblob"
             />
           </div>
           <input type="hidden" class="form-control" name="drawing" id="field_drawing" data-cy="drawing" formControlName="drawing" />
@@ -227,6 +163,60 @@
             id="field_drawingContentType"
             formControlName="drawingContentType"
           />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.worknumber" for="field_worknumber"
+            >Worknumber</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="worknumber"
+            id="field_worknumber"
+            data-cy="worknumber"
+            formControlName="worknumber"
+          />
+          <div *ngIf="editForm.get('worknumber')!.invalid && (editForm.get('worknumber')!.dirty || editForm.get('worknumber')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('worknumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.priority" for="field_priority">Priority</label>
+          <input type="number" class="form-control" name="priority" id="field_priority" data-cy="priority" formControlName="priority" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.product" for="field_product">Product</label>
+          <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="productOption.id === editForm.get('product')!.value?.id ? editForm.get('product')!.value : productOption"
+              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+            >
+              {{ productOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.job.machine" for="field_machine">Machine</label>
+          <select class="form-control" id="field_machine" data-cy="machine" name="machine" formControlName="machine">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="machineOption.id === editForm.get('machine')!.value?.id ? editForm.get('machine')!.value : machineOption"
+              *ngFor="let machineOption of machinesSharedCollection; trackBy: trackMachineById"
+            >
+              {{ machineOption.name }}
+            </option>
+          </select>
         </div>
 
         <div class="form-group">

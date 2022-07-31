@@ -1,22 +1,27 @@
 <p-dropdown [options]="machines" [(ngModel)]="selectedMachine" optionLabel="name" (onChange)="machineChanged()"></p-dropdown><br />
-<p-card header="{{selectedMachine?.name}}"
-        [style]="{'width': '50rem', 'margin-bottom': '2em'}"
-        styleClass="p-card-shadow"
-        subheader="{{ selectedMachine?.description }}">
-
+<p-card
+  header="{{ selectedMachine?.name }}"
+  [style]="{ width: '50rem', 'margin-bottom': '2em' }"
+  styleClass="p-card-shadow"
+  subheader="{{ selectedMachine?.description }}"
+>
   <div *ngIf="selectedMachine?.runningJob?.id">
- futo folyamat: <br />
-  id: {{ selectedMachine?.runningJob?.id }}, megrendelo: {{selectedMachine?.runningJob?.consumerName}} <br/>
-  {{selectedMachine?.runningJob?.productCount}} db {{getProductName(selectedMachine)}} <br/>
-  Kezdve: {{selectedMachine?.runningJob?.startDate}}, becsult idotartam: {{selectedMachine?.runningJob?.estimation}}<br />
+    futo folyamat: <br />
+    id: {{ selectedMachine?.runningJob?.id }}, rendeles szam: {{ selectedMachine?.runningJob?.orderNumber }} <br />
+    {{ selectedMachine?.runningJob?.productCount }} db {{ getProductName(selectedMachine) }} <br />
+    Kezdve: {{ selectedMachine?.runningJob?.startDate }}, becsult idotartam: {{ selectedMachine?.runningJob?.estimation }}<br />
   </div>
   tervezett folyamatok: {{ selectedMachine?.jobs?.length }} db
   <ng-template pTemplate="footer">
-    <p-button *ngIf="selectedMachine?.runningJob == null" label="Start next job" icon="pi pi-check"
-              (onClick)="onStartNextJob()"></p-button>
-    <p-button *ngIf="selectedMachine?.runningJob != null" label="Stop running job" icon="pi pi-times"
-              styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"
-              (onClick)="onStopRunningJob()"></p-button>
+    <p-button *ngIf="selectedMachine?.runningJob == null" label="Start next job" icon="pi pi-check" (onClick)="onStartNextJob()"></p-button>
+    <p-button
+      *ngIf="selectedMachine?.runningJob != null"
+      label="Stop running job"
+      icon="pi pi-times"
+      styleClass="p-button-secondary"
+      [style]="{ 'margin-left': '.5em' }"
+      (onClick)="onStopRunningJob()"
+    ></p-button>
   </ng-template>
 </p-card>
 
@@ -24,8 +29,8 @@
   <ng-template let-job pTemplate="item">
     <div>
       <div style="font-size: 14px; float: right; margin: 15px 5px 0 0">
-        {{ job.productCount }} count {{ getJobProduct(job) }} estimation:{{ job.estimation }}, customer:{{ job.consumerName }}, priority:
-        {{ job.priority }}
+        {{ job.productCount }} db {{ getJobProduct(job) }} becsles:{{ job.estimation }}, vevo:{{ job.consumerName }}, prio:
+        {{ job.priority }} ({{ selectedMachine?.runningJob?.orderNumber }})
       </div>
     </div>
   </ng-template>
@@ -40,12 +45,16 @@
   </ng-template>
   <ng-template let-machineDay pTemplate="listItem">
     <div>
-      <p-card header="{{machineDay.date}}" subheader="{{weekName[machineDay.dayOfWeek?? 0]}}" *ngFor="let machineDay of machineDays"
-              [ngStyle]="{'background':machineDay.occupied ? 'green' : 'red' }"
-              [style]="{'width': '15rem', 'margin-bottom': '1em'}"
-              styleClass="p-card-shadow">
-        <p-tag severity="{{getSeverity(machineDay)}}" value="{{machineDay.comment}}"></p-tag>
-        {{machineDay.jobId}}
+      <p-card
+        header="{{ machineDay.date }}"
+        subheader="{{ weekName[machineDay.dayOfWeek ?? 0] }}"
+        *ngFor="let machineDay of machineDays"
+        [ngStyle]="{ background: machineDay.occupied ? 'green' : 'red' }"
+        [style]="{ width: '15rem', 'margin-bottom': '1em' }"
+        styleClass="p-card-shadow"
+      >
+        <p-tag severity="{{ getSeverity(machineDay) }}" value="{{ machineDay.comment }}"></p-tag>
+        {{ machineDay.jobId }}
       </p-card>
     </div>
   </ng-template>
@@ -53,9 +62,8 @@
   <ng-template let-machineDay pTemplate="gridItem">
     <div class="col-2 md:col-2">
       <div class="card">
-        {{machineDay.date}} ({{weekName[machineDay.dayOfWeek?? 0]}})
-        <p-tag severity="{{getSeverity(machineDay)}}"
-               value="{{machineDay.comment}}"></p-tag>
+        {{ machineDay.date }} ({{ weekName[machineDay.dayOfWeek ?? 0] }})
+        <p-tag severity="{{ getSeverity(machineDay) }}" value="{{ machineDay.comment }}"></p-tag>
       </div>
     </div>
   </ng-template>

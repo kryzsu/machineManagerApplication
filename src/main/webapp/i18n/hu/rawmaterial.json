@@ -1,0 +1,29 @@
+{
+  "machineManagerApplicationApp": {
+    "rawmaterial": {
+      "home": {
+        "title": "Rawmaterials",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új Rawmaterial létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Rawmaterialt",
+        "notFound": "No Rawmaterials found"
+      },
+      "created": "Egy új Rawmaterial lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Rawmaterial módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Rawmaterial törölve lett {{ param }} azonosítóval",
+      "delete": {
+        "question": "Biztos benne, hogy törölni szeretné az Rawmaterialt {{ id }} azonosítóval?"
+      },
+      "detail": {
+        "title": "Rawmaterial"
+      },
+      "id": "ID",
+      "name": "Name",
+      "comment": "Comment",
+      "grade": "Grade",
+      "dimension": "Dimension",
+      "coating": "Coating",
+      "supplier": "Supplier"
+    }
+  }
+}

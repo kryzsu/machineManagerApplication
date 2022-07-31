@@ -2,42 +2,35 @@
   "machineManagerApplicationApp": {
     "job": {
       "home": {
-        "title": "Feladatok",
-        "refreshListLabel": "Lista frissitése",
-        "createLabel": "Egy új Feladat létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Feladatot",
-        "notFound": "Nincs ilyen Feladat"
+        "title": "Jobs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új Job létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Jobt",
+        "notFound": "No Jobs found"
       },
-      "in-progress": {
-        "title": "Feladatok folyamatban",
-        "refreshListLabel": "Lista frissitése",
-        "createLabel": "Egy új Feladat létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Feladatot",
-        "notFound": "Nincs ilyen Feladat"
-      },
-      "created": "Egy új Feladat lett létrehozva {{ param }} azonosítóval",
-      "updated": "A Feladat módosítva lett {{ param }} azonosítóval",
-      "deleted": "A Feladat törölve lett {{ param }} azonosítóval",
+      "created": "Egy új Job lett létrehozva {{ param }} azonosítóval",
+      "updated": "A Job módosítva lett {{ param }} azonosítóval",
+      "deleted": "A Job törölve lett {{ param }} azonosítóval",
       "delete": {
-        "question": "Biztos benne, hogy törölni szeretné az Feladatot {{ id }} azonosítóval?"
+        "question": "Biztos benne, hogy törölni szeretné az Jobt {{ id }} azonosítóval?"
       },
       "detail": {
-        "title": "Feladat"
+        "title": "Job"
       },
       "id": "ID",
-      "estimation": "Becslés (nap)",
-      "priority": "Prioritás",
-      "productCount": "Termékek száma",
-      "startDate": "Kezdés dátuma",
-      "endDate": "Befejezés dátuma",
-      "fact": "Tény (nap)",
-      "orderNumber": "Megrendelés szám",
-      "product": "Termék",
-      "drawingNumber": "Rajzszám",
-      "drawing": "Rajz",
-      "worknumber": "Munkaszám",
-      "machine": "Munkagép",
-      "customer": "Vevő"
+      "estimation": "Estimation",
+      "productCount": "Product Count",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "fact": "Fact",
+      "orderNumber": "Order Number",
+      "drawingNumber": "Drawing Number",
+      "drawing": "Drawing",
+      "worknumber": "Worknumber",
+      "priority": "Priority",
+      "product": "Product",
+      "machine": "Machine",
+      "customer": "Customer"
     }
   }
 }

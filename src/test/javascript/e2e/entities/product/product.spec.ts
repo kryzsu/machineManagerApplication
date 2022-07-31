@@ -2,6 +2,7 @@ import { browser, ExpectedConditions as ec, promise } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { ProductComponentsPage, ProductDeleteDialog, ProductUpdatePage } from './product.page-object';
+import * as path from 'path';
 
 const expect = chai.expect;
 
@@ -11,6 +12,9 @@ describe('Product e2e test', () => {
   let productComponentsPage: ProductComponentsPage;
   let productUpdatePage: ProductUpdatePage;
   let productDeleteDialog: ProductDeleteDialog;
+  const fileNameToUpload = 'logo-jhipster.png';
+  const fileToUpload = '../../../../../../src/main/webapp/content/images/' + fileNameToUpload;
+  const absolutePath = path.resolve(__dirname, fileToUpload);
   const username = process.env.E2E_USERNAME ?? 'admin';
   const password = process.env.E2E_PASSWORD ?? 'admin';
 
@@ -42,7 +46,15 @@ describe('Product e2e test', () => {
 
     await productComponentsPage.clickOnCreateButton();
 
-    await promise.all([productUpdatePage.setNameInput('name'), productUpdatePage.setCommentInput('comment')]);
+    await promise.all([
+      productUpdatePage.setNameInput('name'),
+      productUpdatePage.setDrawingNumberInput('drawingNumber'),
+      productUpdatePage.setItemNumberInput('itemNumber'),
+      productUpdatePage.setWeightInput('5'),
+      productUpdatePage.setCommentInput('comment'),
+      productUpdatePage.setDrawingInput(absolutePath),
+      productUpdatePage.rawmaterialSelectLastOption(),
+    ]);
 
     await productUpdatePage.save();
     expect(await productUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;

@@ -5,9 +5,14 @@
     {
       "relationshipName": "job",
       "otherEntityName": "job",
-      "relationshipType": "many-to-many",
-      "ownerSide": false,
+      "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "product"
+    },
+    {
+      "relationshipName": "rawmaterial",
+      "otherEntityName": "rawmaterial",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "name"
     }
   ],
   "fields": [
@@ -18,8 +23,26 @@
       "fieldValidateRulesMinlength": "5"
     },
     {
+      "fieldName": "drawingNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "itemNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "weight",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
       "fieldName": "comment",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "drawing",
+      "fieldType": "byte[]"
     }
   ],
   "changelogDate": "20210811163819",

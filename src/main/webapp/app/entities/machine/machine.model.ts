@@ -2,14 +2,6 @@ import { IOutOfOrder } from 'app/entities/out-of-order/out-of-order.model';
 import { IJob } from 'app/entities/job/job.model';
 import { IView } from 'app/entities/view/view.model';
 
-export interface IMachineDay {
-  date?: string;
-  occupied?: boolean;
-  comment?: string;
-  jobId?: number;
-  dayOfWeek?: number;
-}
-
 export interface IMachine {
   id?: number;
   name?: string;
@@ -17,7 +9,7 @@ export interface IMachine {
   outOfOrders?: IOutOfOrder[] | null;
   jobs?: IJob[] | null;
   views?: IView[] | null;
-  runningJob?: IJob;
+  runningJob?: IJob | null;
 }
 
 export class Machine implements IMachine {
@@ -27,7 +19,8 @@ export class Machine implements IMachine {
     public description?: string,
     public outOfOrders?: IOutOfOrder[] | null,
     public jobs?: IJob[] | null,
-    public views?: IView[] | null
+    public views?: IView[] | null,
+    public runningJob?: IJob | null
   ) {}
 }
 

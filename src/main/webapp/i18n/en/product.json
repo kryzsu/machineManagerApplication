@@ -19,8 +19,13 @@
       },
       "id": "ID",
       "name": "Name",
+      "drawingNumber": "Drawing Number",
+      "itemNumber": "Item Number",
+      "weight": "Weight",
       "comment": "Comment",
-      "job": "Job"
+      "drawing": "Drawing",
+      "job": "Job",
+      "rawmaterial": "Rawmaterial"
     }
   }
 }

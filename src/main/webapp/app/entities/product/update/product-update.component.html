@@ -36,8 +36,110 @@
         </div>
 
         <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.drawingNumber" for="field_drawingNumber"
+            >Drawing Number</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="drawingNumber"
+            id="field_drawingNumber"
+            data-cy="drawingNumber"
+            formControlName="drawingNumber"
+          />
+          <div
+            *ngIf="
+              editForm.get('drawingNumber')!.invalid && (editForm.get('drawingNumber')!.dirty || editForm.get('drawingNumber')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('drawingNumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.itemNumber" for="field_itemNumber"
+            >Item Number</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="itemNumber"
+            id="field_itemNumber"
+            data-cy="itemNumber"
+            formControlName="itemNumber"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.weight" for="field_weight">Weight</label>
+          <input type="number" class="form-control" name="weight" id="field_weight" data-cy="weight" formControlName="weight" />
+          <div *ngIf="editForm.get('weight')!.invalid && (editForm.get('weight')!.dirty || editForm.get('weight')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('weight')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('weight')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.comment" for="field_comment">Comment</label>
           <input type="text" class="form-control" name="comment" id="field_comment" data-cy="comment" formControlName="comment" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.drawing" for="field_drawing">Drawing</label>
+          <div>
+            <div *ngIf="editForm.get('drawing')!.value" class="form-text text-danger clearfix">
+              <span class="pull-left">{{ editForm.get('drawingContentType')!.value }}, {{ byteSize(editForm.get('drawing')!.value) }}</span>
+              <button
+                type="button"
+                (click)="editForm.patchValue({ drawing: null }); editForm.patchValue({ drawingContentType: null })"
+                class="btn btn-secondary btn-xs pull-right"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="file_drawing"
+              data-cy="drawing"
+              (change)="setFileData($event, 'drawing', false)"
+              jhiTranslate="entity.action.addblob"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="drawing" id="field_drawing" data-cy="drawing" formControlName="drawing" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="drawingContentType"
+            id="field_drawingContentType"
+            formControlName="drawingContentType"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="machineManagerApplicationApp.product.rawmaterial" for="field_rawmaterial"
+            >Rawmaterial</label
+          >
+          <select class="form-control" id="field_rawmaterial" data-cy="rawmaterial" name="rawmaterial" formControlName="rawmaterial">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                rawmaterialOption.id === editForm.get('rawmaterial')!.value?.id ? editForm.get('rawmaterial')!.value : rawmaterialOption
+              "
+              *ngFor="let rawmaterialOption of rawmaterialsSharedCollection; trackBy: trackRawmaterialById"
+            >
+              {{ rawmaterialOption.name }}
+            </option>
+          </select>
         </div>
       </div>
 

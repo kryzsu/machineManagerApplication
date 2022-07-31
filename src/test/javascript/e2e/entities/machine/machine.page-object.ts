@@ -33,6 +33,8 @@ export class MachineUpdatePage {
   nameInput = element(by.id('field_name'));
   descriptionInput = element(by.id('field_description'));
 
+  runningJobSelect = element(by.id('field_runningJob'));
+
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
   }
@@ -59,6 +61,22 @@ export class MachineUpdatePage {
 
   async getDescriptionInput(): Promise<string> {
     return await this.descriptionInput.getAttribute('value');
+  }
+
+  async runningJobSelectLastOption(): Promise<void> {
+    await this.runningJobSelect.all(by.tagName('option')).last().click();
+  }
+
+  async runningJobSelectOption(option: string): Promise<void> {
+    await this.runningJobSelect.sendKeys(option);
+  }
+
+  getRunningJobSelect(): ElementFinder {
+    return this.runningJobSelect;
+  }
+
+  async getRunningJobSelectedOption(): Promise<string> {
+    return await this.runningJobSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

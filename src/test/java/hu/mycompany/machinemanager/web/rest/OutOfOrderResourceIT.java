@@ -44,9 +44,13 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class OutOfOrderResourceIT {
 
-    private static final LocalDate DEFAULT_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATE = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_DATE = LocalDate.ofEpochDay(-1L);
+    private static final LocalDate DEFAULT_START = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_START = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate SMALLER_START = LocalDate.ofEpochDay(-1L);
+
+    private static final LocalDate DEFAULT_END = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_END = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate SMALLER_END = LocalDate.ofEpochDay(-1L);
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -84,7 +88,7 @@ class OutOfOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OutOfOrder createEntity(EntityManager em) {
-        OutOfOrder outOfOrder = new OutOfOrder().start(DEFAULT_DATE).end(DEFAULT_DATE).description(DEFAULT_DESCRIPTION);
+        OutOfOrder outOfOrder = new OutOfOrder().start(DEFAULT_START).end(DEFAULT_END).description(DEFAULT_DESCRIPTION);
         return outOfOrder;
     }
 
@@ -95,7 +99,7 @@ class OutOfOrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static OutOfOrder createUpdatedEntity(EntityManager em) {
-        OutOfOrder outOfOrder = new OutOfOrder().start(DEFAULT_DATE).end(DEFAULT_DATE).description(UPDATED_DESCRIPTION);
+        OutOfOrder outOfOrder = new OutOfOrder().start(UPDATED_START).end(UPDATED_END).description(UPDATED_DESCRIPTION);
         return outOfOrder;
     }
 
@@ -118,8 +122,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeCreate + 1);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getStart()).isEqualTo(DEFAULT_DATE);
-        assertThat(testOutOfOrder.getEnd()).isEqualTo(DEFAULT_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(DEFAULT_START);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(DEFAULT_END);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
@@ -144,10 +148,28 @@ class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    void checkDateIsRequired() throws Exception {
+    void checkStartIsRequired() throws Exception {
         int databaseSizeBeforeTest = outOfOrderRepository.findAll().size();
         // set the field null
         outOfOrder.setStart(null);
+
+        // Create the OutOfOrder, which fails.
+        OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
+
+        restOutOfOrderMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(outOfOrderDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
+        assertThat(outOfOrderList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkEndIsRequired() throws Exception {
+        int databaseSizeBeforeTest = outOfOrderRepository.findAll().size();
+        // set the field null
+        outOfOrder.setEnd(null);
 
         // Create the OutOfOrder, which fails.
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(outOfOrder);
@@ -190,7 +212,8 @@ class OutOfOrderResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(outOfOrder.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
 
@@ -224,7 +247,8 @@ class OutOfOrderResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(outOfOrder.getId().intValue()))
-            .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()))
+            .andExpect(jsonPath("$.start").value(DEFAULT_START.toString()))
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
@@ -248,106 +272,210 @@ class OutOfOrderResourceIT {
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date equals to DEFAULT_DATE
-        defaultOutOfOrderShouldBeFound("date.equals=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start equals to DEFAULT_START
+        defaultOutOfOrderShouldBeFound("start.equals=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date equals to UPDATED_DATE
-        defaultOutOfOrderShouldNotBeFound("date.equals=" + UPDATED_DATE);
+        // Get all the outOfOrderList where start equals to UPDATED_START
+        defaultOutOfOrderShouldNotBeFound("start.equals=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsNotEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsNotEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date not equals to DEFAULT_DATE
-        defaultOutOfOrderShouldNotBeFound("date.notEquals=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start not equals to DEFAULT_START
+        defaultOutOfOrderShouldNotBeFound("start.notEquals=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date not equals to UPDATED_DATE
-        defaultOutOfOrderShouldBeFound("date.notEquals=" + UPDATED_DATE);
+        // Get all the outOfOrderList where start not equals to UPDATED_START
+        defaultOutOfOrderShouldBeFound("start.notEquals=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsInShouldWork() throws Exception {
+    void getAllOutOfOrdersByStartIsInShouldWork() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date in DEFAULT_DATE or UPDATED_DATE
-        defaultOutOfOrderShouldBeFound("date.in=" + DEFAULT_DATE + "," + UPDATED_DATE);
+        // Get all the outOfOrderList where start in DEFAULT_START or UPDATED_START
+        defaultOutOfOrderShouldBeFound("start.in=" + DEFAULT_START + "," + UPDATED_START);
 
-        // Get all the outOfOrderList where date equals to UPDATED_DATE
-        defaultOutOfOrderShouldNotBeFound("date.in=" + UPDATED_DATE);
+        // Get all the outOfOrderList where start equals to UPDATED_START
+        defaultOutOfOrderShouldNotBeFound("start.in=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsNullOrNotNull() throws Exception {
+    void getAllOutOfOrdersByStartIsNullOrNotNull() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date is not null
-        defaultOutOfOrderShouldBeFound("date.specified=true");
+        // Get all the outOfOrderList where start is not null
+        defaultOutOfOrderShouldBeFound("start.specified=true");
 
-        // Get all the outOfOrderList where date is null
-        defaultOutOfOrderShouldNotBeFound("date.specified=false");
+        // Get all the outOfOrderList where start is null
+        defaultOutOfOrderShouldNotBeFound("start.specified=false");
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date is greater than or equal to DEFAULT_DATE
-        defaultOutOfOrderShouldBeFound("date.greaterThanOrEqual=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start is greater than or equal to DEFAULT_START
+        defaultOutOfOrderShouldBeFound("start.greaterThanOrEqual=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date is greater than or equal to UPDATED_DATE
-        defaultOutOfOrderShouldNotBeFound("date.greaterThanOrEqual=" + UPDATED_DATE);
+        // Get all the outOfOrderList where start is greater than or equal to UPDATED_START
+        defaultOutOfOrderShouldNotBeFound("start.greaterThanOrEqual=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsLessThanOrEqualToSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date is less than or equal to DEFAULT_DATE
-        defaultOutOfOrderShouldBeFound("date.lessThanOrEqual=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start is less than or equal to DEFAULT_START
+        defaultOutOfOrderShouldBeFound("start.lessThanOrEqual=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date is less than or equal to SMALLER_DATE
-        defaultOutOfOrderShouldNotBeFound("date.lessThanOrEqual=" + SMALLER_DATE);
+        // Get all the outOfOrderList where start is less than or equal to SMALLER_START
+        defaultOutOfOrderShouldNotBeFound("start.lessThanOrEqual=" + SMALLER_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsLessThanSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsLessThanSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date is less than DEFAULT_DATE
-        defaultOutOfOrderShouldNotBeFound("date.lessThan=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start is less than DEFAULT_START
+        defaultOutOfOrderShouldNotBeFound("start.lessThan=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date is less than UPDATED_DATE
-        defaultOutOfOrderShouldBeFound("date.lessThan=" + UPDATED_DATE);
+        // Get all the outOfOrderList where start is less than UPDATED_START
+        defaultOutOfOrderShouldBeFound("start.lessThan=" + UPDATED_START);
     }
 
     @Test
     @Transactional
-    void getAllOutOfOrdersByDateIsGreaterThanSomething() throws Exception {
+    void getAllOutOfOrdersByStartIsGreaterThanSomething() throws Exception {
         // Initialize the database
         outOfOrderRepository.saveAndFlush(outOfOrder);
 
-        // Get all the outOfOrderList where date is greater than DEFAULT_DATE
-        defaultOutOfOrderShouldNotBeFound("date.greaterThan=" + DEFAULT_DATE);
+        // Get all the outOfOrderList where start is greater than DEFAULT_START
+        defaultOutOfOrderShouldNotBeFound("start.greaterThan=" + DEFAULT_START);
 
-        // Get all the outOfOrderList where date is greater than SMALLER_DATE
-        defaultOutOfOrderShouldBeFound("date.greaterThan=" + SMALLER_DATE);
+        // Get all the outOfOrderList where start is greater than SMALLER_START
+        defaultOutOfOrderShouldBeFound("start.greaterThan=" + SMALLER_START);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsEqualToSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end equals to DEFAULT_END
+        defaultOutOfOrderShouldBeFound("end.equals=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end equals to UPDATED_END
+        defaultOutOfOrderShouldNotBeFound("end.equals=" + UPDATED_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end not equals to DEFAULT_END
+        defaultOutOfOrderShouldNotBeFound("end.notEquals=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end not equals to UPDATED_END
+        defaultOutOfOrderShouldBeFound("end.notEquals=" + UPDATED_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsInShouldWork() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end in DEFAULT_END or UPDATED_END
+        defaultOutOfOrderShouldBeFound("end.in=" + DEFAULT_END + "," + UPDATED_END);
+
+        // Get all the outOfOrderList where end equals to UPDATED_END
+        defaultOutOfOrderShouldNotBeFound("end.in=" + UPDATED_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end is not null
+        defaultOutOfOrderShouldBeFound("end.specified=true");
+
+        // Get all the outOfOrderList where end is null
+        defaultOutOfOrderShouldNotBeFound("end.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end is greater than or equal to DEFAULT_END
+        defaultOutOfOrderShouldBeFound("end.greaterThanOrEqual=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end is greater than or equal to UPDATED_END
+        defaultOutOfOrderShouldNotBeFound("end.greaterThanOrEqual=" + UPDATED_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end is less than or equal to DEFAULT_END
+        defaultOutOfOrderShouldBeFound("end.lessThanOrEqual=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end is less than or equal to SMALLER_END
+        defaultOutOfOrderShouldNotBeFound("end.lessThanOrEqual=" + SMALLER_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsLessThanSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end is less than DEFAULT_END
+        defaultOutOfOrderShouldNotBeFound("end.lessThan=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end is less than UPDATED_END
+        defaultOutOfOrderShouldBeFound("end.lessThan=" + UPDATED_END);
+    }
+
+    @Test
+    @Transactional
+    void getAllOutOfOrdersByEndIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        outOfOrderRepository.saveAndFlush(outOfOrder);
+
+        // Get all the outOfOrderList where end is greater than DEFAULT_END
+        defaultOutOfOrderShouldNotBeFound("end.greaterThan=" + DEFAULT_END);
+
+        // Get all the outOfOrderList where end is greater than SMALLER_END
+        defaultOutOfOrderShouldBeFound("end.greaterThan=" + SMALLER_END);
     }
 
     @Test
@@ -456,7 +584,8 @@ class OutOfOrderResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(outOfOrder.getId().intValue())))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.toString())))
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
 
         // Check, that the count call also returns 1
@@ -505,7 +634,7 @@ class OutOfOrderResourceIT {
         OutOfOrder updatedOutOfOrder = outOfOrderRepository.findById(outOfOrder.getId()).get();
         // Disconnect from session so that the updates on updatedOutOfOrder are not directly saved in db
         em.detach(updatedOutOfOrder);
-        updatedOutOfOrder.start(UPDATED_DATE).end(DEFAULT_DATE).description(UPDATED_DESCRIPTION);
+        updatedOutOfOrder.start(UPDATED_START).end(UPDATED_END).description(UPDATED_DESCRIPTION);
         OutOfOrderDTO outOfOrderDTO = outOfOrderMapper.toDto(updatedOutOfOrder);
 
         restOutOfOrderMockMvc
@@ -520,8 +649,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
-        assertThat(testOutOfOrder.getEnd()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_START);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(UPDATED_END);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -602,7 +731,7 @@ class OutOfOrderResourceIT {
         OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
         partialUpdatedOutOfOrder.setId(outOfOrder.getId());
 
-        partialUpdatedOutOfOrder.start(UPDATED_DATE).end(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        partialUpdatedOutOfOrder.start(UPDATED_START).end(UPDATED_END).description(UPDATED_DESCRIPTION);
 
         restOutOfOrderMockMvc
             .perform(
@@ -616,7 +745,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_START);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(UPDATED_END);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -632,7 +762,7 @@ class OutOfOrderResourceIT {
         OutOfOrder partialUpdatedOutOfOrder = new OutOfOrder();
         partialUpdatedOutOfOrder.setId(outOfOrder.getId());
 
-        partialUpdatedOutOfOrder.start(UPDATED_DATE).description(UPDATED_DESCRIPTION);
+        partialUpdatedOutOfOrder.start(UPDATED_START).end(UPDATED_END).description(UPDATED_DESCRIPTION);
 
         restOutOfOrderMockMvc
             .perform(
@@ -646,7 +776,8 @@ class OutOfOrderResourceIT {
         List<OutOfOrder> outOfOrderList = outOfOrderRepository.findAll();
         assertThat(outOfOrderList).hasSize(databaseSizeBeforeUpdate);
         OutOfOrder testOutOfOrder = outOfOrderList.get(outOfOrderList.size() - 1);
-        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_DATE);
+        assertThat(testOutOfOrder.getStart()).isEqualTo(UPDATED_START);
+        assertThat(testOutOfOrder.getEnd()).isEqualTo(UPDATED_END);
         assertThat(testOutOfOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 

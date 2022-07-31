@@ -50,12 +50,12 @@ describe('Component Tests', () => {
     describe('ngOnInit', () => {
       it('Should call Product query and add missing value', () => {
         const job: IJob = { id: 456 };
-        const products: IProduct[] = [{ id: 69718 }];
-        job.products = products;
+        const product: IProduct = { id: 69718 };
+        job.product = product;
 
         const productCollection: IProduct[] = [{ id: 79610 }];
         jest.spyOn(productService, 'query').mockReturnValue(of(new HttpResponse({ body: productCollection })));
-        const additionalProducts = [...products];
+        const additionalProducts = [product];
         const expectedCollection: IProduct[] = [...additionalProducts, ...productCollection];
         jest.spyOn(productService, 'addProductToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -107,8 +107,8 @@ describe('Component Tests', () => {
 
       it('Should update editForm', () => {
         const job: IJob = { id: 456 };
-        const products: IProduct = { id: 63338 };
-        job.products = [products];
+        const product: IProduct = { id: 63338 };
+        job.product = product;
         const machine: IMachine = { id: 30800 };
         job.machine = machine;
         const customer: ICustomer = { id: 22663 };
@@ -118,7 +118,7 @@ describe('Component Tests', () => {
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(job));
-        expect(comp.productsSharedCollection).toContain(products);
+        expect(comp.productsSharedCollection).toContain(product);
         expect(comp.machinesSharedCollection).toContain(machine);
         expect(comp.customersSharedCollection).toContain(customer);
       });
@@ -210,34 +210,6 @@ describe('Component Tests', () => {
           const entity = { id: 123 };
           const trackResult = comp.trackCustomerById(0, entity);
           expect(trackResult).toEqual(entity.id);
-        });
-      });
-    });
-
-    describe('Getting selected relationships', () => {
-      describe('getSelectedProduct', () => {
-        it('Should return option if no Product is selected', () => {
-          const option = { id: 123 };
-          const result = comp.getSelectedProduct(option);
-          expect(result === option).toEqual(true);
-        });
-
-        it('Should return selected Product for according option', () => {
-          const option = { id: 123 };
-          const selected = { id: 123 };
-          const selected2 = { id: 456 };
-          const result = comp.getSelectedProduct(option, [selected2, selected]);
-          expect(result === selected).toEqual(true);
-          expect(result === selected2).toEqual(false);
-          expect(result === option).toEqual(false);
-        });
-
-        it('Should return option if this Product is not selected', () => {
-          const option = { id: 123 };
-          const selected = { id: 456 };
-          const result = comp.getSelectedProduct(option, [selected]);
-          expect(result === option).toEqual(true);
-          expect(result === selected).toEqual(false);
         });
       });
     });

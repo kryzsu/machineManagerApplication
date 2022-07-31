@@ -56,7 +56,8 @@ describe('Job e2e test', () => {
       jobUpdatePage.setDrawingNumberInput('drawingNumber'),
       jobUpdatePage.setDrawingInput(absolutePath),
       jobUpdatePage.setWorknumberInput('worknumber'),
-      // jobUpdatePage.productSelectLastOption(),
+      jobUpdatePage.setPriorityInput('5'),
+      jobUpdatePage.productSelectLastOption(),
       jobUpdatePage.machineSelectLastOption(),
       jobUpdatePage.customerSelectLastOption(),
     ]);

@@ -9,6 +9,7 @@ import { IProduct } from '../product.model';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
 import { ProductService } from '../service/product.service';
 import { ProductDeleteDialogComponent } from '../delete/product-delete-dialog.component';
+import { DataUtils } from 'app/core/util/data-util.service';
 
 @Component({
   selector: 'jhi-product',
@@ -27,6 +28,7 @@ export class ProductComponent implements OnInit {
   constructor(
     protected productService: ProductService,
     protected activatedRoute: ActivatedRoute,
+    protected dataUtils: DataUtils,
     protected router: Router,
     protected modalService: NgbModal
   ) {}
@@ -59,6 +61,14 @@ export class ProductComponent implements OnInit {
 
   trackId(index: number, item: IProduct): number {
     return item.id!;
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(base64String: string, contentType: string | null | undefined): void {
+    return this.dataUtils.openFile(base64String, contentType);
   }
 
   delete(product: IProduct): void {

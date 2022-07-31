@@ -2,32 +2,24 @@ package hu.mycompany.machinemanager.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import hu.mycompany.machinemanager.IntegrationTest;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.repository.JobRepository;
-import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,7 +30,6 @@ import org.springframework.util.Base64Utils;
  * Integration tests for the {@link JobResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class JobResourceIT {
@@ -72,6 +63,9 @@ class JobResourceIT {
     private static final String DEFAULT_WORKNUMBER = "AAAAAAAAAA";
     private static final String UPDATED_WORKNUMBER = "BBBBBBBBBB";
 
+    private static final Long DEFAULT_PRIORITY = 1L;
+    private static final Long UPDATED_PRIORITY = 2L;
+
     private static final String ENTITY_API_URL = "/api/jobs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -81,14 +75,8 @@ class JobResourceIT {
     @Autowired
     private JobRepository jobRepository;
 
-    @Mock
-    private JobRepository jobRepositoryMock;
-
     @Autowired
     private JobMapper jobMapper;
-
-    @Mock
-    private JobService jobServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -115,7 +103,8 @@ class JobResourceIT {
             .drawingNumber(DEFAULT_DRAWING_NUMBER)
             .drawing(DEFAULT_DRAWING)
             .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE)
-            .worknumber(DEFAULT_WORKNUMBER);
+            .worknumber(DEFAULT_WORKNUMBER)
+            .priority(DEFAULT_PRIORITY);
         return job;
     }
 
@@ -136,7 +125,8 @@ class JobResourceIT {
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
-            .worknumber(UPDATED_WORKNUMBER);
+            .worknumber(UPDATED_WORKNUMBER)
+            .priority(UPDATED_PRIORITY);
         return job;
     }
 
@@ -169,6 +159,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
+        assertThat(testJob.getPriority()).isEqualTo(DEFAULT_PRIORITY);
     }
 
     @Test
@@ -247,25 +238,8 @@ class JobResourceIT {
             .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
             .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))))
-            .andExpect(jsonPath("$.[*].worknumber").value(hasItem(DEFAULT_WORKNUMBER)));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllJobsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(jobServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restJobMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(jobServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllJobsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(jobServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restJobMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(jobServiceMock, times(1)).findAllWithEagerRelationships(any());
+            .andExpect(jsonPath("$.[*].worknumber").value(hasItem(DEFAULT_WORKNUMBER)))
+            .andExpect(jsonPath("$.[*].priority").value(hasItem(DEFAULT_PRIORITY.intValue())));
     }
 
     @Test
@@ -289,7 +263,8 @@ class JobResourceIT {
             .andExpect(jsonPath("$.drawingNumber").value(DEFAULT_DRAWING_NUMBER))
             .andExpect(jsonPath("$.drawingContentType").value(DEFAULT_DRAWING_CONTENT_TYPE))
             .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)))
-            .andExpect(jsonPath("$.worknumber").value(DEFAULT_WORKNUMBER));
+            .andExpect(jsonPath("$.worknumber").value(DEFAULT_WORKNUMBER))
+            .andExpect(jsonPath("$.priority").value(DEFAULT_PRIORITY.intValue()));
     }
 
     @Test
@@ -321,7 +296,8 @@ class JobResourceIT {
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
-            .worknumber(UPDATED_WORKNUMBER);
+            .worknumber(UPDATED_WORKNUMBER)
+            .priority(UPDATED_PRIORITY);
         JobDTO jobDTO = jobMapper.toDto(updatedJob);
 
         restJobMockMvc
@@ -346,6 +322,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);
+        assertThat(testJob.getPriority()).isEqualTo(UPDATED_PRIORITY);
     }
 
     @Test
@@ -453,6 +430,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
+        assertThat(testJob.getPriority()).isEqualTo(DEFAULT_PRIORITY);
     }
 
     @Test
@@ -477,7 +455,8 @@ class JobResourceIT {
             .drawingNumber(UPDATED_DRAWING_NUMBER)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
-            .worknumber(UPDATED_WORKNUMBER);
+            .worknumber(UPDATED_WORKNUMBER)
+            .priority(UPDATED_PRIORITY);
 
         restJobMockMvc
             .perform(
@@ -501,6 +480,7 @@ class JobResourceIT {
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);
+        assertThat(testJob.getPriority()).isEqualTo(UPDATED_PRIORITY);
     }
 
     @Test

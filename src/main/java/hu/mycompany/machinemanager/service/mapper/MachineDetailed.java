@@ -30,8 +30,13 @@ public class MachineDetailed implements Serializable {
         this.runningJob = runningJob;
     }
 
-    public static MachineDetailed createUsingJobWithoutDrawing(Long id, String name, String description,
-                                                               Set<JobWithoutDrawing> jobs, Job runningJob) {
+    public static MachineDetailed createUsingJobWithoutDrawing(
+        Long id,
+        String name,
+        String description,
+        Set<JobWithoutDrawing> jobs,
+        Job runningJob
+    ) {
         MachineDetailed rv = new MachineDetailed();
         rv.id = id;
         rv.name = name;
@@ -42,8 +47,14 @@ public class MachineDetailed implements Serializable {
     }
 
     public static MachineDetailed toDetailed(Machine machine) {
-        machine.getJobs().forEach(job -> job.getProducts().size());
-        return new MachineDetailed(machine.getId(), machine.getName(), machine.getDescription(), machine.getJobs(), machine.getRunningJob());
+        // TODO: problem source can be
+        return new MachineDetailed(
+            machine.getId(),
+            machine.getName(),
+            machine.getDescription(),
+            machine.getJobs(),
+            machine.getRunningJob()
+        );
     }
 
     public Long getId() {

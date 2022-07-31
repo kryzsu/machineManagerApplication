@@ -18,7 +18,7 @@ public class JobWithoutDrawing implements Comparable {
     private String drawingNumber;
     private String consumerName;
     private String worknumber;
-    private Set<Product> products = new HashSet<>();
+    private Product product;
 
     private Long priority;
 
@@ -32,7 +32,7 @@ public class JobWithoutDrawing implements Comparable {
             job.getFact(),
             job.getOrderNumber(),
             job.getDrawingNumber(),
-            job.getProducts(),
+            job.getProduct(),
             (job.getCustomer() == null) ? null : job.getCustomer().getName(),
             job.getWorknumber(),
             (job.getPriority() == null) ? 0 : job.getPriority()
@@ -48,7 +48,7 @@ public class JobWithoutDrawing implements Comparable {
         Integer fact,
         String orderNumber,
         String drawingNumber,
-        Set<Product> products,
+        Product product,
         String consumerName,
         String worknumber,
         long priority
@@ -61,7 +61,7 @@ public class JobWithoutDrawing implements Comparable {
         this.fact = fact;
         this.orderNumber = orderNumber;
         this.drawingNumber = drawingNumber;
-        this.products = products;
+        this.product = product;
         this.consumerName = consumerName;
         this.worknumber = worknumber;
         this.priority = priority;
@@ -131,12 +131,12 @@ public class JobWithoutDrawing implements Comparable {
         this.drawingNumber = drawingNumber;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public String getConsumerName() {

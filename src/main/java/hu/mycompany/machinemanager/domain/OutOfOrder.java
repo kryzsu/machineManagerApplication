@@ -44,7 +44,7 @@ public class OutOfOrder implements Serializable {
         joinColumns = @JoinColumn(name = "out_of_order_id"),
         inverseJoinColumns = @JoinColumn(name = "machine_id")
     )
-    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs", "views", "runningJob" }, allowSetters = true)
     private Set<Machine> machines = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -61,18 +61,13 @@ public class OutOfOrder implements Serializable {
         return this;
     }
 
+    public LocalDate getStart() {
+        return this.start;
+    }
+
     public OutOfOrder start(LocalDate start) {
         this.start = start;
         return this;
-    }
-
-    public OutOfOrder end(LocalDate end) {
-        this.end = end;
-        return this;
-    }
-
-    public LocalDate getStart() {
-        return start;
     }
 
     public void setStart(LocalDate start) {
@@ -80,7 +75,12 @@ public class OutOfOrder implements Serializable {
     }
 
     public LocalDate getEnd() {
-        return end;
+        return this.end;
+    }
+
+    public OutOfOrder end(LocalDate end) {
+        this.end = end;
+        return this;
     }
 
     public void setEnd(LocalDate end) {
@@ -145,10 +145,13 @@ public class OutOfOrder implements Serializable {
     }
 
     // prettier-ignore
-
     @Override
     public String toString() {
-        return String.format("OutOfOrder{id=%d, start=%s, end=%s, description='%s', machines=%s}",
-            id, start, end, description, machines);
+        return "OutOfOrder{" +
+            "id=" + getId() +
+            ", start='" + getStart() + "'" +
+            ", end='" + getEnd() + "'" +
+            ", description='" + getDescription() + "'" +
+            "}";
     }
 }

@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 
-import {IMachine, IMachineDay} from '../entities/machine/machine.model';
+import { IMachine } from '../entities/machine/machine.model';
+import { IMachineDay } from '../entities/machineday';
 
 export const createMachineList = createAction('[machine list] created', props<{ machineList: IMachine[] }>());
 export const deleteMachine = createAction('[machine] delete', props<{ machineId: number }>());
@@ -11,5 +12,4 @@ export const editJobEnd = createAction('[job] edit end', props<{ jobId: number }
 
 export const newJob = createAction('[job] new', props<{ machineId: number }>());
 export const newJobEnd = createAction('[job] new end');
-export const getMachineDays =  createAction('[getMachineDays]', props<{ machineDays: IMachineDay[] }>());
-
+export const getMachineDays = createAction('[getMachineDays]', props<{ machineDays: IMachineDay[] }>());

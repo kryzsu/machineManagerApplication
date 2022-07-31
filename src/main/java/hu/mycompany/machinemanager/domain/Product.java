@@ -2,15 +2,12 @@ package hu.mycompany.machinemanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Product.
@@ -31,27 +28,34 @@ public class Product implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @NotNull
+    @Column(name = "drawing_number", nullable = false)
+    private String drawingNumber;
+
+    @Column(name = "item_number")
+    private String itemNumber;
+
+    @NotNull
+    @Column(name = "weight", nullable = false)
+    private Double weight;
+
     @Column(name = "comment")
     private String comment;
 
-    @CreationTimestamp
-    private LocalDateTime createDateTime;
+    @Lob
+    @Column(name = "drawing")
+    private byte[] drawing;
 
-    @UpdateTimestamp
-    private LocalDateTime updateDateTime;
+    @Column(name = "drawing_content_type")
+    private String drawingContentType;
 
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
-
-    @ManyToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "products", "machine", "customer" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
+
+    @ManyToOne
+    private Rawmaterial rawmaterial;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -80,6 +84,45 @@ public class Product implements Serializable {
         this.name = name;
     }
 
+    public String getDrawingNumber() {
+        return this.drawingNumber;
+    }
+
+    public Product drawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+        return this;
+    }
+
+    public void setDrawingNumber(String drawingNumber) {
+        this.drawingNumber = drawingNumber;
+    }
+
+    public String getItemNumber() {
+        return this.itemNumber;
+    }
+
+    public Product itemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
+        return this;
+    }
+
+    public void setItemNumber(String itemNumber) {
+        this.itemNumber = itemNumber;
+    }
+
+    public Double getWeight() {
+        return this.weight;
+    }
+
+    public Product weight(Double weight) {
+        this.weight = weight;
+        return this;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
     public String getComment() {
         return this.comment;
     }
@@ -93,6 +136,32 @@ public class Product implements Serializable {
         this.comment = comment;
     }
 
+    public byte[] getDrawing() {
+        return this.drawing;
+    }
+
+    public Product drawing(byte[] drawing) {
+        this.drawing = drawing;
+        return this;
+    }
+
+    public void setDrawing(byte[] drawing) {
+        this.drawing = drawing;
+    }
+
+    public String getDrawingContentType() {
+        return this.drawingContentType;
+    }
+
+    public Product drawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+        return this;
+    }
+
+    public void setDrawingContentType(String drawingContentType) {
+        this.drawingContentType = drawingContentType;
+    }
+
     public Set<Job> getJobs() {
         return this.jobs;
     }
@@ -104,24 +173,37 @@ public class Product implements Serializable {
 
     public Product addJob(Job job) {
         this.jobs.add(job);
-        job.getProducts().add(this);
+        job.setProduct(this);
         return this;
     }
 
     public Product removeJob(Job job) {
         this.jobs.remove(job);
-        job.getProducts().remove(this);
+        job.setProduct(null);
         return this;
     }
 
     public void setJobs(Set<Job> jobs) {
         if (this.jobs != null) {
-            this.jobs.forEach(i -> i.removeProduct(this));
+            this.jobs.forEach(i -> i.setProduct(null));
         }
         if (jobs != null) {
-            jobs.forEach(i -> i.addProduct(this));
+            jobs.forEach(i -> i.setProduct(this));
         }
         this.jobs = jobs;
+    }
+
+    public Rawmaterial getRawmaterial() {
+        return this.rawmaterial;
+    }
+
+    public Product rawmaterial(Rawmaterial rawmaterial) {
+        this.setRawmaterial(rawmaterial);
+        return this;
+    }
+
+    public void setRawmaterial(Rawmaterial rawmaterial) {
+        this.rawmaterial = rawmaterial;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -146,6 +228,15 @@ public class Product implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return String.format("Product{id=%d, name='%s', comment='%s'}", getId(), getName(), getComment());
+        return "Product{" +
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", drawingNumber='" + getDrawingNumber() + "'" +
+            ", itemNumber='" + getItemNumber() + "'" +
+            ", weight=" + getWeight() +
+            ", comment='" + getComment() + "'" +
+            ", drawing='" + getDrawing() + "'" +
+            ", drawingContentType='" + getDrawingContentType() + "'" +
+            "}";
     }
 }

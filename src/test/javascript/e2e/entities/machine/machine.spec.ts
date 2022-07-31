@@ -42,7 +42,11 @@ describe('Machine e2e test', () => {
 
     await machineComponentsPage.clickOnCreateButton();
 
-    await promise.all([machineUpdatePage.setNameInput('name'), machineUpdatePage.setDescriptionInput('description')]);
+    await promise.all([
+      machineUpdatePage.setNameInput('name'),
+      machineUpdatePage.setDescriptionInput('description'),
+      machineUpdatePage.runningJobSelectLastOption(),
+    ]);
 
     await machineUpdatePage.save();
     expect(await machineUpdatePage.getSaveButton().isPresent(), 'Expected save button disappear').to.be.false;

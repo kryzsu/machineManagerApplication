@@ -89,6 +89,15 @@ public class ProductQueryService extends QueryService<Product> {
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), Product_.name));
             }
+            if (criteria.getDrawingNumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getDrawingNumber(), Product_.drawingNumber));
+            }
+            if (criteria.getItemNumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getItemNumber(), Product_.itemNumber));
+            }
+            if (criteria.getWeight() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getWeight(), Product_.weight));
+            }
             if (criteria.getComment() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getComment(), Product_.comment));
             }
@@ -96,6 +105,15 @@ public class ProductQueryService extends QueryService<Product> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getJobId(), root -> root.join(Product_.jobs, JoinType.LEFT).get(Job_.id))
+                    );
+            }
+            if (criteria.getRawmaterialId() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getRawmaterialId(),
+                            root -> root.join(Product_.rawmaterial, JoinType.LEFT).get(Rawmaterial_.id)
+                        )
                     );
             }
         }

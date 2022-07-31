@@ -2,24 +2,24 @@
   "machineManagerApplicationApp": {
     "view": {
       "home": {
-        "title": "Nézetek",
-        "refreshListLabel": "Lista frissitese",
-        "createLabel": "Egy új Nézet létrehozása",
-        "createOrEditLabel": "Hozzon létre, vagy módosítson Nézetet",
-        "notFound": "Nincs ilyen Nézet"
+        "title": "Views",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Egy új View létrehozása",
+        "createOrEditLabel": "Hozzon létre, vagy módosítson Viewt",
+        "notFound": "No Views found"
       },
-      "created": "Egy új Nézet lett létrehozva {{ param }} azonosítóval",
-      "updated": "A Nézet módosítva lett {{ param }} azonosítóval",
-      "deleted": "A Nézet törölve lett {{ param }} azonosítóval",
+      "created": "Egy új View lett létrehozva {{ param }} azonosítóval",
+      "updated": "A View módosítva lett {{ param }} azonosítóval",
+      "deleted": "A View törölve lett {{ param }} azonosítóval",
       "delete": {
-        "question": "Biztos benne, hogy törölni szeretné az Nézetet {{ id }} azonosítóval?"
+        "question": "Biztos benne, hogy törölni szeretné az Viewt {{ id }} azonosítóval?"
       },
       "detail": {
-        "title": "Nézet"
+        "title": "View"
       },
       "id": "ID",
-      "name": "Név",
-      "machine": "Munkagép"
+      "name": "Name",
+      "machine": "Machine"
     }
   }
 }

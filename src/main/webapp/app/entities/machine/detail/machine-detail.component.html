@@ -22,6 +22,12 @@
         <dd>
           <span>{{ machine.description }}</span>
         </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.machine.runningJob">Running Job</span></dt>
+        <dd>
+          <div *ngIf="machine.runningJob">
+            <a [routerLink]="['/job', machine.runningJob?.id, 'view']">{{ machine.runningJob?.orderNumber }}</a>
+          </div>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

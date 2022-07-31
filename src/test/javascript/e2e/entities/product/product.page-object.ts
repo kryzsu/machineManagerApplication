@@ -31,7 +31,13 @@ export class ProductUpdatePage {
 
   idInput = element(by.id('field_id'));
   nameInput = element(by.id('field_name'));
+  drawingNumberInput = element(by.id('field_drawingNumber'));
+  itemNumberInput = element(by.id('field_itemNumber'));
+  weightInput = element(by.id('field_weight'));
   commentInput = element(by.id('field_comment'));
+  drawingInput = element(by.id('file_drawing'));
+
+  rawmaterialSelect = element(by.id('field_rawmaterial'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
@@ -53,12 +59,60 @@ export class ProductUpdatePage {
     return await this.nameInput.getAttribute('value');
   }
 
+  async setDrawingNumberInput(drawingNumber: string): Promise<void> {
+    await this.drawingNumberInput.sendKeys(drawingNumber);
+  }
+
+  async getDrawingNumberInput(): Promise<string> {
+    return await this.drawingNumberInput.getAttribute('value');
+  }
+
+  async setItemNumberInput(itemNumber: string): Promise<void> {
+    await this.itemNumberInput.sendKeys(itemNumber);
+  }
+
+  async getItemNumberInput(): Promise<string> {
+    return await this.itemNumberInput.getAttribute('value');
+  }
+
+  async setWeightInput(weight: string): Promise<void> {
+    await this.weightInput.sendKeys(weight);
+  }
+
+  async getWeightInput(): Promise<string> {
+    return await this.weightInput.getAttribute('value');
+  }
+
   async setCommentInput(comment: string): Promise<void> {
     await this.commentInput.sendKeys(comment);
   }
 
   async getCommentInput(): Promise<string> {
     return await this.commentInput.getAttribute('value');
+  }
+
+  async setDrawingInput(drawing: string): Promise<void> {
+    await this.drawingInput.sendKeys(drawing);
+  }
+
+  async getDrawingInput(): Promise<string> {
+    return await this.drawingInput.getAttribute('value');
+  }
+
+  async rawmaterialSelectLastOption(): Promise<void> {
+    await this.rawmaterialSelect.all(by.tagName('option')).last().click();
+  }
+
+  async rawmaterialSelectOption(option: string): Promise<void> {
+    await this.rawmaterialSelect.sendKeys(option);
+  }
+
+  getRawmaterialSelect(): ElementFinder {
+    return this.rawmaterialSelect;
+  }
+
+  async getRawmaterialSelectedOption(): Promise<string> {
+    return await this.rawmaterialSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

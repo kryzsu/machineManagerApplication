@@ -4,7 +4,6 @@ import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.web.rest.errors.BadRequestAlertException;
-import hu.mycompany.machinemanager.web.rest.validator.JobValidator;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -18,8 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -44,17 +43,9 @@ public class JobResource {
 
     private final JobRepository jobRepository;
 
-    private final JobValidator jobValidator;
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(this.jobValidator);
-    }
-
-    public JobResource(JobService jobService, JobRepository jobRepository, JobValidator jobValidator) {
+    public JobResource(JobService jobService, JobRepository jobRepository) {
         this.jobService = jobService;
         this.jobRepository = jobRepository;
-        this.jobValidator = jobValidator;
     }
 
     /**
@@ -67,9 +58,6 @@ public class JobResource {
     @PostMapping("/jobs")
     public ResponseEntity<JobDTO> createJob(@Valid @RequestBody JobDTO jobDTO) throws URISyntaxException {
         log.debug("REST request to save Job : {}", jobDTO);
-
-        extendJobDtoWithPriorityIfNecessary(jobDTO);
-
         if (jobDTO.getId() != null) {
             throw new BadRequestAlertException("A new job cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -78,20 +66,6 @@ public class JobResource {
             .created(new URI("/api/jobs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
-    }
-
-    private void extendJobDtoWithPriorityIfNecessary(JobDTO jobDTO) {
-        if (jobDTO.getPriority() == null && jobDTO.getMachine() != null) {
-            Optional<JobDTO> nextJobForMachine = jobService.getHighestPriorityJobForMachine(jobDTO.getMachine().getId());
-            if (nextJobForMachine.isPresent()) {
-                log.debug("Extending Job Dto With Priority", jobDTO);
-                Long priority = nextJobForMachine.get().getPriority() == null ? 0 : nextJobForMachine.get().getPriority();
-                Long nextPriority = priority + 1;
-                log.debug("Priority is ", nextPriority);
-
-                jobDTO.setPriority(nextPriority);
-            }
-        }
     }
 
     /**
@@ -166,21 +140,12 @@ public class JobResource {
      * {@code GET  /jobs} : get all the jobs.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of jobs in body.
      */
     @GetMapping("/jobs")
-    public ResponseEntity<List<JobDTO>> getAllJobs(
-        Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
-    ) {
+    public ResponseEntity<List<JobDTO>> getAllJobs(Pageable pageable) {
         log.debug("REST request to get a page of Jobs");
-        Page<JobDTO> page;
-        if (eagerload) {
-            page = jobService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = jobService.findAll(pageable);
-        }
+        Page<JobDTO> page = jobService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -212,23 +177,5 @@ public class JobResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-
-    @GetMapping("/jobs/started")
-    public ResponseEntity<List<JobDTO>> getAllOpenJobs(Pageable pageable, @RequestParam Long machineId) {
-        log.debug("REST request to get a page of getAllOpenJobs");
-        Page<JobDTO> page;
-        page = jobService.findAllOpenJobsForMachine(pageable, machineId);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @GetMapping("/jobs/in-progress")
-    public ResponseEntity<List<JobDTO>> getAllInProgressJobs(Pageable pageable, @RequestParam Long machineId) {
-        log.debug("REST request to get a page of getAllNotFinishedJobs");
-        Page<JobDTO> page;
-        page = jobService.findAllInProgressJobsForMachine(pageable, machineId);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }

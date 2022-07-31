@@ -5,6 +5,7 @@ import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
+import hu.mycompany.machinemanager.service.impl.JobBimServiceImpl;
 import hu.mycompany.machinemanager.service.mapper.MachineDetailed;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,14 +26,14 @@ import org.springframework.web.bind.annotation.*;
 public class PerspectiveResource {
 
     private final PerspectiveService perspectiveService;
-    private final JobService jobService;
+    private final JobBimServiceImpl jobService;
 
     private final Logger log = LoggerFactory.getLogger(PerspectiveResource.class);
 
     @Autowired
     CacheManager cacheManager;
 
-    public PerspectiveResource(PerspectiveService perspectiveService, JobService jobService) {
+    public PerspectiveResource(PerspectiveService perspectiveService, JobBimServiceImpl jobService) {
         this.perspectiveService = perspectiveService;
         this.jobService = jobService;
     }

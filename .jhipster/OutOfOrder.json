@@ -13,7 +13,12 @@
   ],
   "fields": [
     {
-      "fieldName": "date",
+      "fieldName": "start",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "end",
       "fieldType": "LocalDate",
       "fieldValidateRules": ["required"]
     },

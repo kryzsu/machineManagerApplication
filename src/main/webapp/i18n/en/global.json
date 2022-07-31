@@ -13,6 +13,7 @@
         "product": "Product",
         "view": "View",
         "customer": "Customer",
+        "rawmaterial": "Rawmaterial",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

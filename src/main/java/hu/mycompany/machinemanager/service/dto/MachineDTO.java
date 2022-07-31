@@ -17,6 +17,8 @@ public class MachineDTO implements Serializable {
     @NotNull
     private String description;
 
+    private JobDTO runningJob;
+
     public Long getId() {
         return id;
     }
@@ -39,6 +41,14 @@ public class MachineDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public JobDTO getRunningJob() {
+        return runningJob;
+    }
+
+    public void setRunningJob(JobDTO runningJob) {
+        this.runningJob = runningJob;
     }
 
     @Override
@@ -69,6 +79,7 @@ public class MachineDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", runningJob=" + getRunningJob() +
             "}";
     }
 }

@@ -1,11 +1,9 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
-import * as R from 'ramda';
-import * as dayjs from 'dayjs';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
@@ -18,10 +16,6 @@ import { IMachine } from 'app/entities/machine/machine.model';
 import { MachineService } from 'app/entities/machine/service/machine.service';
 import { ICustomer } from 'app/entities/customer/customer.model';
 import { CustomerService } from 'app/entities/customer/service/customer.service';
-import { PerspectiveService } from '../../../perspective/perspective.service';
-import { dateFitInterval, sortByNameCaseInsensitive, Interval } from '../../../util/common-util';
-import { OutOfOrder } from '../../out-of-order/out-of-order.model';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-job-update',
@@ -33,7 +27,6 @@ export class JobUpdateComponent implements OnInit {
   productsSharedCollection: IProduct[] = [];
   machinesSharedCollection: IMachine[] = [];
   customersSharedCollection: ICustomer[] = [];
-  createDateTime?: dayjs.Dayjs | null;
 
   editForm = this.fb.group({
     id: [],
@@ -47,12 +40,11 @@ export class JobUpdateComponent implements OnInit {
     drawing: [],
     drawingContentType: [],
     worknumber: [null, [Validators.required]],
-    products: [],
+    priority: [],
+    product: [],
     machine: [],
     customer: [],
   });
-
-  disabledIntervalList: Interval[] = [];
 
   constructor(
     protected dataUtils: DataUtils,
@@ -61,18 +53,14 @@ export class JobUpdateComponent implements OnInit {
     protected productService: ProductService,
     protected machineService: MachineService,
     protected customerService: CustomerService,
-    protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
-    protected fb: FormBuilder,
-    protected perspectiveService: PerspectiveService
+    protected fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ job }) => {
       this.updateForm(job);
-      if (job.id !== undefined) {
-        this.refreshMachineRelatedData();
-      }
+
       this.loadRelationshipsOptions();
     });
   }
@@ -94,16 +82,6 @@ export class JobUpdateComponent implements OnInit {
     });
   }
 
-  clearInputImage(field: string, fieldContentType: string, idInput: string): void {
-    this.editForm.patchValue({
-      [field]: null,
-      [fieldContentType]: null,
-    });
-    if (idInput && this.elementRef.nativeElement.querySelector('#' + idInput)) {
-      this.elementRef.nativeElement.querySelector('#' + idInput).value = null;
-    }
-  }
-
   previousState(): void {
     window.history.back();
   }
@@ -111,8 +89,6 @@ export class JobUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const job = this.createFromForm();
-    job.createDateTime = this.createDateTime;
-
     if (job.id !== undefined) {
       this.subscribeToSaveResponse(this.jobService.update(job));
     } else {
@@ -131,58 +107,6 @@ export class JobUpdateComponent implements OnInit {
   trackCustomerById(index: number, item: ICustomer): number {
     return item.id!;
   }
-
-  getSelectedProduct(option: IProduct, selectedVals?: IProduct[]): IProduct {
-    if (selectedVals) {
-      for (const selectedVal of selectedVals) {
-        if (option.id === selectedVal.id) {
-          return selectedVal;
-        }
-      }
-    }
-    return option;
-  }
-
-  onMachineChange(): void {
-    this.refreshMachineRelatedData();
-  }
-
-  refreshMachineRelatedData(): void {
-    const machineId = this.editForm.get('machine')?.value?.id;
-    const estimation = this.editForm.get('estimation')?.value;
-    const startDate = this.editForm.get('startDate')?.value;
-
-    if (machineId !== undefined) {
-      if (R.isNil(startDate)) {
-        this.perspectiveService
-          .getNextDateForMachine(machineId, estimation)
-          .pipe(map((response: HttpResponse<string>) => response.body ?? ''))
-          .subscribe(newDate => {
-            this.editForm.patchValue({ startDate: dayjs(newDate) });
-          });
-      }
-
-      this.perspectiveService
-        .getRelatedOutOfOrder(machineId)
-        .pipe(map((response: HttpResponse<OutOfOrder[]>) => response.body ?? []))
-        .subscribe((data: OutOfOrder[]) => {
-          this.disabledIntervalList = data.map((item: OutOfOrder) => {
-            const startDayjs = dayjs(item.start);
-            const start: NgbDate = new NgbDate(startDayjs.year(), startDayjs.month() + 1, startDayjs.date());
-            const endDayjs = dayjs(item.end);
-            const end = new NgbDate(endDayjs.year(), endDayjs.month() + 1, endDayjs.date());
-
-            return { start, end };
-          });
-        });
-    }
-  }
-
-  isDisabled = (date: NgbDate): boolean => {
-    const da = dayjs(`${date.year}-${date.month}-${date.day}`);
-    const rv = da.day() === 0 || this.disabledIntervalList.some((interval: Interval) => dateFitInterval(interval, date));
-    return rv;
-  };
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IJob>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe(
@@ -204,10 +128,6 @@ export class JobUpdateComponent implements OnInit {
   }
 
   protected updateForm(job: IJob): void {
-    this.createDateTime = job.createDateTime;
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     this.editForm.patchValue({
       id: job.id,
       estimation: job.estimation,
@@ -219,16 +139,14 @@ export class JobUpdateComponent implements OnInit {
       drawingNumber: job.drawingNumber,
       drawing: job.drawing,
       drawingContentType: job.drawingContentType,
-      products: job.products,
+      worknumber: job.worknumber,
+      priority: job.priority,
+      product: job.product,
       machine: job.machine,
       customer: job.customer,
-      worknumber: job.worknumber,
     });
 
-    this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(
-      this.productsSharedCollection,
-      ...(job.products ?? [])
-    );
+    this.productsSharedCollection = this.productService.addProductToCollectionIfMissing(this.productsSharedCollection, job.product);
     this.machinesSharedCollection = this.machineService.addMachineToCollectionIfMissing(this.machinesSharedCollection, job.machine);
     this.customersSharedCollection = this.customerService.addCustomerToCollectionIfMissing(this.customersSharedCollection, job.customer);
   }
@@ -238,9 +156,7 @@ export class JobUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<IProduct[]>) => res.body ?? []))
       .pipe(
-        map((products: IProduct[]) =>
-          this.productService.addProductToCollectionIfMissing(products, ...(this.editForm.get('products')!.value ?? []))
-        )
+        map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing(products, this.editForm.get('product')!.value))
       )
       .subscribe((products: IProduct[]) => (this.productsSharedCollection = products));
 
@@ -253,16 +169,14 @@ export class JobUpdateComponent implements OnInit {
       .subscribe((machines: IMachine[]) => (this.machinesSharedCollection = machines));
 
     this.customerService
-      .query({ size: 1000, sort: name })
+      .query()
       .pipe(map((res: HttpResponse<ICustomer[]>) => res.body ?? []))
       .pipe(
         map((customers: ICustomer[]) =>
           this.customerService.addCustomerToCollectionIfMissing(customers, this.editForm.get('customer')!.value)
         )
       )
-      .subscribe((customers: ICustomer[]) => {
-        this.customersSharedCollection = sortByNameCaseInsensitive(customers);
-      });
+      .subscribe((customers: ICustomer[]) => (this.customersSharedCollection = customers));
   }
 
   protected createFromForm(): IJob {
@@ -279,7 +193,8 @@ export class JobUpdateComponent implements OnInit {
       drawingContentType: this.editForm.get(['drawingContentType'])!.value,
       drawing: this.editForm.get(['drawing'])!.value,
       worknumber: this.editForm.get(['worknumber'])!.value,
-      products: this.editForm.get(['products'])!.value,
+      priority: this.editForm.get(['priority'])!.value,
+      product: this.editForm.get(['product'])!.value,
       machine: this.editForm.get(['machine'])!.value,
       customer: this.editForm.get(['customer'])!.value,
     };

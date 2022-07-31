@@ -9,6 +9,8 @@ import { of, Subject } from 'rxjs';
 
 import { MachineService } from '../service/machine.service';
 import { IMachine, Machine } from '../machine.model';
+import { IJob } from 'app/entities/job/job.model';
+import { JobService } from 'app/entities/job/service/job.service';
 
 import { MachineUpdateComponent } from './machine-update.component';
 
@@ -18,6 +20,7 @@ describe('Component Tests', () => {
     let fixture: ComponentFixture<MachineUpdateComponent>;
     let activatedRoute: ActivatedRoute;
     let machineService: MachineService;
+    let jobService: JobService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -31,18 +34,40 @@ describe('Component Tests', () => {
       fixture = TestBed.createComponent(MachineUpdateComponent);
       activatedRoute = TestBed.inject(ActivatedRoute);
       machineService = TestBed.inject(MachineService);
+      jobService = TestBed.inject(JobService);
 
       comp = fixture.componentInstance;
     });
 
     describe('ngOnInit', () => {
+      it('Should call runningJob query and add missing value', () => {
+        const machine: IMachine = { id: 456 };
+        const runningJob: IJob = { id: 2897 };
+        machine.runningJob = runningJob;
+
+        const runningJobCollection: IJob[] = [{ id: 66558 }];
+        jest.spyOn(jobService, 'query').mockReturnValue(of(new HttpResponse({ body: runningJobCollection })));
+        const expectedCollection: IJob[] = [runningJob, ...runningJobCollection];
+        jest.spyOn(jobService, 'addJobToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+        activatedRoute.data = of({ machine });
+        comp.ngOnInit();
+
+        expect(jobService.query).toHaveBeenCalled();
+        expect(jobService.addJobToCollectionIfMissing).toHaveBeenCalledWith(runningJobCollection, runningJob);
+        expect(comp.runningJobsCollection).toEqual(expectedCollection);
+      });
+
       it('Should update editForm', () => {
         const machine: IMachine = { id: 456 };
+        const runningJob: IJob = { id: 16412 };
+        machine.runningJob = runningJob;
 
         activatedRoute.data = of({ machine });
         comp.ngOnInit();
 
         expect(comp.editForm.value).toEqual(expect.objectContaining(machine));
+        expect(comp.runningJobsCollection).toContain(runningJob);
       });
     });
 
@@ -107,6 +132,16 @@ describe('Component Tests', () => {
         expect(machineService.update).toHaveBeenCalledWith(machine);
         expect(comp.isSaving).toEqual(false);
         expect(comp.previousState).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Tracking relationships identifiers', () => {
+      describe('trackJobById', () => {
+        it('Should return tracked Job primary key', () => {
+          const entity = { id: 123 };
+          const trackResult = comp.trackJobById(0, entity);
+          expect(trackResult).toEqual(entity.id);
+        });
       });
     });
   });

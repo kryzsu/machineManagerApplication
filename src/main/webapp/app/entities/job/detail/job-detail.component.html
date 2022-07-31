@@ -44,23 +44,21 @@
         </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.job.drawing">Drawing</span></dt>
         <dd>
-          <div *ngIf="job.drawing">
-            <a (click)="openFile(job.drawing, job.drawingContentType)">
-              <img [src]="'data:' + job.drawingContentType + ';base64,' + job.drawing" style="max-width: 100%" alt="job image" />
-            </a>
-            {{ job.drawingContentType }}, {{ byteSize(job.drawing) }}
-          </div>
+          <span>{{ job.drawing }}</span>
         </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.job.worknumber">Worknumber</span></dt>
         <dd>
           <span>{{ job.worknumber }}</span>
         </dd>
+        <dt><span jhiTranslate="machineManagerApplicationApp.job.priority">Priority</span></dt>
+        <dd>
+          <span>{{ job.priority }}</span>
+        </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.job.product">Product</span></dt>
         <dd>
-          <span *ngFor="let product of job.products; let last = last">
-            <a [routerLink]="['/product', product?.id, 'view']">{{ product.name }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
+          <div *ngIf="job.product">
+            <a [routerLink]="['/product', job.product?.id, 'view']">{{ job.product?.name }}</a>
+          </div>
         </dd>
         <dt><span jhiTranslate="machineManagerApplicationApp.job.machine">Machine</span></dt>
         <dd>

@@ -2,6 +2,7 @@ import * as R from 'ramda';
 import * as dayjs from 'dayjs';
 import { DATE_FORMAT } from '../config/input.constants';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { IJob } from '../entities/job/job.model';
 
 export interface Interval {
   start: NgbDate;
@@ -25,3 +26,7 @@ export const toDate = (date: string | null): Date | null => {
 export const wrongDate = new Date(1000, 1, 1);
 
 export const dayjsToString = (date: dayjs.Dayjs): string | undefined => (date.isValid() ? date.format(DATE_FORMAT) : undefined);
+
+export function getRelatedProduct(job: IJob): string {
+  return job.product?.name ? job.product.name : '';
+}

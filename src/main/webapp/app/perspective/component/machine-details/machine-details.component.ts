@@ -1,9 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { getRelatedProduct, IIdWithPriority, IJob } from '../../../entities/job/job.model';
-import {IMachine, IMachineDay} from '../../../entities/machine/machine.model';
+import { IJob } from '../../../entities/job/job.model';
+import { IMachine } from '../../../entities/machine/machine.model';
 import { selectMachineList } from '../../../redux/selectors';
 import { filter, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { IMachineDay } from '../../../entities/machineday';
+import { IIdWithPriority } from '../../../entities/idWithPriority';
+import { getRelatedProduct } from '../../../util/common-util';
 
 @Component({
   selector: 'jhi-machine-details',
@@ -15,14 +18,13 @@ export class MachineDetailsComponent implements OnInit {
   machines: IMachine[];
   selectedMachine?: IMachine;
   changed = false;
-  machineDays : IMachineDay[] = [];
+  machineDays: IMachineDay[] = [];
   weekName: string[] = ['', 'Hetfo', 'Kedd', 'Szerda', 'Csutortok', 'Pentek', 'Szombat', 'Vasarnap'];
 
   @Output() savePriorities = new EventEmitter<IIdWithPriority[]>();
   @Output() getMachineDays = new EventEmitter();
   @Output() startNextJob = new EventEmitter<number>();
   @Output() stopRunningJob = new EventEmitter<number>();
-
 
   constructor(private store: Store) {
     this.jobs = [];
@@ -79,7 +81,7 @@ export class MachineDetailsComponent implements OnInit {
   }
 
   getSeverity(machineDay: IMachineDay): string {
-    return machineDay.occupied ? "danger" : "success";
+    return machineDay.occupied ? 'danger' : 'success';
   }
 
   reorder(): void {
@@ -93,7 +95,7 @@ export class MachineDetailsComponent implements OnInit {
     this.savePriorities.emit(
       this.jobs.map((job: IJob) => ({
         id: job.id,
-        priority: job.priority,
+        priority: job.priority ?? 0,
       }))
     );
   }
@@ -115,10 +117,10 @@ export class MachineDetailsComponent implements OnInit {
   }
 
   getProductName(selectedMachine?: IMachine): string {
-    if (selectedMachine?.runningJob?.products == null) {
+    if (selectedMachine?.runningJob?.product == null) {
       return '';
     }
 
-    return selectedMachine.runningJob.products[0]?.name ?? '';
+    return selectedMachine.runningJob.product.name ?? '';
   }
 }

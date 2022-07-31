@@ -13,6 +13,13 @@
         "product": "Termék",
         "view": "Nézet",
         "customer": "Vevők",
+        "rawmaterial": "Rawmaterial",
+        "product": "Product",
+        "machine": "Machine",
+        "job": "Job",
+        "outOfOrder": "Out Of Order",
+        "view": "View",
+        "customer": "Customer",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

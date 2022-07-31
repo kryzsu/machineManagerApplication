@@ -8,17 +8,20 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Machine} and its DTO {@link MachineDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = { JobMapper.class })
 public interface MachineMapper extends EntityMapper<MachineDTO, Machine> {
-    @Named("name")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "name", source = "name")
-    MachineDTO toDtoName(Machine machine);
+    @Mapping(target = "runningJob", source = "runningJob", qualifiedByName = "orderNumber")
+    MachineDTO toDto(Machine s);
 
     @Named("nameSet")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
     Set<MachineDTO> toDtoNameSet(Set<Machine> machine);
+
+    @Named("name")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    MachineDTO toDtoName(Machine machine);
 }

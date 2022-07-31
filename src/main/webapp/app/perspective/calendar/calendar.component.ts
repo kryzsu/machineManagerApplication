@@ -7,18 +7,20 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import * as d3 from 'd3';
 
 import { machine2BarData, machineArray2Events } from '../converter-utils';
-import { IIdWithPriority, IJob } from 'app/entities/job/job.model';
+import { IJob } from 'app/entities/job/job.model';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../redux/selectors';
 import * as Actions from '../../redux/actions';
 import { AppState } from '../../redux/app.state';
 import { filter, map } from 'rxjs/operators';
 import { BarData } from '../../shared/bar-chart/bar-chart.component';
-import {IMachine, IMachineDay} from '../../entities/machine/machine.model';
+import { IMachine } from '../../entities/machine/machine.model';
 import { EntityArrayResponseType, PerspectiveService } from '../perspective.service';
 import { sortByNameCaseInsensitive } from '../../util/common-util';
 import { Router } from '@angular/router';
-import {getMachineDays} from "../../redux/actions";
+import { getMachineDays } from '../../redux/actions';
+import { IIdWithPriority } from '../../entities/idWithPriority';
+import { IMachineDay } from '../../entities/machineday';
 
 @Component({
   selector: 'jhi-calendar',
@@ -177,9 +179,7 @@ export class CalendarComponent implements OnInit {
 
     this.perspectiveService
       .getNextDays(machineId)
-      .pipe(
-        map( response => response.body),
-      )
+      .pipe(map(response => response.body))
       .subscribe((machineDayList: IMachineDay[] | null) => {
         const machineDays: IMachineDay[] = machineDayList != null ? machineDayList : [];
         this.store.dispatch(getMachineDays({ machineDays }));
@@ -238,6 +238,4 @@ export class CalendarComponent implements OnInit {
       .attr('height', (d: any) => this.height - y(d.Stars))
       .attr('fill', '#d04a35');
   }
-
-
 }

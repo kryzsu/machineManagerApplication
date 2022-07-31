@@ -1,0 +1,29 @@
+{
+  "machineManagerApplicationApp": {
+    "rawmaterial": {
+      "home": {
+        "title": "Rawmaterials",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Rawmaterial",
+        "createOrEditLabel": "Create or edit a Rawmaterial",
+        "notFound": "No Rawmaterials found"
+      },
+      "created": "A new Rawmaterial is created with identifier {{ param }}",
+      "updated": "A Rawmaterial is updated with identifier {{ param }}",
+      "deleted": "A Rawmaterial is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rawmaterial {{ id }}?"
+      },
+      "detail": {
+        "title": "Rawmaterial"
+      },
+      "id": "ID",
+      "name": "Name",
+      "comment": "Comment",
+      "grade": "Grade",
+      "dimension": "Dimension",
+      "coating": "Coating",
+      "supplier": "Supplier"
+    }
+  }
+}
