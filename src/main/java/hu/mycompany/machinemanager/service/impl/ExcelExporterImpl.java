@@ -31,11 +31,12 @@ public class ExcelExporterImpl implements ExcelExporter {
             throw new IllegalStateException("Job can not be null");
         }
 
-        if (job.getCreateDateTime() != null) {
-            Row row = sheet.getRow(4);
-            Cell cell = row.getCell(3);
-            cell.setCellValue(job.getCreateDateTime());
-        }
+        // TODO: created time
+        //        if (job() != null) {
+        //            Row row = sheet.getRow(4);
+        //            Cell cell = row.getCell(3);
+        //            cell.setCellValue(job.getCreateDateTime());
+        //        }
 
         if (job.getCustomer() != null) {
             Row row = sheet.getRow(4);
@@ -61,8 +62,8 @@ public class ExcelExporterImpl implements ExcelExporter {
             cell.setCellValue(job.getProductCount().toString());
         }
 
-        if (job.getProducts() != null && !job.getProducts().isEmpty()) {
-            String productName = job.getProducts().stream().map(product -> product.getName()).findFirst().get();
+        if (job.getProduct() != null) {
+            String productName = job.getProduct().getName();
 
             Row row = sheet.getRow(7);
             Cell cell = row.getCell(3);

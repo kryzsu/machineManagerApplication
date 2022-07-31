@@ -2,9 +2,7 @@ package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
-import hu.mycompany.machinemanager.repository.JobRepository;
-import hu.mycompany.machinemanager.repository.MachineRepository;
-import hu.mycompany.machinemanager.repository.OutOfOrderRepository;
+import hu.mycompany.machinemanager.repository.*;
 import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
 import hu.mycompany.machinemanager.service.ExcelExporter;
 import hu.mycompany.machinemanager.service.NoRunningJobException;
@@ -37,14 +35,14 @@ public class PerspectiveServiceImpl implements PerspectiveService {
 
     private final Logger log = LoggerFactory.getLogger(PerspectiveServiceImpl.class);
     private final MachineRepository machineRepository;
-    private final JobBimRepository jobRepository;
-    private final OutOfOrderBimRepository outOfOrderRepository;
 
     private final Util util;
     private final OutOfOrderMapper outOfOrderMapper;
     Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
 
     private final ExcelExporter excelExporter;
+    private final JobBimRepository jobRepository;
+    private final OutOfOrderBimRepository outOfOrderRepository;
 
     public PerspectiveServiceImpl(
         MachineRepository machineRepository,
