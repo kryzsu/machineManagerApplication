@@ -3,10 +3,13 @@ package hu.mycompany.machinemanager.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * A Job.
@@ -28,6 +31,12 @@ public class Job implements Serializable {
     @NotNull
     @Column(name = "product_count", nullable = false)
     private Integer productCount;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     @Column(name = "start_date")
     private LocalDate startDate;
@@ -69,6 +78,14 @@ public class Job implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "jobs" }, allowSetters = true)
     private Customer customer;
+
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {

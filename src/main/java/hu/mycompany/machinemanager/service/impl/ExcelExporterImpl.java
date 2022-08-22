@@ -31,12 +31,11 @@ public class ExcelExporterImpl implements ExcelExporter {
             throw new IllegalStateException("Job can not be null");
         }
 
-        // TODO: created time
-        //        if (job() != null) {
-        //            Row row = sheet.getRow(4);
-        //            Cell cell = row.getCell(3);
-        //            cell.setCellValue(job.getCreateDateTime());
-        //        }
+        if (job.getCreateDateTime() != null) {
+            Row row = sheet.getRow(4);
+            Cell cell = row.getCell(3);
+            cell.setCellValue(job.getCreateDateTime());
+        }
 
         if (job.getCustomer() != null) {
             Row row = sheet.getRow(4);
@@ -68,20 +67,22 @@ public class ExcelExporterImpl implements ExcelExporter {
             Row row = sheet.getRow(7);
             Cell cell = row.getCell(3);
             cell.setCellValue(productName);
+
+            if (job.getProduct().getRawmaterial() != null) {
+                cell = row.getCell(6);
+                cell.setCellValue(job.getProduct().getRawmaterial().getGrade());
+            }
+        }
+
+        if (job.getMachine() != null) {
+            Row row = sheet.getRow(16);
+            Cell cell = row.getCell(3);
+            cell.setCellValue(job.getMachine().getName());
         }
 
         ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
         workbook.write(bOutput);
 
         return bOutput;
-        /*
-        this.appendHeaderAndValue("Kiadva:", "xxx", row);
-        this.appendHeaderAndValue("Megrendelő:", job.getCustomer().getName(), row);
-        this.appendHeaderAndValue("Munkaszám:", job.getWorknumber(), row);
-
-        this.appendHeaderAndValue("Határidő:", "xxx", row);
-        this.appendHeaderAndValue("Rajzszám:", job.getDrawingNumber(), row);
-        this.appendHeaderAndValue("Rendelt mennyiség:", job.getProductCount().toString(), row);
-        */
     }
 }
