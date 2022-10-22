@@ -35,6 +35,7 @@ export class CustomerService {
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
+    console.warn(req);
     const options = createRequestOption(req);
     return this.http.get<ICustomer[]>(this.resourceUrl, { params: options, observe: 'response' });
   }

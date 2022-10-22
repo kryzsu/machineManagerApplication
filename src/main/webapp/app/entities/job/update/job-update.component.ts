@@ -169,7 +169,11 @@ export class JobUpdateComponent implements OnInit {
       .subscribe((machines: IMachine[]) => (this.machinesSharedCollection = machines));
 
     this.customerService
-      .query()
+      .query({
+        page: 0,
+        size: 500,
+        sort: ['name', 'asc'],
+      })
       .pipe(map((res: HttpResponse<ICustomer[]>) => res.body ?? []))
       .pipe(
         map((customers: ICustomer[]) =>
