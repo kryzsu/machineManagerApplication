@@ -83,16 +83,23 @@ export class JobComponent implements OnInit {
       }
     });
   }
-
-  exportExcel(job: IJob): void {
-    this.perspectiveService.getExcel(job.id ?? 0).subscribe((data: ArrayBuffer | null) => {
+  exportVisszaigazolas(job: IJob): void {
+    this.perspectiveService.getVisszaigazolas(job.id ?? 0).subscribe((data: ArrayBuffer | null) => {
       if (data == null) {
         return;
       }
 
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
+      this.blobInNewWindow(data);
+    });
+  }
+
+  exportGyartasi(job: IJob): void {
+    this.perspectiveService.getGyartasi(job.id ?? 0).subscribe((data: ArrayBuffer | null) => {
+      if (data == null) {
+        return;
+      }
+
+      this.blobInNewWindow(data);
     });
   }
 
@@ -137,5 +144,11 @@ export class JobComponent implements OnInit {
 
   protected onError(): void {
     this.ngbPaginationPage = this.page ?? 1;
+  }
+
+  private blobInNewWindow(data: ArrayBuffer): void {
+    const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 }

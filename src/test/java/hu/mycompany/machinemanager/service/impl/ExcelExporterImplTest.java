@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import hu.mycompany.machinemanager.domain.Customer;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.service.ExcelExporter;
+import hu.mycompany.machinemanager.service.ExcelType;
 import java.io.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -28,7 +29,7 @@ class ExcelExporterImplTest {
 
         Sheet sheet = workbook.getSheetAt(0);
 
-        excelExporter = new ExcelExporterImpl(workbook);
+        excelExporter = new ExcelExporterFactoryImpl(new ExcelExporterImpl()).create(ExcelType.GYARTASI_LAP);
 
         Job job = new Job();
         job.setWorknumber("asdasdsd-19");
@@ -37,7 +38,7 @@ class ExcelExporterImplTest {
         Customer customer = new Customer();
         customer.setName("megrendel jeno");
         job.setCustomer(customer);
-        excelExporter.writeJobData(job);
+        excelExporter.getGyartasiLap(job);
 
         File currDir = new File(".");
         String path = currDir.getAbsolutePath();

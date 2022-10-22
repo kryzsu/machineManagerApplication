@@ -21,5 +21,7 @@ public interface PerspectiveService {
 
     void stopRunningJob(long machineId);
 
-    byte[] getJobExcel(long jobId) throws IOException;
+    byte[] getGyartasiLap(long jobId) throws IOException;
+
+    byte[] getVisszaIgazolas(long jobId) throws IOException;
 }

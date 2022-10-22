@@ -1,6 +1,5 @@
 package hu.mycompany.machinemanager.web.rest;
 
-import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.PerspectiveService;
 import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,8 +87,13 @@ public class PerspectiveResource {
         perspectiveService.stopRunningJob(machineId);
     }
 
-    @GetMapping(value = "/get-job-excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    public byte[] getJobExcel(@RequestParam long jobId) throws IOException {
-        return perspectiveService.getJobExcel(jobId);
+    @GetMapping(value = "/get-job-gyartasi-lap", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public byte[] getGyartasiLap(@RequestParam long jobId) throws IOException {
+        return perspectiveService.getGyartasiLap(jobId);
+    }
+
+    @GetMapping(value = "/get-job-vissza-igazolas", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    public byte[] getVisszaIgazolas(@RequestParam long jobId) throws IOException {
+        return perspectiveService.getVisszaIgazolas(jobId);
     }
 }

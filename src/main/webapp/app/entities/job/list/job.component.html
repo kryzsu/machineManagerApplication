@@ -118,9 +118,13 @@
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
               </button>
 
-              <button type="submit" (click)="exportExcel(job)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button type="submit" (click)="exportGyartasi(job)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
                 <fa-icon icon="book"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.excel">Excel</span>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.gyartasi">Gyartasi</span>
+              </button>
+              <button type="submit" (click)="exportVisszaigazolas(job)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="book"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.viszaigazolas">viszaIgazolas</span>
               </button>
             </div>
           </td>

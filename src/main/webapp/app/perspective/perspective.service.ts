@@ -62,10 +62,21 @@ export class PerspectiveService {
     return this.http.post<IMachineDay[]>(`${this.resourceUrl}/start-next-job`, machineId, { observe: 'response' });
   }
 
-  getExcel(jobId: number): Observable<ArrayBuffer | null> {
+  getGyartasi(jobId: number): Observable<ArrayBuffer | null> {
     const params = createRequestOption({ jobId });
     return this.http
-      .get<ArrayBuffer>(`${this.resourceUrl}/get-job-excel`, { params, observe: 'response', responseType: 'ArrayBuffer' as 'json' })
+      .get<ArrayBuffer>(`${this.resourceUrl}/get-job-gyartasi-lap`, { params, observe: 'response', responseType: 'ArrayBuffer' as 'json' })
+      .pipe(map((response: HttpResponse<ArrayBuffer>) => response.body));
+  }
+
+  getVisszaigazolas(jobId: number): Observable<ArrayBuffer | null> {
+    const params = createRequestOption({ jobId });
+    return this.http
+      .get<ArrayBuffer>(`${this.resourceUrl}/get-job-vissza-igazolas`, {
+        params,
+        observe: 'response',
+        responseType: 'ArrayBuffer' as 'json',
+      })
       .pipe(map((response: HttpResponse<ArrayBuffer>) => response.body));
   }
 }

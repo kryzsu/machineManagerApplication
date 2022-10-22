@@ -14,17 +14,23 @@ import org.springframework.stereotype.Service;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ExcelExporterImpl implements ExcelExporter {
 
-    private final Workbook workbook;
-
-    public ExcelExporterImpl(Workbook workbook) {
-        this.workbook = workbook;
-    }
+    private Workbook workbook;
 
     @Override
     public void createOrderConfirmation(Job job) {}
 
+    public ExcelExporter setWorkbook(Workbook workbook) {
+        this.workbook = workbook;
+
+        return this;
+    }
+
     @Override
-    public ByteArrayOutputStream writeJobData(Job job) throws IOException {
+    public ByteArrayOutputStream getGyartasiLap(Job job) throws IOException {
+        if (workbook == null) {
+            throw new RuntimeException("workbook is null, pls use the setWorkbook");
+        }
+
         Sheet sheet = workbook.getSheetAt(0);
 
         if (job == null) {
@@ -78,6 +84,55 @@ public class ExcelExporterImpl implements ExcelExporter {
             Row row = sheet.getRow(16);
             Cell cell = row.getCell(3);
             cell.setCellValue(job.getMachine().getName());
+        }
+
+        ByteArrayOutputStream bOutput = new ByteArrayOutputStream();
+        workbook.write(bOutput);
+
+        return bOutput;
+    }
+
+    public ByteArrayOutputStream getVisszaIgazolas(Job job) throws IOException {
+        if (workbook == null) {
+            throw new RuntimeException("workbook is null, pls use the setWorkbook");
+        }
+
+        Sheet sheet = workbook.getSheetAt(0);
+
+        if (job == null) {
+            throw new IllegalStateException("Job can not be null");
+        }
+
+        if (job.getCustomer() != null) {
+            Row row = sheet.getRow(11);
+            Cell cell = row.getCell(6);
+            cell.setCellValue(job.getCustomer().getName());
+        }
+
+        if (job.getWorknumber() != null) {
+            Row row = sheet.getRow(16);
+            Cell cell = row.getCell(6);
+            cell.setCellValue(job.getWorknumber());
+        }
+
+        if (job.getDrawingNumber() != null) {
+            Row row = sheet.getRow(16);
+            Cell cell = row.getCell(7);
+            cell.setCellValue(job.getDrawingNumber());
+        }
+
+        if (job.getProductCount() != null) {
+            Row row = sheet.getRow(16);
+            Cell cell = row.getCell(9);
+            cell.setCellValue(job.getProductCount().toString());
+        }
+
+        if (job.getProduct() != null) {
+            String productName = job.getProduct().getName();
+
+            Row row = sheet.getRow(16);
+            Cell cell = row.getCell(8);
+            cell.setCellValue(productName);
         }
 
         ByteArrayOutputStream bOutput = new ByteArrayOutputStream();

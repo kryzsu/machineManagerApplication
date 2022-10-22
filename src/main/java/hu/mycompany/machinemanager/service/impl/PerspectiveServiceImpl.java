@@ -3,10 +3,7 @@ package hu.mycompany.machinemanager.service.impl;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
 import hu.mycompany.machinemanager.repository.*;
-import hu.mycompany.machinemanager.service.AnotherJobIsAlreadyRunningException;
-import hu.mycompany.machinemanager.service.ExcelExporter;
-import hu.mycompany.machinemanager.service.NoRunningJobException;
-import hu.mycompany.machinemanager.service.PerspectiveService;
+import hu.mycompany.machinemanager.service.*;
 import hu.mycompany.machinemanager.service.dto.MachineDayDTO;
 import hu.mycompany.machinemanager.service.dto.OutOfOrderDTO;
 import hu.mycompany.machinemanager.service.mapper.*;
@@ -40,9 +37,10 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     private final OutOfOrderMapper outOfOrderMapper;
     Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
 
-    private final ExcelExporter excelExporter;
     private final JobBimRepository jobRepository;
     private final OutOfOrderBimRepository outOfOrderRepository;
+
+    private final ExcelExporterFactory excelExporterFactory;
 
     public PerspectiveServiceImpl(
         MachineRepository machineRepository,
@@ -50,14 +48,14 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         OutOfOrderMapper outOfOrderMapper,
         JobBimRepository jobRepository,
         OutOfOrderBimRepository outOfOrderRepository,
-        ExcelExporter excelExporter
+        ExcelExporterFactory excelExporterFactory
     ) {
         this.machineRepository = machineRepository;
         this.util = util;
         this.outOfOrderMapper = outOfOrderMapper;
         this.jobRepository = jobRepository;
         this.outOfOrderRepository = outOfOrderRepository;
-        this.excelExporter = excelExporter;
+        this.excelExporterFactory = excelExporterFactory;
     }
 
     @Override
@@ -160,7 +158,7 @@ public class PerspectiveServiceImpl implements PerspectiveService {
         for (int i = 0; i < free.size(); i++) {
             MachineDayDTO jobMachineDay;
             MachineDayDTO freeMachineDay;
-            if (jobMachineDayList.size() > 0) {
+            if (!jobMachineDayList.isEmpty()) {
                 jobMachineDay = jobMachineDayList.remove(0);
                 freeMachineDay = free.remove(0);
             } else {
@@ -230,9 +228,15 @@ public class PerspectiveServiceImpl implements PerspectiveService {
     }
 
     @Override
-    public byte[] getJobExcel(long jobId) throws IOException {
+    public byte[] getGyartasiLap(long jobId) throws IOException {
         Optional<Job> jobOptional = jobRepository.findById(jobId);
-        return excelExporter.writeJobData(jobOptional.get()).toByteArray();
+        return excelExporterFactory.create(ExcelType.GYARTASI_LAP).getGyartasiLap(jobOptional.get()).toByteArray();
+    }
+
+    @Override
+    public byte[] getVisszaIgazolas(long jobId) throws IOException {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        return excelExporterFactory.create(ExcelType.VISSZA_IGAZOLAS).getVisszaIgazolas(jobOptional.get()).toByteArray();
     }
 
     private List<MachineDayDTO> getDaysByInterval(LocalDate from, LocalDate to) {
