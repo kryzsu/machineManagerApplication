@@ -1,22 +1,15 @@
 package hu.mycompany.machinemanager.service.impl;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
-
 import hu.mycompany.machinemanager.domain.Customer;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.service.ExcelExporter;
 import hu.mycompany.machinemanager.service.ExcelType;
 import java.io.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import java.time.LocalDateTime;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 class ExcelExporterImplTest {
 
@@ -34,7 +27,7 @@ class ExcelExporterImplTest {
         Job job = new Job();
         job.setWorknumber("asdasdsd-19");
         job.setProductCount(1000);
-        job.setDrawingNumber("1234-23");
+        job.createDateTime(LocalDateTime.now());
         Customer customer = new Customer();
         customer.setName("megrendel jeno");
         job.setCustomer(customer);

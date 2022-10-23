@@ -2,6 +2,8 @@ package hu.mycompany.machinemanager.service.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Objects;
 import javax.persistence.Lob;
 import javax.validation.constraints.*;
@@ -26,7 +28,7 @@ public class JobDTO implements Serializable {
 
     private String orderNumber;
 
-    private String drawingNumber;
+    private LocalDateTime createDateTime;
 
     @Lob
     private byte[] drawing;
@@ -100,14 +102,6 @@ public class JobDTO implements Serializable {
         this.orderNumber = orderNumber;
     }
 
-    public String getDrawingNumber() {
-        return drawingNumber;
-    }
-
-    public void setDrawingNumber(String drawingNumber) {
-        this.drawingNumber = drawingNumber;
-    }
-
     public byte[] getDrawing() {
         return drawing;
     }
@@ -164,6 +158,14 @@ public class JobDTO implements Serializable {
         this.customer = customer;
     }
 
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -189,20 +191,21 @@ public class JobDTO implements Serializable {
     @Override
     public String toString() {
         return "JobDTO{" +
-            "id=" + getId() +
-            ", estimation=" + getEstimation() +
-            ", productCount=" + getProductCount() +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            ", fact=" + getFact() +
-            ", orderNumber='" + getOrderNumber() + "'" +
-            ", drawingNumber='" + getDrawingNumber() + "'" +
-            ", drawing='" + getDrawing() + "'" +
-            ", worknumber='" + getWorknumber() + "'" +
-            ", priority=" + getPriority() +
-            ", product=" + getProduct() +
-            ", machine=" + getMachine() +
-            ", customer=" + getCustomer() +
-            "}";
+            "id=" + id +
+            ", estimation=" + estimation +
+            ", productCount=" + productCount +
+            ", startDate=" + startDate +
+            ", endDate=" + endDate +
+            ", fact=" + fact +
+            ", orderNumber='" + orderNumber + '\'' +
+            ", createDateTime=" + createDateTime +
+            ", drawing=" + Arrays.toString(drawing) +
+            ", drawingContentType='" + drawingContentType + '\'' +
+            ", worknumber='" + worknumber + '\'' +
+            ", priority=" + priority +
+            ", product=" + product +
+            ", machine=" + machine +
+            ", customer=" + customer +
+            '}';
     }
 }

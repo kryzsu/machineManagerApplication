@@ -51,8 +51,8 @@
           <th scope="col" jhiSortBy="orderNumber">
             <span jhiTranslate="machineManagerApplicationApp.job.orderNumber">Order Number</span> <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col" jhiSortBy="drawingNumber">
-            <span jhiTranslate="machineManagerApplicationApp.job.drawingNumber">Drawing Number</span> <fa-icon icon="sort"></fa-icon>
+          <th scope="col" jhiSortBy="createDateTime">
+            <span jhiTranslate="machineManagerApplicationApp.job.createDateTime">create DateTime</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="worknumber">
             <span jhiTranslate="machineManagerApplicationApp.job.worknumber">Worknumber</span> <fa-icon icon="sort"></fa-icon>
@@ -83,7 +83,7 @@
           <td>{{ job.endDate | formatMediumDate }}</td>
           <td>{{ job.fact }}</td>
           <td>{{ job.orderNumber }}</td>
-          <td>{{ job.drawingNumber }}</td>
+          <td>{{ job.createDateTime }}</td>
           <td>{{ job.worknumber }}</td>
           <td>{{ job.priority }}</td>
           <td>

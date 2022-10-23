@@ -55,10 +55,10 @@ public class ExcelExporterImpl implements ExcelExporter {
             cell.setCellValue(job.getWorknumber());
         }
 
-        if (job.getDrawingNumber() != null) {
+        if (job.getProduct() != null && job.getProduct().getDrawingNumber() != null) {
             Row row = sheet.getRow(5);
             Cell cell = row.getCell(5);
-            cell.setCellValue(job.getDrawingNumber());
+            cell.setCellValue(job.getProduct().getDrawingNumber());
         }
 
         if (job.getProductCount() != null) {
@@ -115,10 +115,10 @@ public class ExcelExporterImpl implements ExcelExporter {
             cell.setCellValue(job.getWorknumber());
         }
 
-        if (job.getDrawingNumber() != null) {
+        if (job.getProduct() != null && job.getProduct().getDrawingNumber() != null) {
             Row row = sheet.getRow(16);
             Cell cell = row.getCell(7);
-            cell.setCellValue(job.getDrawingNumber());
+            cell.setCellValue(job.getProduct().getDrawingNumber());
         }
 
         if (job.getProductCount() != null) {

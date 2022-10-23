@@ -36,7 +36,7 @@ export class JobUpdateComponent implements OnInit {
     endDate: [],
     fact: [],
     orderNumber: [],
-    drawingNumber: [],
+    createDateTime: [],
     drawing: [],
     drawingContentType: [],
     worknumber: [null, [Validators.required]],
@@ -136,7 +136,7 @@ export class JobUpdateComponent implements OnInit {
       endDate: job.endDate,
       fact: job.fact,
       orderNumber: job.orderNumber,
-      drawingNumber: job.drawingNumber,
+      createDateTime: job.createDateTime,
       drawing: job.drawing,
       drawingContentType: job.drawingContentType,
       worknumber: job.worknumber,
@@ -153,7 +153,11 @@ export class JobUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.productService
-      .query()
+      .query({
+        page: 0,
+        size: 500,
+        sort: ['name', 'asc'],
+      })
       .pipe(map((res: HttpResponse<IProduct[]>) => res.body ?? []))
       .pipe(
         map((products: IProduct[]) => this.productService.addProductToCollectionIfMissing(products, this.editForm.get('product')!.value))
@@ -161,7 +165,11 @@ export class JobUpdateComponent implements OnInit {
       .subscribe((products: IProduct[]) => (this.productsSharedCollection = products));
 
     this.machineService
-      .query()
+      .query({
+        page: 0,
+        size: 500,
+        sort: ['name', 'asc'],
+      })
       .pipe(map((res: HttpResponse<IMachine[]>) => res.body ?? []))
       .pipe(
         map((machines: IMachine[]) => this.machineService.addMachineToCollectionIfMissing(machines, this.editForm.get('machine')!.value))
@@ -193,7 +201,7 @@ export class JobUpdateComponent implements OnInit {
       endDate: this.editForm.get(['endDate'])!.value,
       fact: this.editForm.get(['fact'])!.value,
       orderNumber: this.editForm.get(['orderNumber'])!.value,
-      drawingNumber: this.editForm.get(['drawingNumber'])!.value,
+      createDateTime: this.editForm.get(['createDateTime'])!.value,
       drawingContentType: this.editForm.get(['drawingContentType'])!.value,
       drawing: this.editForm.get(['drawing'])!.value,
       worknumber: this.editForm.get(['worknumber'])!.value,

@@ -11,6 +11,7 @@ import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.service.dto.JobDTO;
 import hu.mycompany.machinemanager.service.mapper.JobMapper;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
@@ -52,8 +53,8 @@ class JobResourceIT {
     private static final String DEFAULT_ORDER_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_ORDER_NUMBER = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DRAWING_NUMBER = "AAAAAAAAAA";
-    private static final String UPDATED_DRAWING_NUMBER = "BBBBBBBBBB";
+    private static final LocalDateTime DEFAULT_CREATE_DATETIME = LocalDateTime.now();
+    private static final LocalDateTime UPDATED_CREATE_DATETIME = LocalDateTime.now(ZoneId.systemDefault());
 
     private static final byte[] DEFAULT_DRAWING = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_DRAWING = TestUtil.createByteArray(1, "1");
@@ -100,7 +101,7 @@ class JobResourceIT {
             .endDate(DEFAULT_END_DATE)
             .fact(DEFAULT_FACT)
             .orderNumber(DEFAULT_ORDER_NUMBER)
-            .drawingNumber(DEFAULT_DRAWING_NUMBER)
+            .createDateTime(DEFAULT_CREATE_DATETIME)
             .drawing(DEFAULT_DRAWING)
             .drawingContentType(DEFAULT_DRAWING_CONTENT_TYPE)
             .worknumber(DEFAULT_WORKNUMBER)
@@ -122,7 +123,7 @@ class JobResourceIT {
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
             .orderNumber(UPDATED_ORDER_NUMBER)
-            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .createDateTime(DEFAULT_CREATE_DATETIME)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
             .worknumber(UPDATED_WORKNUMBER)
@@ -155,7 +156,7 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(DEFAULT_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(DEFAULT_ORDER_NUMBER);
-        assertThat(testJob.getDrawingNumber()).isEqualTo(DEFAULT_DRAWING_NUMBER);
+        assertThat(testJob.getCreateDateTime()).isEqualTo(DEFAULT_CREATE_DATETIME);
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
@@ -235,7 +236,7 @@ class JobResourceIT {
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].fact").value(hasItem(DEFAULT_FACT)))
             .andExpect(jsonPath("$.[*].orderNumber").value(hasItem(DEFAULT_ORDER_NUMBER)))
-            .andExpect(jsonPath("$.[*].drawingNumber").value(hasItem(DEFAULT_DRAWING_NUMBER)))
+            .andExpect(jsonPath("$.[*].createDateTime").value(hasItem(DEFAULT_CREATE_DATETIME)))
             .andExpect(jsonPath("$.[*].drawingContentType").value(hasItem(DEFAULT_DRAWING_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].drawing").value(hasItem(Base64Utils.encodeToString(DEFAULT_DRAWING))))
             .andExpect(jsonPath("$.[*].worknumber").value(hasItem(DEFAULT_WORKNUMBER)))
@@ -260,7 +261,7 @@ class JobResourceIT {
             .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
             .andExpect(jsonPath("$.fact").value(DEFAULT_FACT))
             .andExpect(jsonPath("$.orderNumber").value(DEFAULT_ORDER_NUMBER))
-            .andExpect(jsonPath("$.drawingNumber").value(DEFAULT_DRAWING_NUMBER))
+            .andExpect(jsonPath("$.createDateTime").value(DEFAULT_CREATE_DATETIME))
             .andExpect(jsonPath("$.drawingContentType").value(DEFAULT_DRAWING_CONTENT_TYPE))
             .andExpect(jsonPath("$.drawing").value(Base64Utils.encodeToString(DEFAULT_DRAWING)))
             .andExpect(jsonPath("$.worknumber").value(DEFAULT_WORKNUMBER))
@@ -293,7 +294,7 @@ class JobResourceIT {
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
             .orderNumber(UPDATED_ORDER_NUMBER)
-            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .createDateTime(UPDATED_CREATE_DATETIME)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
             .worknumber(UPDATED_WORKNUMBER)
@@ -318,7 +319,7 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
-        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getCreateDateTime()).isEqualTo(UPDATED_CREATE_DATETIME);
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);
@@ -406,7 +407,7 @@ class JobResourceIT {
             .productCount(UPDATED_PRODUCT_COUNT)
             .fact(UPDATED_FACT)
             .orderNumber(UPDATED_ORDER_NUMBER)
-            .drawingNumber(UPDATED_DRAWING_NUMBER);
+            .createDateTime(UPDATED_CREATE_DATETIME);
 
         restJobMockMvc
             .perform(
@@ -426,7 +427,7 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
-        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getCreateDateTime()).isEqualTo(UPDATED_CREATE_DATETIME);
         assertThat(testJob.getDrawing()).isEqualTo(DEFAULT_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(DEFAULT_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(DEFAULT_WORKNUMBER);
@@ -452,7 +453,7 @@ class JobResourceIT {
             .endDate(UPDATED_END_DATE)
             .fact(UPDATED_FACT)
             .orderNumber(UPDATED_ORDER_NUMBER)
-            .drawingNumber(UPDATED_DRAWING_NUMBER)
+            .createDateTime(UPDATED_CREATE_DATETIME)
             .drawing(UPDATED_DRAWING)
             .drawingContentType(UPDATED_DRAWING_CONTENT_TYPE)
             .worknumber(UPDATED_WORKNUMBER)
@@ -476,7 +477,7 @@ class JobResourceIT {
         assertThat(testJob.getEndDate()).isEqualTo(UPDATED_END_DATE);
         assertThat(testJob.getFact()).isEqualTo(UPDATED_FACT);
         assertThat(testJob.getOrderNumber()).isEqualTo(UPDATED_ORDER_NUMBER);
-        assertThat(testJob.getDrawingNumber()).isEqualTo(UPDATED_DRAWING_NUMBER);
+        assertThat(testJob.getCreateDateTime()).isEqualTo(UPDATED_CREATE_DATETIME);
         assertThat(testJob.getDrawing()).isEqualTo(UPDATED_DRAWING);
         assertThat(testJob.getDrawingContentType()).isEqualTo(UPDATED_DRAWING_CONTENT_TYPE);
         assertThat(testJob.getWorknumber()).isEqualTo(UPDATED_WORKNUMBER);

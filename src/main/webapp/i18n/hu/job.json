@@ -24,7 +24,7 @@
       "endDate": "End Date",
       "fact": "Fact",
       "orderNumber": "Order Number",
-      "drawingNumber": "Drawing Number",
+      "createDateTime": "create DateTime",
       "drawing": "Drawing",
       "worknumber": "Worknumber",
       "priority": "Priority",

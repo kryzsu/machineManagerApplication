@@ -11,7 +11,7 @@ export interface IJob {
   endDate?: dayjs.Dayjs | null;
   fact?: number | null;
   orderNumber?: string | null;
-  drawingNumber?: string | null;
+  createDateTime?: dayjs.Dayjs | null;
   drawingContentType?: string | null;
   drawing?: string | null;
   worknumber?: string;
@@ -30,7 +30,7 @@ export class Job implements IJob {
     public endDate?: dayjs.Dayjs | null,
     public fact?: number | null,
     public orderNumber?: string | null,
-    public drawingNumber?: string | null,
+    public createDateTime?: dayjs.Dayjs | null,
     public drawingContentType?: string | null,
     public drawing?: string | null,
     public worknumber?: string,

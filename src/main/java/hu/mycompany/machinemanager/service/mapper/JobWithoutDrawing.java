@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.service.mapper;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Product;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class JobWithoutDrawing implements Comparable {
     private LocalDate endDate;
     private Integer fact;
     private String orderNumber;
-    private String drawingNumber;
+    private LocalDateTime createDateTime;
     private String consumerName;
     private String worknumber;
     private Product product;
@@ -31,7 +32,7 @@ public class JobWithoutDrawing implements Comparable {
             job.getEndDate(),
             job.getFact(),
             job.getOrderNumber(),
-            job.getDrawingNumber(),
+            job.getCreateDateTime(),
             job.getProduct(),
             (job.getCustomer() == null) ? null : job.getCustomer().getName(),
             job.getWorknumber(),
@@ -47,7 +48,7 @@ public class JobWithoutDrawing implements Comparable {
         LocalDate endDate,
         Integer fact,
         String orderNumber,
-        String drawingNumber,
+        LocalDateTime createDateTime,
         Product product,
         String consumerName,
         String worknumber,
@@ -60,7 +61,7 @@ public class JobWithoutDrawing implements Comparable {
         this.endDate = endDate;
         this.fact = fact;
         this.orderNumber = orderNumber;
-        this.drawingNumber = drawingNumber;
+        this.createDateTime = createDateTime;
         this.product = product;
         this.consumerName = consumerName;
         this.worknumber = worknumber;
@@ -123,12 +124,12 @@ public class JobWithoutDrawing implements Comparable {
         this.orderNumber = orderNumber;
     }
 
-    public String getDrawingNumber() {
-        return drawingNumber;
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
     }
 
-    public void setDrawingNumber(String drawingNumber) {
-        this.drawingNumber = drawingNumber;
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
     }
 
     public Product getProduct() {

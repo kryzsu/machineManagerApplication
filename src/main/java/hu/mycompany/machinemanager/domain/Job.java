@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -49,9 +50,6 @@ public class Job implements Serializable {
 
     @Column(name = "order_number")
     private String orderNumber;
-
-    @Column(name = "drawing_number")
-    private String drawingNumber;
 
     @Lob
     @Column(name = "drawing")
@@ -179,17 +177,9 @@ public class Job implements Serializable {
         this.orderNumber = orderNumber;
     }
 
-    public String getDrawingNumber() {
-        return this.drawingNumber;
-    }
-
-    public Job drawingNumber(String drawingNumber) {
-        this.drawingNumber = drawingNumber;
+    public Job createDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
         return this;
-    }
-
-    public void setDrawingNumber(String drawingNumber) {
-        this.drawingNumber = drawingNumber;
     }
 
     public byte[] getDrawing() {
@@ -306,18 +296,22 @@ public class Job implements Serializable {
     @Override
     public String toString() {
         return "Job{" +
-            "id=" + getId() +
-            ", estimation=" + getEstimation() +
-            ", productCount=" + getProductCount() +
-            ", startDate='" + getStartDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            ", fact=" + getFact() +
-            ", orderNumber='" + getOrderNumber() + "'" +
-            ", drawingNumber='" + getDrawingNumber() + "'" +
-            ", drawing='" + getDrawing() + "'" +
-            ", drawingContentType='" + getDrawingContentType() + "'" +
-            ", worknumber='" + getWorknumber() + "'" +
-            ", priority=" + getPriority() +
-            "}";
+            "id=" + id +
+            ", estimation=" + estimation +
+            ", productCount=" + productCount +
+            ", createDateTime=" + createDateTime +
+            ", updateDateTime=" + updateDateTime +
+            ", startDate=" + startDate +
+            ", endDate=" + endDate +
+            ", fact=" + fact +
+            ", orderNumber='" + orderNumber + '\'' +
+            ", drawing=" + Arrays.toString(drawing) +
+            ", drawingContentType='" + drawingContentType + '\'' +
+            ", worknumber='" + worknumber + '\'' +
+            ", priority=" + priority +
+            ", product=" + product +
+            ", machine=" + machine +
+            ", customer=" + customer +
+            '}';
     }
 }
