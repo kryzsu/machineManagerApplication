@@ -2,7 +2,6 @@ package hu.mycompany.machinemanager.service.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ class UtilTest {
         LocalDate intervalStart = LocalDate.of(2000, 1, 1);
 
         // WHEN
-        List<Interval> freeIntervalList = new Util().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
+        List<Interval> freeIntervalList = new JobUtil().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
         // THEN
 
         assertThat(freeIntervalList.get(0).getStart(), equalTo(intervalStart));
@@ -36,7 +35,7 @@ class UtilTest {
         futureOccupiedIntervalList.add(new Interval(firstIntervalStart, firstIntervalEnd));
 
         // WHEN
-        List<Interval> freeIntervalList = new Util().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
+        List<Interval> freeIntervalList = new JobUtil().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
         // THEN
 
         assertThat(freeIntervalList.get(0).getStart(), equalTo(intervalStart));
@@ -60,7 +59,7 @@ class UtilTest {
         futureOccupiedIntervalList.add(new Interval(secondIntervalStart, secondIntervalEnd));
 
         // WHEN
-        List<Interval> freeIntervalList = new Util().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
+        List<Interval> freeIntervalList = new JobUtil().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
 
         // THEN
         assertThat(freeIntervalList.get(0).getStart(), equalTo(intervalStart));
@@ -87,7 +86,7 @@ class UtilTest {
         futureOccupiedIntervalList.add(new Interval(secondIntervalStart, secondIntervalEnd));
 
         // WHEN
-        List<Interval> freeIntervalList = new Util().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
+        List<Interval> freeIntervalList = new JobUtil().getFreeIntervalList(futureOccupiedIntervalList, intervalStart);
 
         // THEN
         assertThat(freeIntervalList.get(0).getStart(), equalTo(firstIntervalEnd.plusDays(1)));

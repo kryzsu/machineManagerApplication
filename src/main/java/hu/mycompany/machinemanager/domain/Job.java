@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -76,6 +78,16 @@ public class Job implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "jobs" }, allowSetters = true)
     private Customer customer;
+
+    @ManyToMany
+    @JoinTable(
+        name = "rel_job__calendar",
+        joinColumns = @JoinColumn(name = "job_id"),
+        inverseJoinColumns = @JoinColumn(name = "calendar_id")
+    )
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs" }, allowSetters = true)
+    private Set<Calendar> calendars = new HashSet<>();
 
     public LocalDateTime getCreateDateTime() {
         return createDateTime;
@@ -275,15 +287,34 @@ public class Job implements Serializable {
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
+    public Set<Calendar> getCalendars() {
+        return calendars;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Job)) {
-            return false;
-        }
-        return id != null && id.equals(((Job) o).id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Job job = (Job) o;
+
+        if (!id.equals(job.id)) return false;
+        if (estimation != null ? !estimation.equals(job.estimation) : job.estimation != null) return false;
+        if (!productCount.equals(job.productCount)) return false;
+        if (!createDateTime.equals(job.createDateTime)) return false;
+        if (updateDateTime != null ? !updateDateTime.equals(job.updateDateTime) : job.updateDateTime != null) return false;
+        if (startDate != null ? !startDate.equals(job.startDate) : job.startDate != null) return false;
+        if (endDate != null ? !endDate.equals(job.endDate) : job.endDate != null) return false;
+        if (fact != null ? !fact.equals(job.fact) : job.fact != null) return false;
+        if (!orderNumber.equals(job.orderNumber)) return false;
+        if (!Arrays.equals(drawing, job.drawing)) return false;
+        if (drawingContentType != null ? !drawingContentType.equals(job.drawingContentType) : job.drawingContentType != null) return false;
+        if (!worknumber.equals(job.worknumber)) return false;
+        if (!priority.equals(job.priority)) return false;
+        if (product != null ? !product.equals(job.product) : job.product != null) return false;
+        if (!machine.equals(job.machine)) return false;
+        if (customer != null ? !customer.equals(job.customer) : job.customer != null) return false;
+        return calendars.equals(job.calendars);
     }
 
     @Override

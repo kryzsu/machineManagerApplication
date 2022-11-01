@@ -47,7 +47,7 @@ public class Machine implements Serializable {
     private Set<View> views = new HashSet<>();
 
     @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(unique = true)
     private Job runningJob;
 

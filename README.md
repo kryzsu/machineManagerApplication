@@ -2,6 +2,26 @@
 
 This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
 
+@startuml
+entity job
+entity calendar
+entity out_of_order
+entity machine
+entity product
+
+calendar }|-up-o{ out_of_order
+machine }|-up-o{ out_of_order
+machine ||--o{ job
+product ||--o{ job
+calendar }o--o{ job
+@enduml
+
+```sql
+create database bim_resource;
+create user 'bim'@'%' identified by 'ThePassword';
+grant all on bim_resource.* to 'bim'@'%';
+```
+
 ## Development
 
 node -v && npm -v

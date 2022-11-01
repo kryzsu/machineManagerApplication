@@ -34,7 +34,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class OutOfOrderResource {
 
-    private final Logger log = LoggerFactory.getLogger(OutOfOrderResource.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(OutOfOrderResource.class);
 
     private static final String ENTITY_NAME = "outOfOrder";
 

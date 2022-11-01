@@ -66,6 +66,20 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20201214140542-1-relations" author="jhipster">
+
+        <createTable tableName="rel_job__calendar">
+            <column name="calendar_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="job_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="job_id, calendar_id" tableName="rel_job__calendar"/>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
 </databaseChangeLog>

@@ -20,6 +20,16 @@ public class OutOfOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public OutOfOrder() {}
+
+    public OutOfOrder(LocalDate start, LocalDate end, String description, Set<Calendar> calendars, Set<Machine> machines) {
+        this.start = start;
+        this.end = end;
+        this.description = description;
+        this.calendars = calendars;
+        this.machines = machines;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +46,16 @@ public class OutOfOrder implements Serializable {
     @Size(min = 5)
     @Column(name = "description", nullable = false)
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+        name = "rel_out_of_order__calendar",
+        joinColumns = @JoinColumn(name = "out_of_order_id"),
+        inverseJoinColumns = @JoinColumn(name = "calendar_id")
+    )
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "outOfOrders", "jobs" }, allowSetters = true)
+    private Set<Calendar> calendars = new HashSet<>();
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -123,6 +143,10 @@ public class OutOfOrder implements Serializable {
 
     public void setMachines(Set<Machine> machines) {
         this.machines = machines;
+    }
+
+    public Set<Calendar> getCalendars() {
+        return calendars;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Util {
+public class JobUtil {
 
     public LocalDate getNextAvailableStartDate(Job job) {
         return (job.getEndDate() != null) ? job.getEndDate() : job.getStartDate().plusDays(job.getEstimation()).plusDays(1);

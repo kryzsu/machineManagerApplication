@@ -1,6 +1,7 @@
 package hu.mycompany.machinemanager.service.impl;
 
 import hu.mycompany.machinemanager.domain.Job;
+import hu.mycompany.machinemanager.repository.CalendarRepository;
 import hu.mycompany.machinemanager.repository.JobRepository;
 import hu.mycompany.machinemanager.service.JobService;
 import hu.mycompany.machinemanager.service.dto.JobDTO;

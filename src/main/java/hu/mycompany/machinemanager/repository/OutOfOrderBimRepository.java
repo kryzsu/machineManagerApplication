@@ -18,8 +18,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OutOfOrderBimRepository extends OutOfOrderRepository {
     @Query(
-        "select outOfOrder from OutOfOrder outOfOrder join fetch outOfOrder.machines machine" +
-        " where machine.id =:id and outOfOrder.start > :date order by outOfOrder.start"
+        "select outOfOrder from OutOfOrder outOfOrder " +
+        "join fetch outOfOrder.machines machine" +
+        " where " +
+        "machine.id =:id " +
+        " and outOfOrder.start >= :date " +
+        "order by outOfOrder.start"
     )
     List<OutOfOrder> findAllByMachineIdAndStartGreaterThanEqual(@Param("id") Long MachineId, @Param("date") LocalDate date);
 }
