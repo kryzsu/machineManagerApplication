@@ -25,6 +25,8 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+      springframework:
+        transaction: TRACE
 spring:
   devtools:
     restart:

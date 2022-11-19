@@ -33,9 +33,6 @@ public class JobInformationResource {
         this.jobInformationUseCase = jobInformationUseCase;
     }
 
-    /**
-     * GET getDetailedMachineList
-     */
     @GetMapping("/get-detailed-machine-list")
     public ResponseEntity<List<MachineDetailed>> getDetailedMachineList() {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());

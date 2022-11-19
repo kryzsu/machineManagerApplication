@@ -32,14 +32,14 @@ public class JobManageResource {
     @PostMapping("/start-next-job")
     public void startNextJob(@RequestBody long machineId) {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
-        log.debug("REST request to get the RequestParam");
+        log.debug("/start-next-job", machineId);
         jobManageUseCase.startNextJob(new MachineJobCommand(machineId));
     }
 
     @PostMapping("/stop-running-job")
     public void stopRunningJob(@RequestBody long machineId) {
         cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
-        log.debug("REST request to get the RequestParam");
+        log.debug("/stop-running-job", machineId);
         jobManageUseCase.stopRunningJob(new MachineJobCommand(machineId));
     }
 }

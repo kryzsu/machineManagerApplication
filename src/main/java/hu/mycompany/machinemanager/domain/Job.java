@@ -291,6 +291,10 @@ public class Job implements Serializable {
         return calendars;
     }
 
+    public void setCalendars(Set<Calendar> calendars) {
+        this.calendars = calendars;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

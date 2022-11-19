@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.PageRequest;
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +39,7 @@ public class JobManageServiceImpl implements JobManageUseCase {
     }
 
     @Override
+    @Transactional
     public void startNextJob(MachineJobCommand machineJobCommand) {
         Optional<Machine> machineById = machineRepository.findById(machineJobCommand.getMachineId());
 
@@ -83,6 +84,7 @@ public class JobManageServiceImpl implements JobManageUseCase {
     }
 
     @Override
+    @Transactional
     public void stopRunningJob(MachineJobCommand machineJobCommand) {
         Optional<Machine> machineById = machineRepository.findById(machineJobCommand.getMachineId());
         assertValidMachine(machineById);
@@ -98,12 +100,17 @@ public class JobManageServiceImpl implements JobManageUseCase {
 
         job.endDate(endDate);
         job.fact(Period.between(startDate, endDate).getDays());
-        Set<Calendar> calendarList = calendarRepository.findAllByDayBetween(startDate, endDate);
-        // job.getCalendars().addAll(calendarList);
+        Set<Calendar> calendarSet = calendarRepository.findAllByDayBetween(startDate, endDate);
+        Set<Calendar> calendars = job.getCalendars();
+        Set<Calendar> all = new HashSet<>();
+        all.addAll(calendars);
+        all.addAll(calendarSet);
+        job.setCalendars(all);
+
         jobRepository.save(job);
         machine.setRunningJob(null);
         machineRepository.save(machine);
-        calendarRepository.saveAll(calendarList);
+        calendarRepository.saveAll(calendarSet);
     }
 
     @Override
