@@ -56,10 +56,10 @@
             <column name="customer_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="CREATE_DATE_TIME" type="date" >
+            <column name="CREATE_DATE_TIME" type="timestamp" >
                 <constraints nullable="false" />
             </column>
-            <column name="UPDATE_DATE_TIME" type="date" >
+            <column name="UPDATE_DATE_TIME" type="timestamp" >
                 <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

@@ -32,4 +32,6 @@
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/20210905_kry_add_view_job.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20221111140542_added_entity_Calendar.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221228_relations.xml" relativeToChangelogFile="false"/>
+
 </databaseChangeLog>

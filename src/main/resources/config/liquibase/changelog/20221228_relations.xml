@@ -9,18 +9,15 @@
     <!--
         Added the entity Calendar.
     -->
-    <changeSet id="calendar-create" author="kry">
-        <createTable tableName="calendar">
+    <changeSet id="rel_job__product-create" author="kry">
+        <createTable tableName="rel_job__product">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="day" type="date" >
+            <column name="job_id" type="bigint" >
                 <constraints nullable="false" />
             </column>
-            <column name="CREATE_DATE_TIME" type="timestamp" >
-                <constraints nullable="false" />
-            </column>
-            <column name="UPDATE_DATE_TIME" type="timestamp" >
+            <column name="product_id" type="bigint" >
                 <constraints nullable="false" />
             </column>
         </createTable>

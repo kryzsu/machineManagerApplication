@@ -16,9 +16,7 @@
             ESTIMATION ,
             PRODUCT_COUNT ,
             START_DATE ,
-            case
-            when END_DATE is null THEN job.START_DATE + job.ESTIMATION - 1
-            else END_DATE END,
+            case when END_DATE is null THEN job.START_DATE + job.ESTIMATION - 1 else END_DATE END as END_DATE,
             FACT ,
             ORDER_NUMBER ,
             DRAWING_NUMBER ,
