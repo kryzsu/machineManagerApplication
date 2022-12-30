@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.service.mapper;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * A MachineDetailed.
@@ -16,26 +17,37 @@ public class MachineDetailed implements Serializable {
     private String description;
     private Job runningJob;
 
+    private Set<Job> jobs;
+
     public MachineDetailed() {}
 
-    public MachineDetailed(Long id, String name, String description, Job runningJob) {
+    public MachineDetailed(Long id, String name, String description, Job runningJob, Set<Job> jobs) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.runningJob = runningJob;
+        this.jobs = jobs;
     }
 
-    public static MachineDetailed createUsingJobWithoutDrawing(Long id, String name, String description, Job runningJob) {
+    public static MachineDetailed createUsingJobWithoutDrawing(Long id, String name, String description, Job runningJob, Set<Job> jobs) {
+        int a = jobs.toArray().length; // fetch the job entities
         MachineDetailed rv = new MachineDetailed();
         rv.id = id;
         rv.name = name;
         rv.description = description;
         rv.setRunningJob(runningJob);
+        rv.jobs = jobs;
         return rv;
     }
 
     public static MachineDetailed toDetailed(Machine machine) {
-        return new MachineDetailed(machine.getId(), machine.getName(), machine.getDescription(), machine.getRunningJob());
+        return new MachineDetailed(
+            machine.getId(),
+            machine.getName(),
+            machine.getDescription(),
+            machine.getRunningJob(),
+            machine.getJobs()
+        );
     }
 
     public Long getId() {
@@ -68,5 +80,9 @@ public class MachineDetailed implements Serializable {
 
     public void setRunningJob(Job runningJob) {
         this.runningJob = runningJob;
+    }
+
+    public Set<Job> getJobs() {
+        return jobs;
     }
 }

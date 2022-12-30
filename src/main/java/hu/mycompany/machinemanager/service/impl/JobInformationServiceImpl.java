@@ -22,6 +22,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +36,6 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
     private final JobUtil jobUtil;
     private final OutOfOrderMapper outOfOrderMapper;
     private final MachineRepository machineRepository;
-
-    private Predicate<JobWithoutDrawing> isOpen = job -> job.getEndDate() == null;
 
     public JobInformationServiceImpl(
         JobBimRepository jobRepository,
@@ -84,13 +83,15 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
     }
 
     @Override
+    @Transactional
     public List<MachineDetailed> findAllOpen() {
         Function<MachineDetailed, MachineDetailed> mapMachine = machine ->
             MachineDetailed.createUsingJobWithoutDrawing(
                 machine.getId(),
                 machine.getName(),
                 machine.getDescription(),
-                machine.getRunningJob()
+                machine.getRunningJob(),
+                machine.getJobs().stream().filter(job -> job.getStartDate() == null).collect(Collectors.toSet())
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());
