@@ -60,14 +60,16 @@ export class MachineDetailsComponent implements OnInit {
   }
 
   machineChanged(): void {
-    if (this.selectedMachine?.jobs != null) {
+    if (this.selectedMachine?.id == null) {
+      return;
+    }
+
+    if (this.selectedMachine.jobs != null) {
       this.jobs = this.selectedMachine.jobs.map(job => ({ ...job }));
     }
 
-    if (this.selectedMachine?.id != null) {
-      console.warn(this.selectedMachine.id);
-      this.getMachineDays.emit(this.selectedMachine.id);
-    }
+    console.warn(this.selectedMachine.id);
+    this.getMachineDays.emit(this.selectedMachine.id);
   }
 
   ngOnInit(): void {

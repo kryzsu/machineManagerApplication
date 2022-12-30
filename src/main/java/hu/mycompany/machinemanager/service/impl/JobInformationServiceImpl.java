@@ -98,7 +98,12 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
 
     @Override
     public List<MachineDayDTO> getJobNextDays(GetJobNextDaysCommand getJobNextDaysCommand) {
-        List<OutOfOrderDTO> outOfOrderDTOList = getRelatedOutOfOrder(new MachineJobCommand(getJobNextDaysCommand.getMachineId()));
+        List<OutOfOrderDTO> outOfOrderDTOList = getRelatedOutOfOrderForInterval(
+            getJobNextDaysCommand.getMachineId(),
+            LocalDate.now(),
+            LocalDate.now().plusDays(getJobNextDaysCommand.getDays())
+        );
+
         List<MachineDayDTO> outUfOrderDays = getOutUfOrderDays(
             outOfOrderDTOList,
             LocalDate.now(),
@@ -119,7 +124,8 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
             .collect(Collectors.toList());
 
         List<MachineDayDTO> all = new ArrayList<>();
-        for (int i = 0; i < free.size(); i++) {
+        int remainingWorkingDayNumber = free.size();
+        for (int i = 0; i < remainingWorkingDayNumber; i++) {
             MachineDayDTO jobMachineDay;
             MachineDayDTO freeMachineDay;
             if (!jobMachineDayList.isEmpty()) {
@@ -144,6 +150,14 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
         all.addAll(runningJobDays);
         all = all.stream().sorted().collect(Collectors.toList());
         return all;
+    }
+
+    private List<OutOfOrderDTO> getRelatedOutOfOrderForInterval(Long machineId, LocalDate from, LocalDate to) {
+        return outOfOrderRepository
+            .findAllByMachineIdAndStartGreaterThanEqualAndEndLessThanEqual(machineId, from, to)
+            .stream()
+            .map(outOfOrderMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     public List<OutOfOrderDTO> getRelatedOutOfOrder(MachineJobCommand machineJobCommand) {

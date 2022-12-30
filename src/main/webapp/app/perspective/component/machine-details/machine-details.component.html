@@ -1,4 +1,5 @@
 <p-dropdown [options]="machines" [(ngModel)]="selectedMachine" optionLabel="name" (onChange)="machineChanged()"></p-dropdown><br />
+
 <p-card
   header="{{ selectedMachine?.name }}"
   [style]="{ width: '50rem', 'margin-bottom': '2em' }"

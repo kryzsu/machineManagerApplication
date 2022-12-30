@@ -95,6 +95,8 @@ export class JobComponent implements OnInit {
 
   exportGyartasi(job: IJob): void {
     this.perspectiveService.getGyartasi(job.id ?? 0).subscribe((data: ArrayBuffer | null) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
       if (data == null) {
         return;
       }

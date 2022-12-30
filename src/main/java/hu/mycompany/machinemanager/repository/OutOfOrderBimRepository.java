@@ -21,9 +21,24 @@ public interface OutOfOrderBimRepository extends OutOfOrderRepository {
         "select outOfOrder from OutOfOrder outOfOrder " +
         "join fetch outOfOrder.machines machine" +
         " where " +
-        "machine.id =:id " +
+        "machine.id =:machineId " +
         " and outOfOrder.start >= :date " +
         "order by outOfOrder.start"
     )
-    List<OutOfOrder> findAllByMachineIdAndStartGreaterThanEqual(@Param("id") Long MachineId, @Param("date") LocalDate date);
+    List<OutOfOrder> findAllByMachineIdAndStartGreaterThanEqual(@Param("machineId") Long MachineId, @Param("date") LocalDate date);
+
+    @Query(
+        "select outOfOrder from OutOfOrder outOfOrder " +
+        "join fetch outOfOrder.machines machine" +
+        " where " +
+        "machine.id =:machineId " +
+        " and outOfOrder.start >= :start " +
+        " and outOfOrder.end <= :end " +
+        "order by outOfOrder.start"
+    )
+    List<OutOfOrder> findAllByMachineIdAndStartGreaterThanEqualAndEndLessThanEqual(
+        @Param("machineId") Long MachineId,
+        @Param("start") LocalDate from,
+        @Param("end") LocalDate to
+    );
 }
