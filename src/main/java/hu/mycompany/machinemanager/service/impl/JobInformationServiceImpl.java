@@ -5,6 +5,7 @@ import hu.mycompany.machinemanager.applicaion.port.in.JobManageUseCase;
 import hu.mycompany.machinemanager.applicaion.port.in.MachineJobCommand;
 import hu.mycompany.machinemanager.applicaion.port.in.MachineJobPlanningCommand;
 import hu.mycompany.machinemanager.domain.Job;
+import hu.mycompany.machinemanager.domain.JobComparator;
 import hu.mycompany.machinemanager.repository.JobBimRepository;
 import hu.mycompany.machinemanager.repository.MachineRepository;
 import hu.mycompany.machinemanager.repository.OutOfOrderBimRepository;
@@ -91,7 +92,12 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
                 machine.getName(),
                 machine.getDescription(),
                 machine.getRunningJob(),
-                machine.getJobs().stream().filter(job -> job.getStartDate() == null).collect(Collectors.toSet())
+                machine
+                    .getJobs()
+                    .stream()
+                    .filter(job -> job.getStartDate() == null)
+                    .sorted(new JobComparator())
+                    .collect(Collectors.toCollection(LinkedHashSet::new))
             );
         Page<MachineDetailed> page = this.findAll(PageRequest.of(0, 1000));
         return page.getContent().stream().map(mapMachine).collect(Collectors.toList());
@@ -196,6 +202,11 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
             .collect(Collectors.toList());
     }
 
+    /**
+     *
+     * @param machineId
+     * @return MachineDayDTO object list with the date of the running job and the job id
+     */
     private List<MachineDayDTO> getRunningJobDays(long machineId) {
         Optional<Job> runningJob = jobRepository.findByMachineIdAndStartDateIsNotNullAndEndDateIsNull(machineId);
         return runningJob

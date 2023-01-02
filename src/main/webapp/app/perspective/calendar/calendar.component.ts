@@ -6,7 +6,7 @@ import { startOfDay, endOfDay, isSameDay, isSameMonth } from 'date-fns';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import * as d3 from 'd3';
 
-import { machine2BarData, machineArray2Events } from '../converter-utils';
+import { machine2BarData, machineArray2Events, machineDaysLists2Events } from '../converter-utils';
 import { IJob } from 'app/entities/job/job.model';
 import { Store } from '@ngrx/store';
 import { selectMachineList } from '../../redux/selectors';
@@ -74,7 +74,7 @@ export class CalendarComponent implements OnInit {
   private margin = 50;
   private width = 750 - this.margin * 2;
   private height = 400 - this.margin * 2;
-  private oldmachineId = 0;
+  private oldMachineId = 0;
 
   constructor(store: Store, perspectiveService: PerspectiveService, protected router: Router) {
     this.store = store;
@@ -91,13 +91,13 @@ export class CalendarComponent implements OnInit {
         this.barData = data;
       });
 
-    this.store
-      .select(selectMachineList)
-      .pipe(
-        filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
-        map(state => machineArray2Events(state.machineList, this.actions))
-      )
-      .subscribe(data => (this.events2 = data));
+    // this.store
+    //   .select(selectMachineList)
+    //   .pipe(
+    //     filter(val => val !== undefined), // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+    //     map(state => machineArray2Events(state.machineList, this.actions))
+    //   )
+    //   .subscribe(data => (this.events2 = data));
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -173,7 +173,7 @@ export class CalendarComponent implements OnInit {
   }
 
   refreshMachineDays(machineId: number): void {
-    if (this.oldmachineId === machineId) {
+    if (this.oldMachineId === machineId) {
       return;
     }
 
@@ -181,10 +181,11 @@ export class CalendarComponent implements OnInit {
       .getNextDays(machineId)
       .pipe(map(response => response.body))
       .subscribe((machineDayList: IMachineDay[] | null) => {
-        const machineDays: IMachineDay[] = machineDayList != null ? machineDayList : [];
+        const machineDays: IMachineDay[] = machineDayList ?? [];
         this.store.dispatch(getMachineDays({ machineDays }));
+        this.events2 = machineDaysLists2Events(machineDays, this.actions);
       });
-    this.oldmachineId = machineId;
+    this.oldMachineId = machineId;
   }
 
   onStartNextJob($event: number): void {

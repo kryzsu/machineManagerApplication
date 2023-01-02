@@ -9,6 +9,7 @@ import { AppState } from '../redux/app.state';
 import { BarData } from '../shared/bar-chart/bar-chart.component';
 import { dayjsToString, toDate, wrongDate } from '../util/common-util';
 import * as dayjs from 'dayjs';
+import { IMachineDay } from '../entities/machineday';
 
 const colors: any = {
   red: {
@@ -85,6 +86,110 @@ export const machineArray2Events = (machineList: IMachine[], actions: CalendarEv
   return events;
 };
 
+export const isWeekendOrFreeDay = (machineDay: IMachineDay): boolean => [6, 7].includes(machineDay.dayOfWeek ?? 10) || !machineDay.occupied;
+
+export const machineDaysLists2Events = (machineDayList: IMachineDay[], actions: CalendarEventAction[]): CalendarEvent[] => {
+  const color: EventColor = colorList[Math.floor(Math.random() * 100) % 7];
+  const events: CalendarEvent[] = [];
+  let jobStartMachineDay = null;
+  let jobLatestMachineDay = null;
+  let i = 0;
+
+  // find first occupied job day
+  for (; i < machineDayList.length; i++) {
+    if (isWeekendOrFreeDay(machineDayList[i])) {
+      continue;
+    }
+
+    jobStartMachineDay = machineDayList[i];
+    jobLatestMachineDay = jobStartMachineDay;
+    break;
+  }
+
+  i++;
+  for (; i < machineDayList.length; i++) {
+    if (isWeekendOrFreeDay(machineDayList[i])) {
+      continue;
+    }
+
+    if (machineDayList[i].jobId !== jobStartMachineDay?.jobId) {
+      const start: Date = toDate(jobStartMachineDay?.date ?? '') ?? wrongDate;
+      const title = jobStartMachineDay?.comment ?? '';
+      events.push(
+        createEvent(
+          jobStartMachineDay?.jobId ?? 0,
+          start,
+          toDate(machineDayList[i - 1]?.date ?? '') ?? wrongDate,
+          title,
+          actions,
+          colorList[Math.floor(Math.random() * 100) % 7]
+        )
+      );
+      jobStartMachineDay = machineDayList[i];
+    }
+    jobLatestMachineDay = machineDayList[i];
+  }
+
+  if (jobLatestMachineDay !== null) {
+    const start: Date = toDate(jobStartMachineDay?.date ?? '') ?? wrongDate;
+    const title = jobStartMachineDay?.comment ?? '';
+    events.push(
+      createEvent(
+        jobStartMachineDay?.jobId ?? 0,
+        start,
+        toDate(machineDayList[i - 1]?.date ?? '') ?? wrongDate,
+        title,
+        actions,
+        colorList[Math.floor(Math.random() * 100) % 7]
+      )
+    );
+  }
+  return events;
+};
+
+export const createEvent = (
+  id: number,
+  startDate: Date,
+  endDate: Date,
+  title: string,
+  actions: CalendarEventAction[],
+  color: EventColor
+): CalendarEvent => ({
+  id,
+  start: startDate,
+  end: endDate,
+  title,
+  color,
+  actions,
+  allDay: true,
+  resizable: {
+    beforeStart: true,
+    afterEnd: true,
+  },
+  draggable: true,
+});
+
+export const machineDay2Event = (machineDay: IMachineDay, actions: CalendarEventAction[], color: EventColor): CalendarEvent => {
+  const startDate: Date = machineDay.date ? toDate(machineDay.date) ?? wrongDate : wrongDate;
+  const title = machineDay.comment ?? '';
+  const endDate: Date | undefined = startDate;
+
+  return {
+    id: machineDay.jobId,
+    start: startDate,
+    end: endDate,
+    title,
+    color,
+    actions,
+    allDay: true,
+    resizable: {
+      beforeStart: true,
+      afterEnd: true,
+    },
+    draggable: true,
+    meta: machineDay,
+  };
+};
 export const job2Event = (machine: IMachine, job: IJob, actions: CalendarEventAction[]): CalendarEvent => {
   const color = colorList[Math.floor(Math.random() * 100) % 7];
   const startDate: Date =

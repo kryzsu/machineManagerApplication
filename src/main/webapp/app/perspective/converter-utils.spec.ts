@@ -1,7 +1,9 @@
-import { job2Event, job2Treenode, machine2Treenode } from 'app/perspective/converter-utils';
+import { job2Event, job2Treenode, machine2Treenode, machineDaysLists2Events } from 'app/perspective/converter-utils';
 import { IMachine } from '../entities/machine/machine.model';
 import { IJob } from '../entities/job/job.model';
 import * as dayjs from 'dayjs';
+import { IMachineDay } from '../entities/machineday';
+import { CalendarEventAction } from 'angular-calendar';
 
 describe('converter utils', () => {
   describe('job2Treenode', () => {
@@ -25,29 +27,13 @@ describe('converter utils', () => {
       const job: IJob = {
         ...basicJob,
         estimation: 2,
-        products: [{ id: 11, name: 'product' }],
+        product: { id: 11, name: 'product' },
       };
 
       // GIVEN
       const rv = job2Treenode(job);
       // THEN
       expect(rv.label).toEqual('product 2 nap');
-    });
-
-    it('with more product', () => {
-      const job: IJob = {
-        ...basicJob,
-        estimation: 2,
-        products: [
-          { id: 11, name: 'product' },
-          { id: 22, name: 'product2' },
-        ],
-      };
-
-      // GIVEN
-      const rv = job2Treenode(job);
-      // THEN
-      expect(rv.label).toEqual('product, product2 2 nap');
     });
   });
 
@@ -83,29 +69,13 @@ describe('converter utils', () => {
       const job: IJob = {
         ...basicJob,
         estimation: 2,
-        products: [{ id: 11, name: 'product' }],
+        product: { id: 11, name: 'product' },
       };
 
       // GIVEN
       const rv = job2Treenode(job);
       // THEN
       expect(rv.label).toEqual('product 2 nap');
-    });
-
-    it('with more product', () => {
-      const job: IJob = {
-        ...basicJob,
-        estimation: 2,
-        products: [
-          { id: 11, name: 'product' },
-          { id: 22, name: 'product2' },
-        ],
-      };
-
-      // GIVEN
-      const rv = job2Treenode(job);
-      // THEN
-      expect(rv.label).toEqual('product, product2 2 nap');
     });
   });
 
@@ -121,6 +91,101 @@ describe('converter utils', () => {
       // THEN
       expect(rv).not.toBeNull();
       expect(rv.children).toBeUndefined();
+    });
+  });
+
+  describe('machineDaysLists2Events', () => {
+    it('empty', () => {
+      // GIVEN
+      const machineDayList: IMachineDay[] = [];
+      const actions: CalendarEventAction[] = [
+        {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          label: '',
+          onClick() {},
+        },
+      ];
+
+      const rv = machineDaysLists2Events(machineDayList, actions);
+
+      // THEN
+      expect(rv).toEqual([]);
+    });
+
+    it('3 day two jobs', () => {
+      // GIVEN
+      const machineDayList: IMachineDay[] = [
+        { date: '2023-01-02', occupied: true, comment: 'wn1', jobId: 48, dayOfWeek: 1 },
+        { date: '2023-01-03', occupied: true, comment: 'wn7', jobId: 54, dayOfWeek: 2 },
+        { date: '2023-01-04', occupied: true, comment: 'wn7', jobId: 54, dayOfWeek: 3 },
+      ];
+
+      const actions: CalendarEventAction[] = [
+        {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          label: '',
+          onClick() {},
+        },
+      ];
+
+      const rv = machineDaysLists2Events(machineDayList, actions);
+
+      // THEN
+      expect(rv[0].id).toEqual(machineDayList[0].jobId);
+      expect(rv[0].title).toEqual(machineDayList[0].comment);
+      expect(rv[0].start.toISOString()).toEqual('2023-01-01T23:00:00.000Z');
+      expect(rv[0]?.end?.toISOString()).toEqual('2023-01-01T23:00:00.000Z');
+
+      expect(rv[1].id).toEqual(machineDayList[1].jobId);
+      expect(rv[1].title).toEqual(machineDayList[1].comment);
+      expect(rv[1].start.toISOString()).toEqual('2023-01-02T23:00:00.000Z');
+      expect(rv[1]?.end?.toISOString()).toEqual('2023-01-03T23:00:00.000Z');
+    });
+
+    it('just weekend', () => {
+      // GIVEN
+      const machineDayList: IMachineDay[] = [
+        { date: '2023-01-02', occupied: true, dayOfWeek: 6 },
+        { date: '2023-01-03', occupied: true, dayOfWeek: 7 },
+      ];
+
+      const actions: CalendarEventAction[] = [
+        {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          label: '',
+          onClick() {},
+        },
+      ];
+
+      const rv = machineDaysLists2Events(machineDayList, actions);
+
+      // THEN
+      expect(rv).toEqual([]);
+    });
+
+    it('1 weekend on job', () => {
+      // GIVEN
+      const machineDayList: IMachineDay[] = [
+        { date: '2023-01-02', occupied: true, comment: 'wn1', jobId: 48, dayOfWeek: 1 },
+        { date: '2023-01-03', occupied: true, dayOfWeek: 7 },
+      ];
+
+      const actions: CalendarEventAction[] = [
+        {
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          label: '',
+          onClick() {},
+        },
+      ];
+
+      const rv = machineDaysLists2Events(machineDayList, actions);
+
+      // THEN
+      expect(rv.length).toEqual(1);
+      expect(rv[0].id).toEqual(machineDayList[0].jobId);
+      expect(rv[0].title).toEqual(machineDayList[0].comment);
+      expect(rv[0].start.toISOString()).toEqual('2023-01-02T23:00:00.000Z');
+      expect(rv[0]?.end?.toISOString()).toEqual('2023-01-02T23:00:00.000Z');
     });
   });
 });

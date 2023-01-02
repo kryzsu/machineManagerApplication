@@ -68,7 +68,6 @@ export class MachineDetailsComponent implements OnInit {
       this.jobs = this.selectedMachine.jobs.map(job => ({ ...job }));
     }
 
-    console.warn(this.selectedMachine.id);
     this.getMachineDays.emit(this.selectedMachine.id);
   }
 

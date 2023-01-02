@@ -6,13 +6,7 @@
       (startNextJob)="onStartNextJob($event)"
       (stopRunningJob)="onStopRunningJob($event)"
     >
-
     </jhi-machine-details>
-  </p-accordionTab>
-  <p-accordionTab header="gépek, jobok fa nézetben">
-    <jhi-perps-tree></jhi-perps-tree>
-  </p-accordionTab>
-  <p-accordionTab header="Naptár">
     <div class="row text-center">
       <div class="col-md-4">
         <div class="btn-group">
@@ -61,6 +55,9 @@
       >
       </mwl-calendar-week-view>
     </div>
+  </p-accordionTab>
+  <p-accordionTab header="gépek, jobok fa nézetben">
+    <jhi-perps-tree></jhi-perps-tree>
   </p-accordionTab>
   <p-accordionTab header="becsült terhelés">
     <jhi-bar-chart [data]="barData"> </jhi-bar-chart>
