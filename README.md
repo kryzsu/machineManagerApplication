@@ -4,7 +4,10 @@ This application was generated using JHipster 7.1.0, you can find documentation 
 
 ```shell
 docker build --build-arg JAR_FILE=target/machine-manager-application-0.1.1-SNAPSHOT.jar -t bim/manager .
+```
 
+```shell
+docker build -t bim/postgres .
 ```
 
 @startuml

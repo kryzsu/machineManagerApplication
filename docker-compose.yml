@@ -7,7 +7,7 @@ services:
     depends_on:
       - 'db'
   db:
-    image: postgres
+    image: bim/postgres
     container_name: postgres_bim
     ports:
       - '5432:5432'
