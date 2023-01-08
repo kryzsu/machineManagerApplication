@@ -631,8 +631,8 @@
                     <configuration>
                         <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
                         <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
-                        <driver>org.h2.Driver</driver>
-                        <url>jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true</url>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC&amp;createDatabaseIfNotExist=true</url>
                         <defaultSchemaName></defaultSchemaName>
                         <username>postgres</username>
                         <password>TiTok4</password>
