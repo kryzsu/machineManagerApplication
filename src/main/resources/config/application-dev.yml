@@ -40,8 +40,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: ${db.username}
-    password: ${db.pwd}
+    username: postgres
+    password: TiTok4
     hikari:
       poolName: Hikari
       auto-commit: false
