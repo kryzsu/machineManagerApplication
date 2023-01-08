@@ -1,0 +1,15 @@
+services:
+  manager:
+    image: bim/manager
+    container_name: manager
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'db'
+  db:
+    image: postgres
+    container_name: postgres_bim
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: TiTok4

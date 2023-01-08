@@ -5,6 +5,8 @@ import hu.mycompany.machinemanager.applicaion.port.in.JobInformationUseCase;
 import hu.mycompany.machinemanager.applicaion.port.in.JobManageUseCase;
 import hu.mycompany.machinemanager.applicaion.port.in.MachineJobCommand;
 import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
+import hu.mycompany.machinemanager.service.dto.IdWithPriorityDTO;
+import java.util.List;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;

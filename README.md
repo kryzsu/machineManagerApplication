@@ -2,6 +2,11 @@
 
 This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
 
+```shell
+docker build --build-arg JAR_FILE=target/machine-manager-application-0.1.1-SNAPSHOT.jar -t bim/manager .
+
+```
+
 @startuml
 entity job
 entity calendar

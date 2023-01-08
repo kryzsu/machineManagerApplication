@@ -57,6 +57,10 @@ public class JobInformationServiceImpl implements JobInformationUseCase {
         return machineRepository.findAll(pageable).map(MachineDetailed::toDetailed);
     }
 
+    public Stream<MachineDetailed> findAllWithJobs() {
+        return machineRepository.findAllWithJobs().stream().map(MachineDetailed::toDetailed);
+    }
+
     @Override
     public LocalDate getNextDateForMachine(MachineJobPlanningCommand machineJobPlanningCommand) {
         Stream<Interval> futureOccupiedIntervalStream = jobRepository

@@ -39,18 +39,14 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/ma;DB_CLOSE_DELAY=-1
-    username: machineManagerApplication
-    password:
+    url: jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${db.username}
+    password: ${db.pwd}
     hikari:
       poolName: Hikari
       auto-commit: false
-  h2:
-    console:
-      # disable spring boot built-in h2-console since we start it manually with correct configuration
-      enabled: false
   jpa:
-    database-platform: tech.jhipster.domain.util.FixedH2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
       hibernate:

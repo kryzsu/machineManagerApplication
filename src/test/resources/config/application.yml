@@ -21,17 +21,16 @@ spring:
     name: machineManagerApplication
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:machinemanagerapplication;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    name:
-    username:
-    password:
+    url: jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${db.username}
+    password: ${db.pwd}
     hikari:
       auto-commit: false
   jackson:
     serialization:
       write-durations-as-timestamps: false
   jpa:
-    database-platform: tech.jhipster.domain.util.FixedH2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     hibernate:
       ddl-auto: none

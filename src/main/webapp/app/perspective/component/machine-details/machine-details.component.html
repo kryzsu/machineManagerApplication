@@ -14,7 +14,13 @@
   </div>
   tervezett folyamatok: {{ selectedMachine?.jobs?.length }} db
   <ng-template pTemplate="footer">
-    <p-button *ngIf="selectedMachine?.runningJob == null" label="Start next job" icon="pi pi-check" (onClick)="onStartNextJob()"></p-button>
+    <p-button
+      *ngIf="selectedMachine?.runningJob == null"
+      label="Start next job"
+      icon="pi pi-check"
+      (onClick)="onStartNextJob()"
+      [disabled]="selectedMachine?.jobs?.length === 0"
+    ></p-button>
     <p-button
       *ngIf="selectedMachine?.runningJob != null"
       label="Stop running job"

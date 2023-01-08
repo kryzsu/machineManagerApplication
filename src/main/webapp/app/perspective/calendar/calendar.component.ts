@@ -40,8 +40,6 @@ export class CalendarComponent implements OnInit {
   machineList$: Observable<AppState> | undefined;
   barData: BarData = { labels: [], datasets: [] };
 
-  private perspectiveService: PerspectiveService;
-  private store: Store;
   private actions: CalendarEventAction[] = [
     {
       label: '&nbsp; edit &nbsp;',
@@ -76,9 +74,7 @@ export class CalendarComponent implements OnInit {
   private height = 400 - this.margin * 2;
   private oldMachineId = 0;
 
-  constructor(store: Store, perspectiveService: PerspectiveService, protected router: Router) {
-    this.store = store;
-    this.perspectiveService = perspectiveService;
+  constructor(private store: Store, private perspectiveService: PerspectiveService, protected router: Router) {
     this.machineList$ = this.store.select(selectMachineList);
 
     this.store

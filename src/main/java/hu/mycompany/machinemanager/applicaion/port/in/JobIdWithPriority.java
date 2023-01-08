@@ -5,6 +5,8 @@ public class JobIdWithPriority {
     private Long jobId;
     private Long priority;
 
+    public JobIdWithPriority() {}
+
     public JobIdWithPriority(Long jobId, Long priority) {
         this.jobId = jobId;
         this.priority = priority;
@@ -16,5 +18,13 @@ public class JobIdWithPriority {
 
     public Long getPriority() {
         return priority;
+    }
+
+    public void setId(Long jobId) {
+        this.jobId = jobId;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
     }
 }

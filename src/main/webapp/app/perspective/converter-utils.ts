@@ -137,7 +137,7 @@ export const machineDaysLists2Events = (machineDayList: IMachineDay[], actions: 
       createEvent(
         jobStartMachineDay?.jobId ?? 0,
         start,
-        toDate(machineDayList[i - 1]?.date ?? '') ?? wrongDate,
+        toDate(jobLatestMachineDay?.date ?? '') ?? wrongDate,
         title,
         actions,
         colorList[Math.floor(Math.random() * 100) % 7]

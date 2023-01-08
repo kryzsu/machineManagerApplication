@@ -12,9 +12,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:mysql:8.0.25:///machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=${user.timezone}&TC_TMPFS=/testtmpfs:rw
-    username: root
-    password:
+    url: jdbc:postgresql://db:5432/machineManagerApplication?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${db.username}
+    password: ${db.pwd}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -24,4 +24,4 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

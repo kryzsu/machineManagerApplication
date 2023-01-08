@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Where;
 
 /**
  * A Machine.
@@ -40,6 +41,12 @@ public class Machine implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
     private Set<Job> jobs = new HashSet<>();
+
+    @OneToMany(mappedBy = "machine")
+    @Where(clause = "start_date is null")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "product", "machine", "customer" }, allowSetters = true)
+    private Set<Job> openJobs = new HashSet<>();
 
     @ManyToMany(mappedBy = "machines")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -224,5 +231,13 @@ public class Machine implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             "}";
+    }
+
+    public Set<Job> getOpenJobs() {
+        return openJobs;
+    }
+
+    public void setOpenJobs(Set<Job> openJobs) {
+        this.openJobs = openJobs;
     }
 }

@@ -3,6 +3,7 @@ package hu.mycompany.machinemanager.service.mapper;
 import hu.mycompany.machinemanager.domain.Job;
 import hu.mycompany.machinemanager.domain.Machine;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +17,6 @@ public class MachineDetailed implements Serializable {
     private String name;
     private String description;
     private Job runningJob;
-
     private Set<Job> jobs;
 
     public MachineDetailed() {}
@@ -35,8 +35,8 @@ public class MachineDetailed implements Serializable {
         rv.id = id;
         rv.name = name;
         rv.description = description;
-        rv.setRunningJob(runningJob);
         rv.jobs = jobs;
+        rv.setRunningJob(runningJob);
         return rv;
     }
 
