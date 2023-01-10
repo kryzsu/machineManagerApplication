@@ -1,15 +1,27 @@
+version: '3.3'
 services:
-  manager:
-    image: bim/manager
-    container_name: manager
-    ports:
-      - '8080:8080'
-    depends_on:
-      - 'db'
   db:
     image: bim/postgres
     container_name: postgres_bim
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_PASSWORD: TiTok4
+      - POSTGRES_PASSWORD=TiTok4
+      - POSTGRES_DB=machineManagerApplication
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - /var/lib/postgresql/data/:/var/lib/postgresql/data
+  manager:
+    image: bim/manager
+    container_name: manager
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+  ping:
+    image: willfarrell/ping
+    environment:
+      HOSTNAME: 'db'
+      TIMEOUT: 30000
+    depends_on:
+      - db

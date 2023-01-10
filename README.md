@@ -10,6 +10,14 @@ docker build --build-arg JAR_FILE=target/machine-manager-application-0.1.1-SNAPS
 docker build -t bim/postgres .
 ```
 
+```shell
+sudo mkdir -p /var/lib/postgresql/data
+```
+
+```shell
+chmod 777 /var/lib/postgresql/data
+```
+
 @startuml
 entity job
 entity calendar
