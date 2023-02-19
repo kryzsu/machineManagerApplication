@@ -7,7 +7,7 @@ docker build --build-arg JAR_FILE=target/machine-manager-application-0.1.1-SNAPS
 ```
 
 ```shell
-docker build -t bim/postgres .
+cd db && docker build -t bim/postgres . && cd ..
 ```
 
 ```shell
